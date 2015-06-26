@@ -58,11 +58,7 @@ public class VideoBrowserActivity extends ListActivity implements MusicUtils.Def
     public void init() {
         // Set the layout for this activity.  You can find it
         // in assets/res/any/layout/media_picker_activity.xml
-    	if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
-		}
+    	setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityTop : R.attr.mediaPickerActivity));
         makeCursor();
         if (mCursor == null) {
             MusicUtils.displayDatabaseError(this);

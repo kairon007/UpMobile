@@ -20,7 +20,6 @@ import java.text.Collator;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Util;
-
 import android.app.ListActivity;
 import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
@@ -138,37 +137,22 @@ public class PlaylistBrowserActivity extends ListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-        if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
-		}
+        setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityTop : R.attr.mediaPickerActivity));
         MusicUtils.updateButtonBar(this, R.id.playlisttab);
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
         lv.setTextFilterEnabled(true);
 
         mAdapter = (PlaylistListAdapter) getLastNonConfigurationInstance();
-        if (mAdapter == null) {
-            //Log.i("@@@", "starting query");
-        	if (Util.getThemeName(this).equals("AppTheme.White")) {
-	            mAdapter = new PlaylistListAdapter(
-	                    getApplication(),
-	                    this,
-	                    R.layout.track_list_item_white,
-	                    mPlaylistCursor,
-	                    new String[] { MediaStore.Audio.Playlists.NAME},
-	                    new int[] { android.R.id.text1 });
-        	} else {
-        		mAdapter = new PlaylistListAdapter(
-	                    getApplication(),
-	                    this,
-	                    R.layout.track_list_item,
-	                    mPlaylistCursor,
-	                    new String[] { MediaStore.Audio.Playlists.NAME},
-	                    new int[] { android.R.id.text1 });
-        	}
-            setListAdapter(mAdapter);
+		if (mAdapter == null) {
+			mAdapter = new PlaylistListAdapter(
+					getApplication(), 
+					this,
+					Util.getResIdFromAttribute(this, R.attr.trackListItem),
+					mPlaylistCursor,
+					new String[] { MediaStore.Audio.Playlists.NAME },
+					new int[] { android.R.id.text1 });
+			setListAdapter(mAdapter);
             setTitle(R.string.working_playlists);
             getPlaylistCursor(mAdapter.getQueryHandler(), null);
         } else {
@@ -624,19 +608,8 @@ public class PlaylistBrowserActivity extends ListActivity
             tv.setText(name);
             ImageView iv = (ImageView) view.findViewById(R.id.icon);
             long id = cursor.getLong(mIdIdx);
-            if (Util.getThemeName(mActivity).equals("AppTheme.White")) {
-            	if (id == RECENTLY_ADDED_PLAYLIST) {
-					iv.setImageResource(R.drawable.ic_mp_playlist_recently_added_list_white);
-				} else {
-					iv.setImageResource(R.drawable.ic_mp_playlist_list_white);
-				}
-			} else {
-				if (id == RECENTLY_ADDED_PLAYLIST) {
-					iv.setImageResource(R.drawable.ic_mp_playlist_recently_added_list);
-				} else {
-					iv.setImageResource(R.drawable.ic_mp_playlist_list);
-				}
-			}
+            iv.setImageResource(Util.getResIdFromAttribute(mActivity, 
+            		id == RECENTLY_ADDED_PLAYLIST ? R.attr.icMpPlaylistRecentlyAddedList : R.attr.icMpPlaylistList));
             ViewGroup.LayoutParams p = iv.getLayoutParams();
             p.width = ViewGroup.LayoutParams.WRAP_CONTENT;
             p.height = ViewGroup.LayoutParams.WRAP_CONTENT;

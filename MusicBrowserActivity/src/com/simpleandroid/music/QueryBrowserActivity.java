@@ -29,7 +29,6 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
-import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -411,11 +410,7 @@ implements MusicUtils.Defs, ServiceConnection
                 tv2.setText(songs_albums);
             
             } else if (mimetype.equals("album")) {
-            	 if (Util.getThemeName(mActivity).equals("AppTheme.White")){
-            		iv.setImageResource(R.drawable.albumart_mp_unknown_list_white);
-                 } else {
-                	iv.setImageResource(R.drawable.albumart_mp_unknown_list);
-                 }
+                iv.setImageResource(Util.getResIdFromAttribute(mActivity, R.attr.albumartMpUnknownList));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(
                         MediaStore.Audio.Albums.ALBUM));
                 String displayname = name;

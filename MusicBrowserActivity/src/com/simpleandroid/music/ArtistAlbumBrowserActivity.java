@@ -27,11 +27,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.CursorWrapper;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -99,36 +97,23 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-		if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
-		}
+        setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityExpandingTop : R.attr.mediaPickerActivityExpanding));
         MusicUtils.updateButtonBar(this, R.id.artisttab);
         ExpandableListView lv = getExpandableListView();
         lv.setOnCreateContextMenuListener(this);
         lv.setTextFilterEnabled(true);
-        mAdapter = (ArtistAlbumListAdapter) getLastNonConfigurationInstance();
-        if (mAdapter == null) {
-            //Log.i("@@@", "starting query");
-			if (Util.getThemeName(this).equals("AppTheme.White")) {
-				// here set text color in artist page
-				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
-						R.layout.track_list_item_group_white,
-						new String[] {},
-						new int[] {},
-						R.layout.track_list_item_child_white,
-						new String[] {}, 
-						new int[] {});
-			} else {
-				mAdapter = new ArtistAlbumListAdapter(getApplication(), this, null, // cursor
-						R.layout.track_list_item_group,
-						new String[] {},
-						new int[] {},
-						R.layout.track_list_item_child,
-						new String[] {}, 
-						new int[] {});
-			}
+		mAdapter = (ArtistAlbumListAdapter) getLastNonConfigurationInstance();
+		if (mAdapter == null) {
+			mAdapter = new ArtistAlbumListAdapter(
+					getApplication(),
+					this,
+					null, // cursor
+					Util.getResIdFromAttribute(this, R.attr.trackListItemGroup),
+					new String[] {}, 
+					new int[] {}, 
+					Util.getResIdFromAttribute(this, R.attr.trackListItemChild), 
+					new String[] {},
+					new int[] {});
 			setListAdapter(mAdapter);
             setTitle(R.string.working_artists);
             getArtistCursor(mAdapter.getQueryHandler(), null);
@@ -618,11 +603,7 @@ public class ArtistAlbumBrowserActivity extends ExpandableListActivity
 
             Resources r = context.getResources();
             mNowPlayingOverlay = r.getDrawable(R.drawable.indicator_ic_mp_playing_list);
-            if (Util.getThemeName(mActivity).equals("AppTheme.White")){
-            	mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(R.drawable.albumart_mp_unknown_list_white);
-            } else {
-            	mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(R.drawable.albumart_mp_unknown_list);
-            }
+            mDefaultAlbumIcon = (BitmapDrawable) r.getDrawable(Util.getResIdFromAttribute(currentactivity, R.attr.albumartMpUnknownList));
             // no filter or dither, it's a lot faster and we can't tell the difference
             mDefaultAlbumIcon.setFilterBitmap(false);
             mDefaultAlbumIcon.setDither(false);

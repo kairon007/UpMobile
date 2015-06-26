@@ -89,7 +89,7 @@
                     android:layout_width="48dp"
                     android:layout_height="48dp"
                     android:layout_gravity="center"
-                    android:background="?attr/search_bg"
+                    android:background="@drawable/selectable_item_bg"
                     android:src="@drawable/ic_download" />
             </LinearLayout>
 

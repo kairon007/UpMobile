@@ -41,7 +41,6 @@ import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -100,39 +99,22 @@ public class AlbumBrowserActivity extends ListActivity
         f.addAction(Intent.ACTION_MEDIA_UNMOUNTED);
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
-		if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
-		}
+		setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityTop : R.attr.mediaPickerActivity));
         MusicUtils.updateButtonBar(this, R.id.albumtab);
         ListView lv = getListView();
         lv.setOnCreateContextMenuListener(this);
         lv.setTextFilterEnabled(true);
         lv.setCacheColorHint(0);
         mAdapter = (AlbumListAdapter) getLastNonConfigurationInstance();
-        if (mAdapter == null) {
-            //Log.i("@@@", "starting query");
-        	if (Util.getThemeName(this).equals("AppTheme.White")) {
-        		// here set text color in album page
-	            mAdapter = new AlbumListAdapter(
-	                    getApplication(),
-	                    this,
-	                    R.layout.track_list_item_white,
-	                    mAlbumCursor,
-	                    new String[] {},
-	                    new int[] {});
-	            setListAdapter(mAdapter);
-        	} else {
-        		mAdapter = new AlbumListAdapter(
-	                    getApplication(),
-	                    this,
-	                    R.layout.track_list_item,
-	                    mAlbumCursor,
-	                    new String[] {},
-	                    new int[] {});
-	            setListAdapter(mAdapter);
-        	}
+		if (mAdapter == null) {
+			mAdapter = new AlbumListAdapter(
+					getApplication(), 
+					this,
+					Util.getResIdFromAttribute(this, R.attr.trackListItem),
+					mAlbumCursor, 
+					new String[] {}, 
+					new int[] {});
+			setListAdapter(mAdapter);
             setTitle(R.string.working_albums);
             getAlbumCursor(mAdapter.getQueryHandler(), null);
         } else {
@@ -567,12 +549,7 @@ public class AlbumBrowserActivity extends ListActivity
 
             Resources r = context.getResources();
             mNowPlayingOverlay = r.getDrawable(R.drawable.indicator_ic_mp_playing_list);
-            Bitmap b;
-            if (Util.getThemeName(mActivity).equals("AppTheme.White")){
-            	b = BitmapFactory.decodeResource(r, R.drawable.albumart_mp_unknown_list_white);
-            } else {
-            	b = BitmapFactory.decodeResource(r, R.drawable.albumart_mp_unknown_list);
-            }
+            Bitmap b = BitmapFactory.decodeResource(r, Util.getResIdFromAttribute(currentactivity, R.attr.albumartMpUnknownList));            
             mDefaultAlbumIcon = new BitmapDrawable(context.getResources(), b);
             // no filter or dither, it's a lot faster and we can't tell the difference
             mDefaultAlbumIcon.setFilterBitmap(false);

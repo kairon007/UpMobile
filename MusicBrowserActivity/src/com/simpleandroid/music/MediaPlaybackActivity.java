@@ -102,11 +102,7 @@ public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,
         mAlbumArtHandler = new AlbumArtHandler(mAlbumArtWorker.getLooper());
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (Util.getThemeName(this).equals("AppTheme.White")){
-        	setContentView(R.layout.audio_player_white);
-        } else {
-        	setContentView(R.layout.audio_player);
-        }
+        setContentView(Util.getResIdFromAttribute(this, R.attr.audioPlayer));
 
         mCurrentTime = (TextView) findViewById(R.id.currenttime);
         mTotalTime = (TextView) findViewById(R.id.totaltime);

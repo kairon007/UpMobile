@@ -36,11 +36,7 @@ public class DeleteItems extends Activity {
 		super.onCreate(icicle);
 		setVolumeControlStream(AudioManager.STREAM_MUSIC);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(R.layout.confirm_delete_white);
-		} else {
-			setContentView(R.layout.confirm_delete);
-		}
+		setContentView(Util.getResIdFromAttribute(this, R.attr.confirmDelete));
 		getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
 		mPrompt = (TextView) findViewById(R.id.prompt);
 		mButton = (Button) findViewById(R.id.delete);

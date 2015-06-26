@@ -47,11 +47,7 @@ public class CreatePlaylist extends Activity
         super.onCreate(icicle);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(R.layout.create_playlist_white);
-		} else {
-			setContentView(R.layout.create_playlist);
-		}
+        setContentView(Util.getResIdFromAttribute(this, R.attr.createPlaylist));
 		getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
         mPrompt = (TextView)findViewById(R.id.prompt);
         mPlaylist = (EditText)findViewById(R.id.playlist);
