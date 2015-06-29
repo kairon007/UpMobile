@@ -54,6 +54,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -239,11 +240,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private Bitmap addBorder(Bitmap bmp, float borderSize) {
-	    Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + (int)borderSize * 2, bmp.getHeight() + (int)borderSize * 2, bmp.getConfig());
-	    Canvas canvas = new Canvas(bmpWithBorder);
-	    canvas.drawColor(Color.TRANSPARENT);
-	    canvas.drawBitmap(bmp, borderSize, borderSize, null);
-	    return bmpWithBorder;
+	    try {
+			Bitmap bmpWithBorder = Bitmap.createBitmap(bmp.getWidth() + (int)borderSize * 2, bmp.getHeight() + (int)borderSize * 2, bmp.getConfig());
+			Canvas canvas = new Canvas(bmpWithBorder);
+			canvas.drawColor(Color.TRANSPARENT);
+			canvas.drawBitmap(bmp, borderSize, borderSize, null);
+			return bmpWithBorder;
+		} catch (OutOfMemoryError e) {
+			Log.e(getClass().getSimpleName(), e + "");
+		}
+	    return bmp;
 	}
 
 	@Override
