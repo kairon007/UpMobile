@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import ru.johnlife.lifetoolsmp3.Util;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -1085,12 +1084,8 @@ public class MusicUtils {
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
         Bitmap bitmap;
-        if (Util.getThemeName(context).equals("AppTheme.White")){
-        	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.albumart_mp_unknown_white), null, opts);
-        } else {
-        	bitmap = BitmapFactory.decodeStream(context.getResources().openRawResource(R.drawable.albumart_mp_unknown), null, opts);
-        }
-        return bitmap;
+        return BitmapFactory.decodeStream(context.getResources().openRawResource(
+        		Util.getResIdFromAttribute((Activity) context, R.attr.albumartMpUnknown)), null, opts);
     }
     
     static int getIntPref(Context context, String name, int def) {

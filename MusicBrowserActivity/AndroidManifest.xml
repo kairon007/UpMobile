@@ -80,9 +80,8 @@
         android:name="com.simpleandroid.music.MusicPlayerApp"
         android:allowTaskReparenting="true"
         android:largeHeap="true"
-        android:taskAffinity="android.task.music">
-<!--         android:theme="@style/AppTheme" -->
-	<!-- AppTheme to enable white theme -->
+        android:taskAffinity="android.task.music"
+        android:theme="@style/AppTheme.White">
         
         <meta-data
             android:name="android.app.default_searchable"
@@ -254,8 +253,7 @@
         </activity>
         <activity
             android:name="com.simpleandroid.music.QueryBrowserActivity"
-            android:exported="true"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
                 <action android:name="android.intent.action.MEDIA_SEARCH" />
@@ -383,23 +381,23 @@
         <activity
             android:name="com.simpleandroid.music.CreatePlaylist"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppTheme.Dialog.White" />
         <activity
             android:name="com.simpleandroid.music.RenamePlaylist"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppTheme.Dialog.White" />
         <activity
             android:name="com.simpleandroid.music.WeekSelector"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppTheme.Dialog.White" />
         <activity
             android:name="com.simpleandroid.music.DeleteItems"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppTheme.Dialog.White" />
         <activity
             android:name="com.simpleandroid.music.ScanningProgress"
             android:exported="false"
-            android:theme="@android:style/Theme.Dialog" />
+            android:theme="@style/AppTheme.Dialog.White" />
 
         <service
             android:name="com.simpleandroid.music.MediaPlaybackService"

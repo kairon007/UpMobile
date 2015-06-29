@@ -19,7 +19,6 @@ package com.simpleandroid.music;
 import java.util.Arrays;
 
 import ru.johnlife.lifetoolsmp3.Util;
-
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -158,11 +157,7 @@ public class TrackBrowserActivity extends ListActivity
                 MediaStore.Audio.Playlists.Members.AUDIO_ID,
                 MediaStore.Audio.Media.IS_MUSIC
         };
-        if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top_white : R.layout.media_picker_activity_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_top : R.layout.media_picker_activity);
-		}
+        setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityTop : R.attr.mediaPickerActivity));
         mUseLastListPos = MusicUtils.updateButtonBar(this, R.id.songtab);
         mTrackList = getListView();
         mTrackList.setOnCreateContextMenuListener(this);
@@ -187,11 +182,10 @@ public class TrackBrowserActivity extends ListActivity
         mTrackList.post(new Runnable() {
 
             public void run() {
-            	if (Util.getThemeName(TrackBrowserActivity.this).equals("AppTheme.White")){
-            		setAlbumArtBackgroundWhite();
-            	} else {
+            	if (0 != Util.getResIdFromAttribute(TrackBrowserActivity.this, R.attr.albumBackground)){
             		setAlbumArtBackground();
             	}
+                mTrackList.setCacheColorHint(0);
             }
         });
 		// load banner ad
@@ -216,32 +210,17 @@ public class TrackBrowserActivity extends ListActivity
         f.addDataScheme("file");
         registerReceiver(mScanListener, f);
 
-        if (mAdapter == null) {
-            //Log.i("@@@", "starting query");
-        	if (Util.getThemeName(this).equals("AppTheme.White")) {
-	            mAdapter = new TrackListAdapter(
-	                    getApplication(), // need to use application context to avoid leaks
-	                    this,
-	                    mEditMode ? R.layout.edit_track_list_item_white : R.layout.track_list_item_white,
-	                    null, // cursor
-	                    new String[] {},
-	                    new int[] {},
-	                    "nowplaying".equals(mPlaylist),
-	                    mPlaylist != null &&
-	                    !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
-        	} else {
-        		mAdapter = new TrackListAdapter(
-	                    getApplication(), // need to use application context to avoid leaks
-	                    this,
-	                    mEditMode ? R.layout.edit_track_list_item : R.layout.track_list_item,
-	                    null, // cursor
-	                    new String[] {},
-	                    new int[] {},
-	                    "nowplaying".equals(mPlaylist),
-	                    mPlaylist != null &&
-	                    !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
-        	}
-            setListAdapter(mAdapter);
+		if (mAdapter == null) {
+			mAdapter = new TrackListAdapter(
+					getApplication(), // need to use application context to avoid leaks
+					this,
+					Util.getResIdFromAttribute(this, mEditMode ? R.attr.editTrackListItem : R.attr.trackListItem),
+					null, // cursor
+					new String[] {}, 
+					new int[] {},
+					"nowplaying".equals(mPlaylist),
+					mPlaylist != null && !(mPlaylist.equals("podcasts") || mPlaylist.equals("recentlyadded")));
+			setListAdapter(mAdapter);
             setTitle(R.string.working_songs);
             getTrackCursor(mAdapter.getQueryHandler(), null, true);
         } else {
@@ -470,12 +449,6 @@ public class TrackBrowserActivity extends ListActivity
             } catch (Exception ex) {
             }
         }
-        mTrackList.setBackgroundColor(0xff000000);
-        mTrackList.setCacheColorHint(0);
-    }
-    
-    private void setAlbumArtBackgroundWhite() {
-        mTrackList.setCacheColorHint(0);
     }
 
     private void setTitle() {

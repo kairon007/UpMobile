@@ -502,7 +502,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		pos = pos + 1;
 	    final int firstListItemPosition = listView.getFirstVisiblePosition();
 	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
 	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
 	        return listView.getAdapter().getView(pos, null, listView);
 	    }
@@ -692,9 +691,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		lastSearchString = searchString;
 		if (isOffline(getContext())) {
 			message.setText(R.string.search_message_no_internet);
-			getAdapter().clear();
+			adapter.clear();
 		} else if ((null == searchString) || (searchString.isEmpty())) {
-			getAdapter().clear();
+			adapter.clear();
 			message.setText(R.string.search_please_enter_query);
 		} else {
 			search(searchString);
@@ -719,15 +718,13 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 				} catch (Exception e) {
 				}
 			}
-		} catch (Exception e) {
-		}
-
+		} catch (Exception e) { }
 		return searchEngines;
 	}
 	
 	@SuppressLint("DefaultLocale")
 	public boolean isBlacklistedQuery(String songName) {
-		ArrayList<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
+		List<String> dmcaSearchQueryBlacklist = getDMCABlacklistedItems("dmca_searchquery_blacklist");
 		if (songName != null) {
 			// serach blacklist
 			for (String blacklistedSearchQuery : BaseSearchTask.blacklist) {
@@ -751,14 +748,14 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
 		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		if (isBlacklistedQuery(songName)) {
-			ArrayList<Engine> nothingSearch = new ArrayList<Engine>();
+			List<Engine> nothingSearch = new ArrayList<Engine>();
 			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass("SearchNothing");
 			nothingSearch.add(new Engine(engineClass, 1));
 			taskIterator = nothingSearch.iterator();
 		} else {
 			taskIterator = engines.iterator();
 		}
-		getAdapter().clear();
+		adapter.clear();
 		setMessage("");
 		showBaseProgress();
 		getNextResults(true);
@@ -766,9 +763,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 
 	private void getNextResults(boolean cancel) {
 		if (null == taskIterator) return;
-		getAdapter().setVisibilityProgress(true);
+		adapter.setVisibilityProgress(true);
 		if (!taskIterator.hasNext()) {
-			getAdapter().setVisibilityProgress(false);
+			adapter.setVisibilityProgress(false);
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			return;
 		}
@@ -800,7 +797,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			Toast.makeText(getContext(), getContext().getString(R.string.no_wi_fi), Toast.LENGTH_LONG).show();
 			return;
 		}
-		downloadSong = (RemoteSong) getAdapter().getItem(position);
+		downloadSong = (RemoteSong) adapter.getItem(position);
 		if (null != alertProgressDialog && alertProgressDialog.isShowing()) {
 			alertProgressDialog.cancel();
 		}
@@ -1032,15 +1029,13 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
 	}
 	
-	protected void animateListView(boolean isRestored) {
-		// Animate list view in childs, if need
-	}
+	protected void animateListView(boolean isRestored) { } // Animate list view in childs, if need
 	
 	public void restoreAdapter(ArrayList<Song> list, int position) {
 		adapter.add(list);
 		listView.addHeaderView(emptyHeader);
-		listView.addFooterView(getAdapter().getProgressView(), null, false);
-		listView.setAdapter(getAdapter());
+		listView.addFooterView(adapter.getProgressView(), null, false);
+		listView.setAdapter(adapter);
 		animateListView(true);
 		listView.setSelection(position);
 		isRestored = true;

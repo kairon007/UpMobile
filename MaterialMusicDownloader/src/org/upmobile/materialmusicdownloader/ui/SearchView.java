@@ -208,8 +208,7 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 	
 	@Override
-	protected ListView getListView(View v) {
-		ListView listV = (ListView) v.findViewById(R.id.list);
-		return listV;
+	protected ListView getListView(View view) {
+		return (ListView) view.findViewById(R.id.list);
 	}
 }

@@ -849,6 +849,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void getCover(final AbstractSong s) {
+		if (null == s) return;
 		setCheckBoxState(false);
 		Bitmap bitmap = s.getCover();
 		if (null != bitmap) {

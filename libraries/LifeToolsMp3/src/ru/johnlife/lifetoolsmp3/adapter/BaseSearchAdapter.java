@@ -49,10 +49,9 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 		super(context, resource);
 		this.context = context;
 		refreshProgress = (View) initRefreshProgress();
-		footer = new FrameLayout(context);
-		int footerHeight = Util.dpToPx(getContext(), 72);
 		int progressSize = Util.dpToPx(getContext(), 48);
-		footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, footerHeight));
+		footer = new FrameLayout(context);
+		footer.setLayoutParams(new AbsListView.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 		footer.addView(refreshProgress, new FrameLayout.LayoutParams(progressSize, progressSize, Gravity.CENTER));
 		setVisibilityProgress(false);
 		Thread thread = new Thread() {
@@ -143,9 +142,6 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			artist.setText(item.getArtist().replace("&#039;", "'"));
 			showDurationd(item.getDuration() > 0);
 			duration.setText(Util.getFormatedStrDuration(item.getDuration()));
-			if (null != btnDownload) {
-				btnDownload.setTag(position);
-			}
 			if (null != threeDot) {
 				threeDot.setTag(position);
 			}

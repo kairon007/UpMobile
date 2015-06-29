@@ -36,11 +36,7 @@ public class SearchBrowserActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
- 		if (Util.getThemeName(this).equals("AppTheme.White")) {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top_white : R.layout.media_picker_activity_expanding_white);
-		} else {
-			setContentView(Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.layout.media_picker_activity_expanding_top : R.layout.media_picker_activity_expanding);
-		}
+		setContentView(Util.getResIdFromAttribute(this, Nulldroid_Settings.SHOW_BANNER_ON_TOP ? R.attr.mediaPickerActivityExpandingTop : R.attr.mediaPickerActivityExpanding));
  		if (null != findViewById(R.id.nowplaying)) {
  			findViewById(R.id.nowplaying).setVisibility(View.GONE);
  		}
