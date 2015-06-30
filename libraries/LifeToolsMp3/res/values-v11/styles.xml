@@ -8,7 +8,15 @@
         <!-- API 11 theme customizations can go here. -->
     </style>
     
-        <style name="MD_Light" parent="android:Theme.Holo.Light.Dialog">
+    <style name="AlertDialog" parent="@android:style/Theme.Holo.Dialog">
+    	<item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    
+    <style name="AlertDialog.White" parent="@android:style/Theme.Holo.Light.Dialog">
+    	<item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="MD_Light" parent="android:Theme.Holo.Light.Dialog">
         <item name="md_divider">@color/md_divider_black</item>
         <item name="md_list_selector">@drawable/md_selector</item>
         <item name="md_btn_stacked_selector">@drawable/md_selector</item>

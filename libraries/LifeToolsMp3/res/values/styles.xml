@@ -30,8 +30,15 @@
         <item name="play">@drawable/play</item>
         <item name="pause">@drawable/pause</item>
         <item name="editorDialog">@layout/editor_dialog</item>
-        <item name="customAlertDialogStyle">@android:style/Theme.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
         <item name="coverScale">@dimen/size_cover</item>
+    </style>
+    
+    <style name="AlertDialog" parent="@android:style/Theme.Dialog">        
+    	<item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    <style name="AlertDialog.White" parent="@android:style/Theme.Dialog">
+    	<item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
     <style name="Dialog" parent="android:Theme.Dialog" />
@@ -54,7 +61,7 @@
         <item name="play">@drawable/play</item>
         <item name="pause">@drawable/pause</item>
         <item name="editorDialog">@layout/editor_dialog</item>
-        <item name="alertDialogStyle">@android:style/Theme.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog</item>
         <item name="coverScale">@dimen/size_cover</item>
     </style>
 
@@ -75,7 +82,7 @@
         <item name="play">@drawable/play_white</item>
         <item name="pause">@drawable/pause_white</item>
         <item name="editorDialog">@layout/editor_dialog_white</item>
-        <item name="alertDialogStyle">@android:style/Theme.Holo.Light.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
     </style>
 
     <style name="AppTheme.White2" parent="AppThemeBase.White">
@@ -95,7 +102,7 @@
         <item name="play">@drawable/play</item>
         <item name="pause">@drawable/pause</item>
         <item name="editorDialog">@layout/editor_dialog_white</item>
-        <item name="alertDialogStyle">@android:style/Theme.Holo.Light.Dialog</item>
+        <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
     </style>
 
     <style name="DefaultSeekBar" parent="android:Widget">

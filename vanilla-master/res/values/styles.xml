@@ -80,9 +80,9 @@
 
     <style name="Dialog" parent="android:Theme.Dialog" />
 
-    <style name="Dialog.White" parent="android:Theme.Dialog" />
+    <style name="Dialog.White" parent="Dialog" />
 
-    <style name="Dialog.Black" parent="android:Theme.Holo.Dialog">
+    <style name="Dialog.Black" parent="Dialog">
         <item name="android:background">@color/window_background_black</item>
     </style>
 

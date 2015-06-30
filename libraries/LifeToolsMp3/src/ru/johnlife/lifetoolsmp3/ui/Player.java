@@ -9,7 +9,6 @@ import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListe
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
@@ -233,7 +232,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			return;
 		}
 		final View lyricsView = inflater.inflate(Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.lyrics_view), null);
-		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext());
+		AlertDialog.Builder b = new AlertDialog.Builder(view.getContext());
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			
@@ -310,7 +309,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				editor.setUseCover(keeper.isUseCover());
 			}
 		}
-		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext()).setView(editorView);
+		AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext()).setView(editorView);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override

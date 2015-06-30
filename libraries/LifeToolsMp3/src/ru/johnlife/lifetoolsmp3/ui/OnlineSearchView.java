@@ -48,7 +48,6 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.dialog.CustomDialogBuilder;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -983,7 +982,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(getContext()).setView(player.getView());
+		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
 		b.setNegativeButton(R.string.download_dialog_cancel, null);
 		b.setPositiveButton(R.string.download_dialog_download, null);
 		alertDialog = b.create();

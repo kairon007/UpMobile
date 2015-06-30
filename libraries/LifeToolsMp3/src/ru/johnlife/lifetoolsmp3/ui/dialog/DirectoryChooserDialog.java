@@ -201,19 +201,8 @@ public class DirectoryChooserDialog {
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
-		AlertDialog.Builder dialogBuilder;
-		if (getResourcefromTheme()) {
-			dialogBuilder = new AlertDialog.Builder(m_context);
-		} else {
-			dialogBuilder = CustomDialogBuilder.getBuilder(m_context);
-		}
+		AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(m_context);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//		View contentView;
-//		if(isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME)) {
-//			contentView = inflater.inflate(R.layout.dir_chooser_dialog_white, null);
-//		} else {
-//			contentView = inflater.inflate(R.layout.dir_chooser_dialog, null);
-//		}
 		View contentView = inflater.inflate(Util.getResIdFromAttribute((Activity) m_context, R.attr.dir_chooser_dialog), null);
 		titleText = (TextView) contentView.findViewById(R.id.directoryText);
 		lvContent = (ListView) contentView.findViewById(R.id.lvPath);
@@ -303,7 +292,7 @@ public class DirectoryChooserDialog {
 		} else {
 			StateKeeper.getInstance().setNewDirName("");
 		}
-		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(m_context).setView(view);
+		AlertDialog.Builder builder = new AlertDialog.Builder(m_context).setView(view);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int whichButton) {
@@ -369,13 +358,7 @@ public class DirectoryChooserDialog {
 					tv.getLayoutParams().width = LayoutParams.MATCH_PARENT;
 					tv.setGravity(Gravity.CENTER_VERTICAL);
 					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
-//						if (isWhiteTheme || Util.getThemeName(m_context).equals(Util.WHITE_THEME) || keeper.checkState(StateKeeper.IS_PT_TEXT)) {
-//							tv.setTextColor(Color.BLACK);
-//						} else {
-//							tv.setTextColor(Color.WHITE);
-//						}
-						tv.setTextColor(m_context.getResources().getColor(
-								Util.getResIdFromAttribute((Activity)m_context, R.attr.directory_chooser_tv_color)));
+						tv.setTextColor(m_context.getResources().getColor(Util.getResIdFromAttribute((Activity)m_context, R.attr.directory_chooser_tv_color)));
 					}
 					
 					tv.setTextSize(16f);

@@ -26,7 +26,10 @@ THE SOFTWARE.
     <style name="AppThemeBase.White" parent="android:Theme.Holo.Light"/>
     
 	<style name="Dialog" parent="android:Theme.Holo.Dialog" />
-	<style name="Dialog.White" parent="android:Theme.Holo.Light.Dialog" />
+	<style name="Dialog.White" parent="android:Theme.Holo.Light.Dialog" />	
+    <style name="Dialog.Black" parent="android:Theme.Holo.Dialog">
+        <item name="android:background">@color/window_background_black</item>
+    </style>
 	<style name="AlertDialogItem">
 		<item name="android:textColor">?android:textColorAlertDialogListItem</item>
 	</style>
