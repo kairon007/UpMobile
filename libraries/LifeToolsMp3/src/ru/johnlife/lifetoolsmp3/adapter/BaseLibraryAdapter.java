@@ -39,7 +39,6 @@ import android.widget.Toast;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 	
-	private final String PROJECT_PRIFICS = getDirectory();
 	public final String[] PROJECTION_PLAYLIST = { 
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
@@ -227,7 +226,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		ArrayList<PlaylistData> playlistDatas = getPlaylists();
 		String[] data = new String[playlistDatas.size()];
 		for (int i = 0; i < playlistDatas.size(); i++) {
-			data[i] = playlistDatas.get(i).getName().replace(PROJECT_PRIFICS, "");
+			data[i] = playlistDatas.get(i).getName().replace(getDirectory(), "");
 		}
 		if (playlistDatas.size() == 0) {
 			showMessage(getContext(), R.string.playlists_are_missing);
@@ -293,12 +292,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
 				return playlistDatas;
 			}
-			if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+			if (playlistCursor.getString(1).contains(getDirectory())) {
 				playlistData.populate(playlistCursor);
 				playlistDatas.add(playlistData);
 			}
 			while (playlistCursor.moveToNext()) {
-				if (playlistCursor.getString(1).contains(PROJECT_PRIFICS)) {
+				if (playlistCursor.getString(1).contains(getDirectory())) {
 					PlaylistData playlist = new PlaylistData();
 					playlist.populate(playlistCursor);
 					playlistDatas.add(playlist);
