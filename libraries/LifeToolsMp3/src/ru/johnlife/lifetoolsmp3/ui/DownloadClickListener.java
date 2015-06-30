@@ -165,7 +165,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@SuppressLint("NewApi")
 	public void downloadSong(boolean fromCallback) {
 		String url = downloadingSong.getUrl();
-		if (url == null || url.isEmpty()) {
+		if (url == null || url.isEmpty() || !url.startsWith("http")) {
+			android.util.Log.d("logd", "downloadSong: error!!!!!!!!!!!!!" + url);
 			showMessage(context, R.string.download_error);
 			return;
 		}
