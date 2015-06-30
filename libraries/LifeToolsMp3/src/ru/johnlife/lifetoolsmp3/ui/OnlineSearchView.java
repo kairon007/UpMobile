@@ -451,10 +451,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		try {
-			if (position == adapter.getCount()) return; // progress click
 			adapter.notifyDataSetChanged();
 			viewItem = view;
-			clickPosition = position;
+			clickPosition = position - 1;
 			getDownloadUrl(view, (position - 1));
 		} catch (Exception e) {
 			e.printStackTrace();
