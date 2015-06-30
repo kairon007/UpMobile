@@ -112,7 +112,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		mDrawerItems.add(new DrawerItem(((UIMainActivity) getActivity()).getSettingsIcon(), ((UIMainActivity) getActivity()).getDirectory(), DrawerItem.Types.TYPE_SETTING ));
 		mAdapter = new DrawerAdapter(getActivity(), mDrawerItems, true);
 		mDrawerListView.setAdapter(mAdapter);
-		selectItem(mCurrentSelectedPosition);
+		setSelectedItem(mCurrentSelectedPosition);
 	}
 	
     public boolean isDrawerOpen() {
