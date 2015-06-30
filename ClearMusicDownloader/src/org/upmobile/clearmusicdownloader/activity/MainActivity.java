@@ -230,7 +230,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	protected void showDialog() {
 		final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, true, new DirectoryChooserDialog.ChosenDirectoryListener() {
+		DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, new DirectoryChooserDialog.ChosenDirectoryListener() {
 
 			@Override
 			public void onChosenDir(String chDir) {

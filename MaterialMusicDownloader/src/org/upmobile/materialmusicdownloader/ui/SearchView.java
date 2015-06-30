@@ -36,10 +36,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 	}
-	
-	//TODO remove if it possible
-	@Override
-	public boolean isWhiteTheme(Context context) { return false; }
 
 	@Override
 	protected boolean showFullElement() { return false; }

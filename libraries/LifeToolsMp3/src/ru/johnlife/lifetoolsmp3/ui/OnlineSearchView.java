@@ -154,8 +154,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
 	private View touchInterceptor;
 	
-	//TODO: remove if it is possible
-	public abstract boolean isWhiteTheme(Context context);
 	public void specialInit(View view) {}
 	public boolean isUseDefaultSpinner(){ return false; }
 	
@@ -917,7 +915,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			int layoutId = Util.getResIdFromAttribute(((Activity)getContext()), R.attr.download_dialog);
 			View v = inflater.inflate(layoutId > 0 ? layoutId : R.layout.download_dialog, null);
-			player = new Player(v, song, isWhiteTheme(getContext()));
+			player = new Player(v, song);
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
 			player.setIsAppPT(isAppPT());
 			player.execute(song.getUrl());
@@ -985,7 +983,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(getContext(), isWhiteTheme(getContext())).setView(player.getView());
+		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(getContext()).setView(player.getView());
 		b.setNegativeButton(R.string.download_dialog_cancel, null);
 		b.setPositiveButton(R.string.download_dialog_download, null);
 		alertDialog = b.create();

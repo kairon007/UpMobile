@@ -42,9 +42,6 @@ public class SearchView extends OnlineSearchView {
 	public boolean isUseDefaultSpinner() { return true; }
 	
 	@Override
-	public boolean isWhiteTheme(Context context) { return false; }
-
-	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
 		try {
 			return Nulldroid_Advertisement.class.newInstance();

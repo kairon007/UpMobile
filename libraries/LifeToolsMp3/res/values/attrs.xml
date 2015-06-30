@@ -18,6 +18,9 @@
         <attr name="lyrics_view" format="reference" />
         <attr name="play" format="reference" />
         <attr name="pause" format="reference" />
+        <attr name="editorDialog" format="reference" />
+        <attr name="customAlertDialogStyle" format="reference" />
+        <attr name="coverScale" format="reference" />
     </declare-styleable>
     
     <declare-styleable name="Undobar">

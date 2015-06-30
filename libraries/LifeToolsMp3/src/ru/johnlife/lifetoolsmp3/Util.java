@@ -165,18 +165,6 @@ public final class Util {
 		}
 	}
 	
-	public static String getThemeName(Context context) {
-		String themeName = getSimpleThemeName(context);
-		if (themeName.equals(WHITE_THEME2)) {
-			themeName = WHITE_THEME;
-		}
-		return themeName;
-	}
-	
-	public static boolean isDifferentApp(Context context) {
-		return getSimpleThemeName(context).equals(WHITE_THEME2);
-	}
-	
 	public static String removeSpecialCharacters(String str) {
 		return str.trim()
 				.replaceAll("\\?", "")

@@ -33,9 +33,6 @@ public class SearchView extends OnlineSearchView {
 
 	@Override
 	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
-	
-	@Override
-	public boolean isWhiteTheme(Context context) { return false; }
 
 	@Override
 	protected boolean showFullElement() { return true; }

@@ -569,9 +569,7 @@ public class MainActivity extends Activity {
 	public void showEditDialog() {
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final MusicData item = (MusicData) keeper.getTag();
-		//TODO remove check isWhiteTheme + remove second parameter in constructor of MP3Editor
-		boolean isWhiteTheme = Util.getThemeName(this).equals(Util.WHITE_THEME);
-		editor = new MP3Editor(this, isWhiteTheme);
+		editor = new MP3Editor(this);
 		editor.setStrings(keeper.getTempID3Fields());
 		View dialogView = editor.getView();
 		if (keeper.getTempID3UseCover() != 0) {

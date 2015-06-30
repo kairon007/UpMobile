@@ -101,12 +101,6 @@ public class SearchViewTab  extends OnlineSearchView {
 
 	@Override
 	protected void stopSystemPlayer(Context context) {}
-
-	//TODO remove this method (and in superclass)
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		return Util.isDifferentApp(context);
-	}
 	
 	private void startPlay(final RemoteSong song, final MusicData data, final Bitmap bitmap) {
 		activity.runOnUiThread(new Runnable() {

@@ -81,7 +81,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean indeterminate;
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
-	private boolean isWhiteTheme;
 	private boolean isDefaultCover = true;
 	private boolean isAppPT = false;
 
@@ -115,11 +114,10 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		this.downloadSong = downloadSong;
 	}
 
-	public Player(final View view, RemoteSong song, boolean isWhiteTheme) {
+	public Player(final View view, RemoteSong song) {
 		super();
 		keeper = StateKeeper.getInstance();
 		this.downloadSong = song;
-		this.isWhiteTheme = isWhiteTheme;
 		mediaPlayer = new MediaPlayer();
 		keeper.setCurrentPlayersId(mediaPlayer.hashCode());
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -207,7 +205,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createDirectoryChooserDialog() {
 		keeper.openDialog(StateKeeper.DIRCHOOSE_DIALOG);
-		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), isWhiteTheme, new DirectoryChooserDialog.ChosenDirectoryListener() {
+		directoryChooserDialog = new DirectoryChooserDialog(view.getContext(), new DirectoryChooserDialog.ChosenDirectoryListener() {
 			
 			@Override
 			public void onChosenDir(String chDir) {
@@ -234,14 +232,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}
-//		final View lyricsView;
-//		if (isWhiteTheme) {
-//			lyricsView = inflater.inflate(R.layout.lyrics_view_white, null);
-//		} else {
-//			lyricsView = inflater.inflate(R.layout.lyrics_view, null);
-//		}
 		final View lyricsView = inflater.inflate(Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.lyrics_view), null);
-		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme);
+		AlertDialog.Builder b = CustomDialogBuilder.getBuilder(view.getContext());
 		b.setView(lyricsView);
 		b.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
 			
@@ -306,7 +298,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 	public void createId3dialog(String[] fields) {
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
-		editor = new MP3Editor(view.getContext(), isWhiteTheme);
+		editor = new MP3Editor(view.getContext());
 		editor.setStrings(fields);
 		editorView = editor.getView();
 		if (isDefaultCover) {
@@ -318,7 +310,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 				editor.setUseCover(keeper.isUseCover());
 			}
 		}
-		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext(), isWhiteTheme).setView(editorView);
+		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(view.getContext()).setView(editorView);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			@Override
@@ -376,7 +368,8 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (null != bmp) {
 			isDefaultCover = false;
 			coverImage.setImageBitmap(bmp);
-			if (isWhiteTheme && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && view != null) {
+			if (Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.coverScale) == 0
+					&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && view != null) {
 				float h = view.getContext().getResources().getDimension(R.dimen.min_hight_layout_player);
 				float scale = (float) h / bmp.getHeight();
 				coverImage.setScaleX(scale);

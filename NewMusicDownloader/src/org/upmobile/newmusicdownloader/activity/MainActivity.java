@@ -217,7 +217,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		case SETTINGS_FRAGMENT:
 		case 6:
 	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, isWhiteTheme(this), new DirectoryChooserDialog.ChosenDirectoryListener() {
+			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, new DirectoryChooserDialog.ChosenDirectoryListener() {
 				
 				@Override
 				public void onChosenDir(String chDir) {

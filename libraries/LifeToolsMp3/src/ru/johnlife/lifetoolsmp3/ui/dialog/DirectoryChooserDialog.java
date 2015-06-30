@@ -19,7 +19,6 @@ import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.DialogInterface.OnShowListener;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Environment;
 import android.text.Editable;
@@ -56,7 +55,6 @@ public class DirectoryChooserDialog {
 	private TextView titleText;
 	private String m_sdcardDirectory = "";
 	private String m_dir = "";
-	private boolean isWhiteTheme;
 	private boolean m_isNewFolderEnabled = true;
 	OnShowListener showlistener = new OnShowListener() {
 
@@ -77,10 +75,9 @@ public class DirectoryChooserDialog {
 		public void onChosenDir(String chosenDir);
 	}
 
-	public DirectoryChooserDialog(Context context, boolean isWhiteTheme, ChosenDirectoryListener chosenDirectoryListener) {
+	public DirectoryChooserDialog(Context context, ChosenDirectoryListener chosenDirectoryListener) {
 		keeper = StateKeeper.getInstance();
 		keeper.activateOptions(StateKeeper.BTN_ENABLED);
-		this.isWhiteTheme = isWhiteTheme;
 		m_context = context;
 		m_sdcardDirectory = Environment.getExternalStorageDirectory().getAbsolutePath();
 		m_chosenDirectoryListener = chosenDirectoryListener;
@@ -208,7 +205,7 @@ public class DirectoryChooserDialog {
 		if (getResourcefromTheme()) {
 			dialogBuilder = new AlertDialog.Builder(m_context);
 		} else {
-			dialogBuilder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme);
+			dialogBuilder = CustomDialogBuilder.getBuilder(m_context);
 		}
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 //		View contentView;
@@ -306,7 +303,7 @@ public class DirectoryChooserDialog {
 		} else {
 			StateKeeper.getInstance().setNewDirName("");
 		}
-		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(m_context, isWhiteTheme).setView(view);
+		AlertDialog.Builder builder = CustomDialogBuilder.getBuilder(m_context).setView(view);
 		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
 			public void onClick(DialogInterface dialog, int whichButton) {

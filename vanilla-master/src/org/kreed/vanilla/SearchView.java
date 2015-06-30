@@ -23,10 +23,6 @@ public class SearchView extends OnlineSearchView {
 			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 	}
-
-	//TODO remove it if it possible
-	@Override
-	public boolean isWhiteTheme(Context context) { return Util.isDifferentApp(context); }
 	
 	@Override
 	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }

@@ -10,6 +10,7 @@
         <item name="miniPlayerPlay">@drawable/mini_player_play_dark</item>
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
+        <item name="coverScale">@dimen/size_cover</item>
     </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">

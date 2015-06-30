@@ -64,12 +64,6 @@ public class SearchView extends OnlineSearchView {
 	protected void stopSystemPlayer(Context context) {
 		if (activity != null) MusicUtils.bindToService(activity, osc);
 	}
-	
-	//TODO need remove if it possible
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		return Util.getThemeName(context).equals("AppTheme.White");
-	}
 
 	@Override
 	public BaseSearchAdapter getAdapter() {

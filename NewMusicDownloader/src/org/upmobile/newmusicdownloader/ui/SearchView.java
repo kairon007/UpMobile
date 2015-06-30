@@ -42,10 +42,6 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	protected void stopSystemPlayer(Context context) {}
 	
-	//TODO remove if it possible
-	@Override
-	public boolean isWhiteTheme(Context context) { return false; }
-
 	@Override
 	protected boolean showFullElement() { return false; }
 	

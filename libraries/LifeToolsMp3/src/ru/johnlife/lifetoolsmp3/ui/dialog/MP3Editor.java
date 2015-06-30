@@ -2,6 +2,8 @@ package ru.johnlife.lifetoolsmp3.ui.dialog;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -31,46 +33,28 @@ public class MP3Editor implements OnEditorActionListener {
 	private String oldSongTitle;
 	private String oldAlbumTitle;
 	public static final String UNKNOWN = "unknown";
-	private boolean isWhiteTheme;
 	private OnActionEndListener actionEndListener;
 	
 	public static interface OnActionEndListener {
 		public void donePressed();
 	}
 
-	public MP3Editor(Context context, boolean isWhiteTheme) {
+	public MP3Editor(Context context) {
 		this.context = context;
-		this.isWhiteTheme = isWhiteTheme;
 	}
 	
-	public MP3Editor(Context context, boolean isWhiteTheme, OnActionEndListener actionEndListener) {
+	public MP3Editor(Context context, OnActionEndListener actionEndListener) {
 		this.context = context;
-		this.isWhiteTheme = isWhiteTheme;
 		this.actionEndListener = actionEndListener;
 	}
 	
 	public View getView() {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		this.view = inflater.inflate(R.layout.editor_dialog, null);
+		this.view = inflater.inflate(Util.getResIdFromAttribute((Activity) context, R.attr.editorDialog), null);
 		init();
 		etArtistName.setText(newArtistName);
 		etSongTitle.setText(newSongTitle);
 		etAlbumTitle.setText(newAlbumTitle);
-		if (isWhiteTheme) {
-			view.setBackgroundColor(context.getResources().getColor(android.R.color.white));
-			int black = context.getResources().getColor(android.R.color.black);
-			etArtistName.setTextColor(black);
-			etSongTitle.setTextColor(black);
-			etAlbumTitle.setTextColor(black);
-			etArtistName.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.edittext_borders));
-			etSongTitle.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.edittext_borders));
-			etAlbumTitle.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.edittext_borders));
-			((TextView)view.findViewById(R.id.text_check_box)).setTextColor(black);
-			((TextView)view.findViewById(R.id.header)).setTextColor(black);
-			((TextView)view.findViewById(R.id.title_title)).setTextColor(black);
-			((TextView)view.findViewById(R.id.title_album)).setTextColor(black);
-			((TextView)view.findViewById(R.id.title_artist)).setTextColor(black);
-		}
 		CustomWatcher watcher = new CustomWatcher();
 		etAlbumTitle.addTextChangedListener(watcher);
 		etSongTitle.addTextChangedListener(watcher);

@@ -29,11 +29,34 @@
         <item name="lyrics_view">@layout/lyrics_view</item>
         <item name="play">@drawable/play</item>
         <item name="pause">@drawable/pause</item>
+        <item name="editorDialog">@layout/editor_dialog</item>
+        <item name="customAlertDialogStyle">@android:style/Theme.Dialog</item>
+        <item name="coverScale">@dimen/size_cover</item>
     </style>
 
     <style name="Dialog" parent="android:Theme.Dialog" />
 
     <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
+    
+    <style name="AppTheme.Black" parent="AppBaseTheme">
+        <item name="android:scrollbarStyle">outsideInset</item>
+        <item name="listview_divider">@color/divider_color</item>
+        <item name="search_bg">@drawable/selectable_item_bg</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="download_dialog">@layout/download_dialog_white</item>
+        <item name="choise_engines_layout_bg">@drawable/search_background</item>
+        <item name="fallback_cover">@drawable/fallback_cover</item>
+        <item name="row_online_search">@layout/row_online_search</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/white</item>
+        <item name="lyrics_view">@layout/lyrics_view</item>
+        <item name="play">@drawable/play</item>
+        <item name="pause">@drawable/pause</item>
+        <item name="editorDialog">@layout/editor_dialog</item>
+        <item name="alertDialogStyle">@android:style/Theme.Dialog</item>
+        <item name="coverScale">@dimen/size_cover</item>
+    </style>
 
     <style name="AppTheme.White" parent="AppThemeBase.White">
         <item name="android:windowBackground">@color/window_background_light</item>
@@ -51,6 +74,8 @@
         <item name="lyrics_view">@layout/lyrics_view</item>
         <item name="play">@drawable/play_white</item>
         <item name="pause">@drawable/pause_white</item>
+        <item name="editorDialog">@layout/editor_dialog_white</item>
+        <item name="alertDialogStyle">@android:style/Theme.Holo.Light.Dialog</item>
     </style>
 
     <style name="AppTheme.White2" parent="AppThemeBase.White">
@@ -69,6 +94,8 @@
         <item name="lyrics_view">@layout/lyrics_view_white</item>
         <item name="play">@drawable/play</item>
         <item name="pause">@drawable/pause</item>
+        <item name="editorDialog">@layout/editor_dialog_white</item>
+        <item name="alertDialogStyle">@android:style/Theme.Holo.Light.Dialog</item>
     </style>
 
     <style name="DefaultSeekBar" parent="android:Widget">

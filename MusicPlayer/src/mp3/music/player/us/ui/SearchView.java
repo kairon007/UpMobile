@@ -59,20 +59,9 @@ public class SearchView extends OnlineSearchView {
 		return flag;
 	}
 
-//	@Override
-//	public void refreshLibrary() {
-//		HomeActivity.refreshLibrary();
-//	}
-
 	@Override
 	protected void stopSystemPlayer(Context context) {
 		MusicUtils.pause();
-	}
-	
-	@Override
-	public boolean isWhiteTheme(Context context) {
-		String theme = Util.getThemeName(context);
-		return null != theme && theme.equals(Constants.WHITE_THEME);
 	}
 
 	@Override
