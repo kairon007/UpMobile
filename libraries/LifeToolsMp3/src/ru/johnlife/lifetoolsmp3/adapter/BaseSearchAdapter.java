@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -116,8 +117,14 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 		}
 	}
 	
-	public void showMessage(Context context, String message) {
-		Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+	public void showMessage(final Context context, final String message) {
+		((Activity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Toast.makeText(context, message ,Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 	
 	public void showMessage(Context context, int message) {
@@ -137,7 +144,7 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 		protected ViewGroup info;
 
 		@Override
-		protected void hold(final Song item, int position) {
+		protected void hold(final Song item, final int position) {
 			title.setText(item.getTitle().replace("&#039;", "'"));
 			artist.setText(item.getArtist().replace("&#039;", "'"));
 			showDurationd(item.getDuration() > 0);
@@ -147,9 +154,13 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			}
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong) item).isHasCoverFromSearch()) {
 				((RemoteSong) item).getSmallCover(false, new OnBitmapReadyListener() {
+					
+					int tag = position;
+						
 							@Override
 							public void onBitmapReady(Bitmap bmp) {
-								if (null != bmp) {
+								boolean set = null == threeDot ? true : tag == (int) threeDot.getTag();
+								if (null != bmp && set) {
 									cover.setImageBitmap(bmp);
 								}
 							}

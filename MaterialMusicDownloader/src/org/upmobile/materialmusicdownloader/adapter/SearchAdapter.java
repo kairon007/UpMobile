@@ -90,5 +90,21 @@ public class SearchAdapter extends BaseSearchAdapter {
 			}
 		}
 	}
+	
+	@Override
+	public void showMessage(Context context, int message) {
+		showMessage(context, context.getResources().getString(message));
+	}
+	
+	@Override
+	public void showMessage(final Context context, final String message) {
+		((MainActivity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) context).showMessage(message);
+			}
+		});
+	}
 
 }

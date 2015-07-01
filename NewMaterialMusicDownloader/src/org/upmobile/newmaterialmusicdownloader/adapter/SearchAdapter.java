@@ -58,7 +58,6 @@ public class SearchAdapter extends BaseSearchAdapter {
 			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
 			indicator = (ImageView) info.findViewById(R.id.playingIndicator);
-			info.setOnClickListener(this);
 			threeDot.setOnClickListener(this);
 		}
 
@@ -93,8 +92,14 @@ public class SearchAdapter extends BaseSearchAdapter {
 	}
 	
 	@Override
-	public void showMessage(Context context, String message) {
-		((MainActivity) context).showMessage(message);
+	public void showMessage(final Context context, final String message) {
+		((MainActivity) context).runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				((MainActivity) context).showMessage(message);
+			}
+		});
 	}
 
 }
