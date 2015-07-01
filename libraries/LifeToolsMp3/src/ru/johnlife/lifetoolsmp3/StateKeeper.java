@@ -206,7 +206,6 @@ public class StateKeeper {
 	
 	public void saveStateAdapter(OnlineSearchView view) {
 		searchView = null;
-		view.unregisterObserver();
 		songField = view.getSearchField().getText().toString();
 		results = view.getAdapter().getAll();
 		if (results != null && !results.isEmpty()) listViewPosition = view.getListViewPosition();

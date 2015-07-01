@@ -64,7 +64,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -179,7 +178,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		keeper.restoreState(this);
 		sPref = MusicApp.getSharedPreferences();
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
-		sPref.registerOnSharedPreferenceChangeListener(sPrefListener);
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
 		if (searchField.getWidth() - view.findViewById(R.id.clear).getWidth() < width) {
 			searchField.setHint(Html.fromHtml("<small>" + getResources().getString(R.string.hint_main_search) + "</small>"));
@@ -253,23 +251,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		}
 	};
 
-	
-	private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
-
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			if (key.contains(SPREF_CURRENT_ENGINES)) {
-				lastSearchString = "";
-				String value = sharedPreferences.getString(key, null);
-				initSearchEngines(getContext(), value);
-				String str = Util.removeSpecialCharacters(searchField.getText().toString());
-				if (!str.isEmpty()) {
-					trySearch();
-				}
-			}
-		}
-	};
-	
 	DownloadPressListener downloadPressListener = new DownloadPressListener() {
 		
 		@Override
@@ -602,6 +583,15 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 						keyEngines = getTitleSearchEngine8();
 					}
 					editor.commit();
+					
+					// start search with new engine
+					lastSearchString = "";
+					String value = keyEngines;
+					initSearchEngines(getContext(), value);
+					String str = Util.removeSpecialCharacters(searchField.getText().toString());
+					if (!str.isEmpty()) {
+						trySearch();
+					}
 				}
 
 				@Override
@@ -611,7 +601,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 
 		} else {
 			spEnginesChoiser.setVisibility(View.GONE);
-			sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
 		}
 	}
 
@@ -667,14 +656,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		edit.clear();
 		edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
 		edit.commit();
-	}
-	
-	public int defaultCover() {
-		return R.drawable.fallback_cover;
-	}
-	
-	public Bitmap getDeafultBitmapCover() {
-		return ((BitmapDrawable) getResources().getDrawable(defaultCover())).getBitmap();
 	}
 	
 	public static boolean isOffline(Context context) {
@@ -1040,10 +1021,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 		isRestored = true;
 	}
 	
-	public void unregisterObserver() {
-		sPref.unregisterOnSharedPreferenceChangeListener(sPrefListener);
-	}
-
 	public RemoteSong getDownloadSong() {
 		return downloadSong;
 	}
@@ -1134,10 +1111,6 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	public static String getTitleSearchEngine8() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_8", "Search Engine 8");
-	}
-	
-	private int getVisibleChildCount() {
-		return ((listView.getLastVisiblePosition() - listView.getFirstVisiblePosition()) + 1);
 	}
 
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
