@@ -16,6 +16,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class MusicData {
 
@@ -253,7 +254,7 @@ public class MusicData {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.e(getClass().getSimpleName(), e + "");
 		}
 		return songBitmap;
 	}
