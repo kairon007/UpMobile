@@ -19,7 +19,10 @@
     <!-- Main Holo -->
     <style name="Apollo.Theme.Dark" parent="Theme.Sherlock">
     </style>
-
+    
+    <style name="AppTheme" parent="Apollo.Theme.Dark">
+    </style>
+    
     <!-- Main Holo light -->
     <style name="Apollo.Theme.Light" parent="Theme.Sherlock.Light">
         <item name="android:windowBackground">@color/window_background_light</item>
