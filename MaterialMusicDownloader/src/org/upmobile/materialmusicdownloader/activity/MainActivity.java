@@ -18,7 +18,6 @@ import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.Folde
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.TestApp;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -269,7 +268,6 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		String lastFragmentName = getPreviousFragmentName(1);
 		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-			TestApp.start();
 			fragment.forceDelete();
 		}
 	}

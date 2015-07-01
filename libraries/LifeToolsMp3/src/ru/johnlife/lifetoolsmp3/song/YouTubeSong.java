@@ -145,7 +145,7 @@ public class YouTubeSong extends SongWithCover {
 		long tsCreate = 0;
 		String r = null;
 		try {
-			android.util.Log.d("logd", "getUrlTask: " + YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()));
+			android.util.Log.i("logd", "getUrlTask: " + YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()));
 			Document doc = Jsoup.connect(YOUTUBE_MP3_URL + sig_url("/a/itemInfo/?video_id=" + watchId + "&ac=www&t=grp&r=" + System.currentTimeMillis()))
 					.ignoreContentType(true)
 					.ignoreHttpErrors(true)

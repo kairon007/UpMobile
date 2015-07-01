@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -185,26 +186,31 @@ public class PlaylistView extends BasePlaylistView{
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
 	        	for (int position : reverseSortedPositions) {
-	        		AbstractSong data = (AbstractSong) adapter.getItem(position);
-	        		if (null == data) return;
-	        		if (data.equals(swipeUndoAdapter.getSongs().get(position))) {
-		        		if (data.getClass() == MusicData.class) {
-		        			removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
-		        		} else {
-		        			removeData((PlaylistData) data, null);
-		        		}
-	        		} else {
-	        			data = swipeUndoAdapter.getSongs().get(position);
-		        		if (data.getClass() == MusicData.class) {
-		        			PlaylistData playlistBySong = getPlaylistBySong((MusicData) data);
-							playlistBySong.removeFromPlaylist(getContext(), playlistBySong.getId(), data.getId());
-		        		} else {
-		        			((PlaylistData) data).deletePlaylist(getContext(), data.getId());
-		        		}
-	        			swipeUndoAdapter.getSongs().remove(position);
-	        		}
+	        		try {
+						AbstractSong data = (AbstractSong) adapter.getItem(position);
+						if (null == data) return;
+						if (data.equals(swipeUndoAdapter.getSongs().get(position))) {
+							if (data.getClass() == MusicData.class) {
+								removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
+							} else {
+								removeData((PlaylistData) data, null);
+							}
+						} else {
+							data = swipeUndoAdapter.getSongs().get(position);
+							if (null == data) return;
+							if (data.getClass() == MusicData.class) {
+								PlaylistData playlistBySong = getPlaylistBySong((MusicData) data);
+								if (null == playlistBySong) return;
+								playlistBySong.removeFromPlaylist(getContext(), playlistBySong.getId(), data.getId());
+							} else {
+								((PlaylistData) data).deletePlaylist(getContext(), data.getId());
+							}
+							swipeUndoAdapter.getSongs().remove(position);
+						}
+					} catch (Exception e) {
+						Log.e(getClass().getSimpleName(), e + "");
+					}
 	            }
-	        	updatePlaylist();
             	if (adapter.isEmpty()) {
         			lView.setEmptyView(message);
         		}

@@ -2087,19 +2087,6 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		public long getItemId(int position) {
 			return position;
 		}
-		
-//		public boolean containsPos (int pos) {
-//			if (null == selectedPositions) return false;
-//			if (selectedPositions.length == 0) return false;
-//			android.util.Log.d("logd", "containsPos: " + selectedPositions.length);
-//			for (int i = 0; i < selectedPositions.length; i++) {
-////				android.util.Log.d("logd", "containsPos: " + i + " - "+ selectedPositions[i]);
-//				if (pos == selectedPositions[i]) {
-//					return true;
-//				}
-//			}
-//			return false;
-//		}
 
 		@SuppressLint("WrongViewCast")
 		@Override
