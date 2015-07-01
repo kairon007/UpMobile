@@ -85,6 +85,7 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
 					((BaseMiniPlayerActivity) getContext()).hideDownloadButton(true);
+					StateKeeper.getInstance().putSongInfo(song.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 					song.getDownloadUrl(new DownloadUrlListener() {
 
 								@Override
