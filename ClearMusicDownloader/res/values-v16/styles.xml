@@ -11,6 +11,8 @@
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
     
         <style name="AppTheme.NoFonts" parent="Theme.AppCompat.Light.NoActionBar">
