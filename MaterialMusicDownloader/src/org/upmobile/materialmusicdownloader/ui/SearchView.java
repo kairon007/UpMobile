@@ -92,12 +92,6 @@ public class SearchView extends OnlineSearchView implements Constants, PlaybackS
 	}
 
 	@Override
-	public Bitmap getDeafultBitmapCover() {
-		String cover =  getResources().getString(R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
-	}
-	
-	@Override
 	protected void animateListView(boolean isRestored) {
 		final AnimationAdapter animAdapter = new AlphaInAnimationAdapter(getAdapter());
 		animAdapter.setAbsListView(listView);
