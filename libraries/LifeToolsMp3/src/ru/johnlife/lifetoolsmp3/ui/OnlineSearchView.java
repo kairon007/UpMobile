@@ -317,6 +317,9 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 							adapter.add(song);
 						}
 					}
+					if (adapter.getCount() <= 3 && !(adapter.getCount() > 12) && taskIterator.hasNext()) {
+						getNextResults(false);
+					}
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), e + "");
 				}
@@ -1131,6 +1134,10 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	public static String getTitleSearchEngine8() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_8", "Search Engine 8");
+	}
+	
+	private int getVisibleChildCount() {
+		return ((listView.getLastVisiblePosition() - listView.getFirstVisiblePosition()) + 1);
 	}
 
 	public Class<? extends BaseSearchTask> getSearchEngineClass(String searchEngineName) {
