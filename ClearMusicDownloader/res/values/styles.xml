@@ -11,6 +11,8 @@
         <item name="miniPlayerPause">@drawable/mini_player_pause_dark</item>
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
         <item name="coverScale">@dimen/size_cover</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">

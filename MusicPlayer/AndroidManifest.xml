@@ -95,7 +95,8 @@
         android:allowTaskReparenting="true"
         android:hardwareAccelerated="@bool/config_hardwareAccelerated"
         android:largeHeap="@bool/config_largeHeap"
-        android:taskAffinity="mp3.music.player.us.task" >
+        android:taskAffinity="mp3.music.player.us.task" 
+        android:theme="@style/AppTheme">
 
         <!-- Searchable -->
         <meta-data
