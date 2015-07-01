@@ -9,7 +9,7 @@
         <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
         <item name="play_all">@drawable/play_all</item>
-        <item name="search_background">@drawable/search_background</item>
+        <item name="search_background">@drawable/selectable_item_bg</item>
         <item name="listview_divider_color">@color/divider_color</item>
         <item name="tab_order_list_divider_color">@null</item>
         <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>

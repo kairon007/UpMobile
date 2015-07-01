@@ -19,6 +19,7 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
 
+    <string name="app_name">MusicBrowser</string>
     <!-- used in various places to indicate there is one song for a given artist or album -->
     <string name="onesong">1 song</string>
     <!-- used in various places to indicate there is some number other than one songs for a given artist or album. -->
