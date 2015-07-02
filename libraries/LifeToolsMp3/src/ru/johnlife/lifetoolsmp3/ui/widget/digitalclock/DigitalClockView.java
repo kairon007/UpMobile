@@ -114,8 +114,12 @@ public class DigitalClockView extends View {
 				for (int i = 0; i < size; i++) {
 					// Save result to mLocalChars and mLocalWidth. Both are local array that can be edited (not the case of
 					// mPreviousChars, mPreviousWidth, mChars and mWidth).
-					mFont.save(mPreviousChars[i], mChars[i], mMorphingPercent, mLocalChars[i]);
-					mFont.saveWidth(mPreviousWidth[i], mWidth[i], mMorphingPercent, mLocalWidth[i]);
+					try {
+						mFont.save(mPreviousChars[i], mChars[i], mMorphingPercent, mLocalChars[i]);
+						mFont.saveWidth(mPreviousWidth[i], mWidth[i], mMorphingPercent, mLocalWidth[i]);
+					} catch (IndexOutOfBoundsException e) {
+						Log.d("logd", "IndexOutOfBoundsException: " + "size: " + size + " index: " + i);
+					}
 				}
 
 				originChars = mLocalChars;
