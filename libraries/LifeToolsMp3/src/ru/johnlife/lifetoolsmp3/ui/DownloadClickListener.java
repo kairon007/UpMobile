@@ -64,7 +64,7 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-public class DownloadClickListener implements View.OnClickListener, OnBitmapReadyListener {
+public class DownloadClickListener implements View.OnClickListener {
 
 	private ArrayList<String[]> headers = new ArrayList<String[]>();
 
@@ -73,7 +73,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 
 	private DownloadCache.Item cacheItem;
 	protected RemoteSong downloadingSong;
-	protected Bitmap cover;
+//	protected Bitmap cover;
 
 	protected long currentDownloadId = 0;
 	private int songId;
@@ -94,6 +94,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	};
 
 	private boolean earlierMsg = false;
+
+	private MusicMetadataSet src_set;
 	
 	public interface CoverReadyListener {
 		void onCoverReady(Bitmap cover);
@@ -117,7 +119,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		this.id = id;
 		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
 		headers = downloadingSong.getHeaders();
-		downloadingSong.getCover(this);
 	}
 	
 	public DownloadClickListener(final Context context, RemoteSong song, int id, boolean earlierMessage) {
@@ -127,7 +128,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		earlierMsg = earlierMessage;
 		songId = downloadingSong instanceof GrooveSong ? ((GrooveSong) downloadingSong).getSongId() : -1;
 		headers = downloadingSong.getHeaders();
-		downloadingSong.getCover(this);
 		StringBuilder stringBuilder = new StringBuilder(song.getArtist()).append(" - ").append(song.getTitle());
 		final String sb = Util.removeSpecialCharacters(stringBuilder.toString());
 		((Activity) context).runOnUiThread(new Runnable() {
@@ -169,6 +169,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			showMessage(context, R.string.download_error);
 			return;
 		}
+		Log.i(getClass().getSimpleName(),"Url is: " + url);
 		StateKeeper.getInstance().putSongInfo(downloadingSong.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 		String songArtist = downloadingSong.getArtist().trim();
 		String songTitle = downloadingSong.getTitle().trim();
@@ -292,11 +293,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 	@Override
 	public void onClick(View v) {
 		downloadSong(false);
-	}
-
-	@Override
-	public void onBitmapReady(Bitmap bmp) {
-		cover = bmp;
 	}
 
 	@SuppressLint("NewApi")
@@ -426,8 +422,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
 	}
 
-	private boolean setMetadataToFile(File src, boolean useCover, RemoteSong song) {
-		MusicMetadataSet src_set = null;
+	private boolean setMetadataToFile(final File src, final boolean useCover, RemoteSong song) {
+		src_set = null;
 		try {
 			src_set = new MyID3().read(src);
 		} catch (Exception exception) {
@@ -451,17 +447,32 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 		// } catch (Exception e) {
 		// e.printStackTrace();
 		// }
+		
+		if (useCover) {
+			downloadingSong.getCover(new OnBitmapReadyListener() {
 
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					write(src, bmp, downloadingSong, src_set);
+				}
+			});
+		} else {
+			write(src, null, downloadingSong, src_set);
+		}
+		return true;
+	}
+
+	private void write(File src, Bitmap cover, RemoteSong song, MusicMetadataSet src_set) {
 		MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 		metadata.clear();
 		metadata.setSongTitle(song.getTitle().trim());
 		metadata.setArtist(song.getArtist().trim());
 		metadata.setComment(song.getComment());
-		if (null != cover && useCover) {
+		if (null != cover) {
 			ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
 			cover.compress(CompressFormat.JPEG, 85, out);
 			metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-		} else if (!useCover) {
+		} else {
 			RenameTask.deleteCoverFromFile(src);
 		}
 		File dst = new File(src.getParentFile(), src.getName() + "-1");
@@ -476,7 +487,6 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				dst.delete();
 			}
 		}
-		return true;
 	}
 
 	private final class UpdateTimerTask extends TimerTask {
