@@ -244,7 +244,8 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			request.setMimeType(downloadingSong.getComment());
 			request.setDescription(songTitle);
-			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE | DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
+//			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE | DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
 			showMessage(context, e.getMessage());
@@ -503,6 +504,7 @@ public class DownloadClickListener implements View.OnClickListener, OnBitmapRead
 				final String title = song.getTitle().trim();
 				if (c.moveToFirst()) {
 					int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+					android.util.Log.i(getClass().getSimpleName(), "DownloadManager status: " + status);
 					switch (status) {
 					case DownloadManager.ERROR_CANNOT_RESUME:
 					case DownloadManager.ERROR_FILE_ERROR:
