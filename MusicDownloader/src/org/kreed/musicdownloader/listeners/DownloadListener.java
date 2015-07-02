@@ -48,7 +48,6 @@ public class DownloadListener extends DownloadClickListener {
 		data.setSongArtist(song.getArtist());
 		data.setSongTitle(song.getTitle());
 		data.setSongDuration(duration);
-		data.setSongBitmap(cover);
 		data.setFileUri(pathToFile);
 		DBHelper.getInstance(context).insert(data);
 	}

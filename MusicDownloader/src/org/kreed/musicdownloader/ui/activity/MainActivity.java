@@ -266,8 +266,8 @@ public class MainActivity extends Activity {
 		}
 		
 		
-		initCrossPromoBoxAndDisclaimer();
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		initCrossPromoBoxAndDisclaimer();
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
 	@Override

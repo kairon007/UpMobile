@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -18,7 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -27,9 +29,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-
-import java.util.Locale;
-import java.util.Collections;
 import android.telephony.TelephonyManager;
 
 
@@ -1361,7 +1360,7 @@ public class Nulldroid_Settings implements BaseSettings {
 		if (Nulldroid_Settings.getIsBlacklisted(context) ||  Nulldroid_Settings.getIsSuperBlacklisted(context)) {
 			
 			if(null != SEARCH_ENGINES && SEARCH_ENGINES.length >0){
-				result.add(OnlineSearchView.getTitleSearchEngine());
+				result.add(BaseSearchView.getTitleSearchEngine());
 			}
 		} else {
 			if (getIsRemoteSettingsOn()) {
@@ -1373,39 +1372,39 @@ public class Nulldroid_Settings implements BaseSettings {
 				ArrayList<String> searchEngines6 = getRemoteSearchEngines6(context);
 				ArrayList<String> searchEngines7 = getRemoteSearchEngines7(context);
 				ArrayList<String> searchEngines8 = getRemoteSearchEngines8(context);
-				if (searchEngines1 != null && searchEngines1.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine());
-				if (searchEngines2 != null && searchEngines2.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine2());
-				if (searchEngines3 != null && searchEngines3.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine3());
-				if (searchEngines4 != null && searchEngines4.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine4());
-				if (searchEngines5 != null && searchEngines5.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine5());
-				if (searchEngines6 != null && searchEngines6.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine6());
-				if (searchEngines7 != null && searchEngines7.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine7());
-				if (searchEngines8 != null && searchEngines8.size() > 0) result.add(OnlineSearchView.getTitleSearchEngine8());
+				if (searchEngines1 != null && searchEngines1.size() > 0) result.add(BaseSearchView.getTitleSearchEngine());
+				if (searchEngines2 != null && searchEngines2.size() > 0) result.add(BaseSearchView.getTitleSearchEngine2());
+				if (searchEngines3 != null && searchEngines3.size() > 0) result.add(BaseSearchView.getTitleSearchEngine3());
+				if (searchEngines4 != null && searchEngines4.size() > 0) result.add(BaseSearchView.getTitleSearchEngine4());
+				if (searchEngines5 != null && searchEngines5.size() > 0) result.add(BaseSearchView.getTitleSearchEngine5());
+				if (searchEngines6 != null && searchEngines6.size() > 0) result.add(BaseSearchView.getTitleSearchEngine6());
+				if (searchEngines7 != null && searchEngines7.size() > 0) result.add(BaseSearchView.getTitleSearchEngine7());
+				if (searchEngines8 != null && searchEngines8.size() > 0) result.add(BaseSearchView.getTitleSearchEngine8());
 			
 			} else {
 				if(null != SEARCH_ENGINES && SEARCH_ENGINES.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine());
+					result.add(BaseSearchView.getTitleSearchEngine());
 				}
 				if(null != SEARCH_ENGINES_2 && SEARCH_ENGINES_2.length>0){
-					result.add(OnlineSearchView.getTitleSearchEngine2());
+					result.add(BaseSearchView.getTitleSearchEngine2());
 				}
 				if(null != SEARCH_ENGINES_3 && SEARCH_ENGINES_3.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine3());
+					result.add(BaseSearchView.getTitleSearchEngine3());
 				}
 				if(null != SEARCH_ENGINES_4 && SEARCH_ENGINES_4.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine4());
+					result.add(BaseSearchView.getTitleSearchEngine4());
 				}
 				if(null != SEARCH_ENGINES_5 && SEARCH_ENGINES_5.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine5());
+					result.add(BaseSearchView.getTitleSearchEngine5());
 				}
 				if(null != SEARCH_ENGINES_5 && SEARCH_ENGINES_6.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine6());
+					result.add(BaseSearchView.getTitleSearchEngine6());
 				}
 				if(null != SEARCH_ENGINES_5 && SEARCH_ENGINES_7.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine7());
+					result.add(BaseSearchView.getTitleSearchEngine7());
 				}
 				if(null != SEARCH_ENGINES_5 && SEARCH_ENGINES_8.length >0){
-					result.add(OnlineSearchView.getTitleSearchEngine8());
+					result.add(BaseSearchView.getTitleSearchEngine8());
 				}
 			}
 		}

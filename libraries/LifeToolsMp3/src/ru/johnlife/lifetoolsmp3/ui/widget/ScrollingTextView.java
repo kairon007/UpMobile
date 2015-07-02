@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui;
+package ru.johnlife.lifetoolsmp3.ui.widget;
 
 import android.content.Context;
 import android.graphics.Rect;

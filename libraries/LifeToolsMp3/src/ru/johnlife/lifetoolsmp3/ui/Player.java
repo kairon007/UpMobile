@@ -11,6 +11,7 @@ import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -151,7 +152,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		progress.setMax(duration);
 		progress.setOnTouchListener(touchListener);
 		time.setText(timeText);
-		textPath.setText(OnlineSearchView.getDownloadPath(view.getContext()));
+		textPath.setText(BaseSearchView.getDownloadPath(view.getContext()));
 		if (coverBitmap != null) {
 			coverImage.setImageBitmap(coverBitmap);
 		}
@@ -209,13 +210,13 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 			@Override
 			public void onChosenDir(String chDir) {
 				textPath.setText(chDir);
-				OnlineSearchView.setDownloadPath(view.getContext(), chDir);
+				BaseSearchView.setDownloadPath(view.getContext(), chDir);
 			}
 		});
 		if (null != keeper.getDirectoryChooserPath()) {
 			directoryChooserDialog.chooseDirectory(StateKeeper.getInstance().getDirectoryChooserPath());
 		} else {
-			directoryChooserDialog.chooseDirectory(OnlineSearchView.getDownloadPath(view.getContext()));
+			directoryChooserDialog.chooseDirectory(BaseSearchView.getDownloadPath(view.getContext()));
 		}
 	}
 
@@ -227,7 +228,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	public void createLyricsDialog() {
 		keeper.openDialog(StateKeeper.LYRICS_DIALOG);
 		LayoutInflater inflater = (LayoutInflater) view.getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-		if (OnlineSearchView.isOffline(view.getContext())) {
+		if (BaseSearchView.isOffline(view.getContext())) {
 			Toast.makeText(view.getContext(), view.getContext().getString(R.string.search_message_no_internet), Toast.LENGTH_LONG).show();
 			return;
 		}

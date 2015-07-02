@@ -13,8 +13,8 @@ import org.cmc.music.myid3.MyID3;
 import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
 import ru.johnlife.lifetoolsmp3.ui.Player;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -35,7 +35,7 @@ public class StateKeeper {
 	
 	private Object tag;
 	private static StateKeeper instance = null;
-	private OnlineSearchView searchView;
+	private BaseSearchView searchView;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
 	private Player playerInstance;
@@ -204,7 +204,7 @@ public class StateKeeper {
 		return result;
 	}
 	
-	public void saveStateAdapter(OnlineSearchView view) {
+	public void saveStateAdapter(BaseSearchView view) {
 		searchView = null;
 		songField = view.getSearchField().getText().toString();
 		results = view.getAdapter().getAll();
@@ -219,7 +219,7 @@ public class StateKeeper {
 		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(view.getClickPosition());
 	}
 
-	public void restoreState(OnlineSearchView view) {
+	public void restoreState(BaseSearchView view) {
 		searchView = view;
 		notifyLable = true;
 		if (null != songField && !Util.removeSpecialCharacters(songField).equals("")) {
@@ -265,7 +265,7 @@ public class StateKeeper {
 	}
 	
 	public void initSongHolder(String folder) {
-		if (OnlineSearchView.EMPTY_DIRECTORY.equals(folder)) {
+		if (BaseSearchView.EMPTY_DIRECTORY.equals(folder)) {
 			return;
 		}
 		if (!new File(folder).exists()) {
@@ -461,7 +461,7 @@ public class StateKeeper {
 		this.libaryFirstPosition = libaryFirstPosition;
 	}
 	
-	public void setSearchView(OnlineSearchView searchView) {
+	public void setSearchView(BaseSearchView searchView) {
 		this.searchView = searchView;
 	}
 	

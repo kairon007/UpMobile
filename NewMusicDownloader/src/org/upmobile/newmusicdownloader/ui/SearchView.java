@@ -14,39 +14,48 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class SearchView extends OnlineSearchView implements PlaybackService.OnErrorListener {
+public class SearchView extends BaseSearchView implements PlaybackService.OnErrorListener {
 
 	private PlaybackService service;
 	private BaseSearchAdapter adapter;
-    
+
 	public SearchView(LayoutInflater inflater) {
 		super(inflater);
 		if (null == adapter) {
 			adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 	}
-	
-	@Override
-	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
 
 	@Override
-	protected Nulldroid_Advertisement getAdvertisment() { return new Nulldroid_Advertisement(); }
+	protected BaseSettings getSettings() {
+		return new Nulldroid_Settings();
+	}
 
 	@Override
-	protected void stopSystemPlayer(Context context) {}
-	
+	protected Nulldroid_Advertisement getAdvertisment() {
+		return new Nulldroid_Advertisement();
+	}
+
 	@Override
-	protected boolean showFullElement() { return false; }
-	
+	protected void stopSystemPlayer(Context context) {
+	}
+
 	@Override
-	public boolean isUseDefaultSpinner() { return true; }
+	protected boolean showFullElement() {
+		return false;
+	}
+
+	@Override
+	public boolean isUseDefaultSpinner() {
+		return true;
+	}
 
 	@Override
 	public View getView() {
@@ -54,7 +63,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 		listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
 		return view;
 	}
-	
+
 	@Override
 	protected void click(final View view, int position) {
 		if (null == service) {
@@ -71,7 +80,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 				}
 			}
 			service.setArrayPlayback(list);
-		} 
+		}
 		try {
 			((MainActivity) getContext()).startSong(((Song) getAdapter().getItem(position)).cloneSong());
 		} catch (CloneNotSupportedException e) {
@@ -86,7 +95,7 @@ public class SearchView extends OnlineSearchView implements PlaybackService.OnEr
 	@Override
 	public void error(final String error) {
 		((MainActivity) getContext()).runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Toast.makeText(getContext(), R.string.error_getting_url_songs, Toast.LENGTH_SHORT).show();

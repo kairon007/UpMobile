@@ -17,7 +17,7 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -26,7 +26,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-public class SearchViewTab  extends OnlineSearchView {
+public class SearchViewTab  extends BaseSearchView {
 	
 	private MainActivity activity;
 	private ViewPagerAdapter parentAdapter;

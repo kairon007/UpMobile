@@ -64,7 +64,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 				@Override
 				public void success(String url) {
 					song.setDownloadUrl(url);
-					song.getCover(downloadListener);
+					downloadListener.setUseAlbumCover(true);
 					downloadListener.onClick(null);
 				}
 

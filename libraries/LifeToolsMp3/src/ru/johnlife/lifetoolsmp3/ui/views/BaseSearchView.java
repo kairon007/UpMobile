@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui;
+package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -49,6 +49,8 @@ import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -101,7 +103,7 @@ import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public abstract class OnlineSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener {
+public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener {
 
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
@@ -171,7 +173,7 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	protected int getDropDownViewResource() { return 0;	}
 	protected void showShadow (boolean visible) { }
 
-	public OnlineSearchView(LayoutInflater inflater) {
+	public BaseSearchView(LayoutInflater inflater) {
 		super(inflater.getContext());
 		init(inflater);
 		initSearchEngines(getContext(), null);
@@ -623,12 +625,12 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	public static String getDownloadPath(Context context) {
 		String downloadPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		if (context != null) {
-			SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
-			String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.DOWNLOAD_DIR, "");
+			SharedPreferences downloadDetails = context.getSharedPreferences(BaseSearchView.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
+			String sharedDownloadPath = downloadDetails.getString(BaseSearchView.DOWNLOAD_DIR, "");
 			if (sharedDownloadPath.equals("")) {
 				Editor edit = downloadDetails.edit();
 				edit.clear();
-				edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
+				edit.putString(BaseSearchView.DOWNLOAD_DIR, downloadPath);
 				edit.commit();
 			} else if (!new File(sharedDownloadPath).exists()) {
 				return downloadPath;
@@ -652,10 +654,10 @@ public abstract class OnlineSearchView extends View implements OnTouchListener, 
 	}
 
 	public static void setDownloadPath(Context context, String downloadPath) {
-		SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
+		SharedPreferences downloadDetails = context.getSharedPreferences(BaseSearchView.DOWNLOAD_DETAIL, Context.MODE_PRIVATE);
 		Editor edit = downloadDetails.edit();
 		edit.clear();
-		edit.putString(OnlineSearchView.DOWNLOAD_DIR, downloadPath);
+		edit.putString(BaseSearchView.DOWNLOAD_DIR, downloadPath);
 		edit.commit();
 	}
 	

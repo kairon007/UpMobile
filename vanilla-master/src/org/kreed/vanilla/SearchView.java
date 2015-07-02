@@ -2,16 +2,15 @@ package org.kreed.vanilla;
 
 import org.kreed.vanilla.adapter.SearchAdapter;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 
-public class SearchView extends OnlineSearchView {
+public class SearchView extends BaseSearchView {
 	
 	private PlaybackService service;
 	private BaseSearchAdapter adapter;

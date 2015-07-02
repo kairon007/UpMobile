@@ -16,9 +16,8 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.OnlineSearchView;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
@@ -26,7 +25,7 @@ import android.widget.ListView;
 import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
 import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
-public class SearchView extends OnlineSearchView implements Constants, PlaybackService.OnErrorListener{
+public class SearchView extends BaseSearchView implements Constants, PlaybackService.OnErrorListener{
 	
 	private BaseSearchAdapter adapter;
 	

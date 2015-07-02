@@ -34,6 +34,7 @@ import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -242,7 +243,7 @@ public class DownloadClickListener implements View.OnClickListener {
 		request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE).setAllowedOverRoaming(false).setTitle(sb);
 		try {
 			request.setTitle(songArtist);
-			request.setDestinationInExternalPublicDir(OnlineSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
+			request.setDestinationInExternalPublicDir(BaseSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			request.setMimeType(downloadingSong.getComment());
 			request.setDescription(songTitle);
 			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
@@ -369,12 +370,12 @@ public class DownloadClickListener implements View.OnClickListener {
 	protected String getDirectory() {
 		downloadPath = BaseConstants.DOWNLOAD_DIR;
 		if (context != null) {
-			SharedPreferences downloadDetails = context.getSharedPreferences(OnlineSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
-			String sharedDownloadPath = downloadDetails.getString(OnlineSearchView.getDOWNLOAD_DIR(), "");
+			SharedPreferences downloadDetails = context.getSharedPreferences(BaseSearchView.getDOWNLOAD_DETAIL(), Context.MODE_PRIVATE);
+			String sharedDownloadPath = downloadDetails.getString(BaseSearchView.getDOWNLOAD_DIR(), "");
 			if (sharedDownloadPath.equals("")) {
 				Editor edit = downloadDetails.edit();
 				edit.clear();
-				edit.putString(OnlineSearchView.getDOWNLOAD_DIR(), downloadPath);
+				edit.putString(BaseSearchView.getDOWNLOAD_DIR(), downloadPath);
 				edit.commit();
 			} else
 				return sharedDownloadPath;
