@@ -4,6 +4,8 @@ package com.csform.android.uiapptemplate.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
+
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
@@ -264,6 +266,9 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     }
     
     public void setSelectedItem(int position){
+		if (mDrawerItems.get(position).getType().equals(DrawerItem.Types.TYPE_SETTING)) {
+			position = mCurrentSelectedPosition = previousSelectedPosition;
+		}
         if (mDrawerListView != null) {
         	mDrawerListView.setItemChecked(position, true);
         }
@@ -276,10 +281,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     	getActionBar().setTitle(Html.fromHtml("<font color = " + strColor + ">" + mTitle+ "</font>"));
     }
     
-    private boolean useOldToggle() {
-		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
-    }
-
 	public OnNavigationDrawerState getDrawerState() {
 		return drawerState;
 	}

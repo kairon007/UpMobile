@@ -30,7 +30,14 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
 		activity.setVisibleSearchView(true);
+		playlistView.onResume();
 		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		playlistView.onPause();
+		super.onPause();
 	}
 
 	@Override
