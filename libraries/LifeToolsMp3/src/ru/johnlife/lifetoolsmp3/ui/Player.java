@@ -368,7 +368,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (null != bmp) {
 			isDefaultCover = false;
 			coverImage.setImageBitmap(bmp);
-			if (Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.coverScale) == 0
+			if (Util.getResIdFromAttribute((Activity) coverImage.getContext(), R.attr.coverScale) == 0
 					&& Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && view != null) {
 				float h = view.getContext().getResources().getDimension(R.dimen.min_hight_layout_player);
 				float scale = (float) h / bmp.getHeight();
