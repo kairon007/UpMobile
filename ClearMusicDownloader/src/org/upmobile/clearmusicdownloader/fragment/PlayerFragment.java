@@ -420,7 +420,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+	public void onCheckedChanged(final CompoundButton buttonView, boolean isChecked) {
 		((MainActivity) getActivity()).setCoverHelper(isChecked);
 		isUseAlbumCover = isChecked;
 		closeEditViews();
@@ -442,6 +442,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				@Override
 				public void onHide(@Nullable Parcelable token) {
 					if (MusicData.class == song.getClass()) {
+						buttonView.setVisibility(View.INVISIBLE);
 						clearCover((MusicData) song);
 					}
 				}
@@ -796,11 +797,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void setCheckBoxState(boolean state) {
-		useCover.setOnCheckedChangeListener(null);
+		useCover.setOnCheckedChangeListener(state ? this : null);
 		useCover.setEnabled(state);
 		useCover.setChecked(state);
 		useCover.setClickable(state);
-		useCover.setOnCheckedChangeListener(this);
 	}
 
 	private void download() {
