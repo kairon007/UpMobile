@@ -752,7 +752,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playProgress.setVisibility(View.VISIBLE);
 		playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
-			player.play(player.getArrayPlayback().get(0));
+			AbstractSong song = player.getArrayPlayback().get(0);
+			player.play(song);
+			getCover(song);
 			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
 		} else {
 			player.pause();
