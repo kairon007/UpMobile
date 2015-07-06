@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="start"
     android:background="?attr/colorPrimary"
+    android:paddingLeft="@dimen/material_edges_padding"
     android:paddingRight="@dimen/material_edges_padding" >
 
     <TextView
@@ -11,9 +12,9 @@
         style="@style/TextStyleLine2"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="4dp"
         android:ellipsize="start"
         android:fontFamily="sans-serif"
-        android:paddingLeft="18dp"
         android:singleLine="true"
         android:textColor="@android:color/white"
         android:textStyle="bold" />
