@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.johnlife.uilibrary.widget.customviews.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
@@ -39,4 +39,4 @@
             app:typeface="robotoBold" />
     </LinearLayout>
 
-</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+</ru.johnlife.uilibrary.widget.customviews.RippleView>

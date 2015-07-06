@@ -27,7 +27,7 @@
         android:text="@string/download_dialog_download_location"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.text.EllipsizingTextView
+    <ru.johnlife.uilibrary.widget.textviews.EllipsizingTextView
         android:id="@+id/navmenusection_path"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
