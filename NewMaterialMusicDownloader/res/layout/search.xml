@@ -23,7 +23,7 @@
             android:text="@string/search_your_results_appear_here"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
+        <ru.johnlife.uilibrary.widget.form.ProgressWheel
             android:id="@+id/progress"
             style="@style/ProgressBar"
             android:visibility="gone" />
@@ -72,7 +72,7 @@
                         android:textStyle="bold" >
                     </EditText>
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
@@ -88,10 +88,10 @@
                             android:background="@android:color/transparent"
                             android:scaleType="centerInside"
                             android:src="@drawable/ic_close_white" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
                 </FrameLayout>
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                <ru.johnlife.uilibrary.widget.customviews.RippleView
                     style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -105,7 +105,7 @@
                         android:layout_gravity="center_vertical"
                         android:background="@android:color/transparent"
                         android:src="@drawable/ic_search_white" />
-                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
                 <ImageButton
                     android:id="@+id/downloads"

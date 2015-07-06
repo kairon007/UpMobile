@@ -11,8 +11,8 @@ import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ButtonCallback;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;

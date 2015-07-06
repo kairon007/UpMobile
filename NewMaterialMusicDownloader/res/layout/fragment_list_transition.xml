@@ -19,7 +19,7 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="gone" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
+    <ru.johnlife.uilibrary.widget.form.ProgressWheel
         android:id="@+id/progress"
         style="@style/ProgressBar"
         android:visibility="gone" />

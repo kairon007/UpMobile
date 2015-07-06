@@ -16,7 +16,6 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -423,8 +422,8 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_artist)).setText(artist.getText());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_title)).setText(title.getText());
 		((ImageView)fakeMiniPlayer.findViewById(R.id.mini_player_cover)).setImageDrawable(cover.getDrawable());
-		if (playPause.getClass() != PlayPauseView.class) {
-			((ImageView)fakeMiniPlayer.findViewById(R.id.mini_player_play_pause)).setImageDrawable(((ImageButton)playPause).getDrawable());
+		if (playPause.getClass() == ImageView.class) {
+			((ImageView) fakeMiniPlayer.findViewById(R.id.mini_player_play_pause)).setImageDrawable(((ImageButton)playPause).getDrawable());
 		}
 		fakeMiniPlayer.findViewById(R.id.mini_player_progress).setVisibility(View.GONE);
 		Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
@@ -498,7 +497,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	 * @param playPayse true - image play, false - image pause
 	 */
 	protected void setPlayPauseMini(boolean playPayse) {
-		if (playPause.getClass() != PlayPauseView.class) {
+		if (playPause.getClass() == ImageButton.class) {
 			((ImageButton) playPause).setImageResource(playPayse ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
 		}
 	}

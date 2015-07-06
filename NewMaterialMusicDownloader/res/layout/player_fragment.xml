@@ -20,7 +20,7 @@
             android:src="@drawable/big_album" />
     </FrameLayout>
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView
+    <ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -34,7 +34,7 @@
             android:orientation="vertical"
             tools:ignore="ContentDescription" >
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.visualizer.SimpleVisualizerView
+            <ru.johnlife.uilibrary.widget.customviews.visualizer.SimpleVisualizerView
                 android:id="@+id/visualizer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,7 +59,7 @@
                         android:minHeight="48dp"
                         android:orientation="horizontal" >
 
-                        <ru.johnlife.lifetoolsmp3.ui.widget.CheckBox
+                        <ru.johnlife.uilibrary.widget.buttons.CheckBox
                             android:id="@+id/cbShowEqualizer"
                             style="@style/CheckBox"
                             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
                         android:minHeight="48dp"
                         android:orientation="horizontal" >
 
-                        <ru.johnlife.lifetoolsmp3.ui.widget.CheckBox
+                        <ru.johnlife.uilibrary.widget.buttons.CheckBox
                             android:id="@+id/cbUseCover"
                             style="@style/CheckBox"
                             android:layout_width="wrap_content"
@@ -113,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                        <ru.johnlife.uilibrary.widget.customviews.RippleView
                             style="@style/RippleStyleCircle"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
@@ -142,7 +142,7 @@
                                     android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
-                        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                        </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
                         <EditText
                             android:id="@+id/songNameEdit"
@@ -164,7 +164,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal" >
 
-                        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                        <ru.johnlife.uilibrary.widget.customviews.RippleView
                             style="@style/RippleStyleRectangle"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" >
@@ -193,7 +193,7 @@
                                     android:paddingLeft="4dp"
                                     android:src="@drawable/ic_mode_edit_grey" />
                             </LinearLayout>
-                        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                        </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
                         <EditText
                             android:id="@+id/artistNameEdit"
@@ -217,7 +217,7 @@
                             android:layout_weight="1"
                             android:orientation="horizontal" >
 
-                            <ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView
+                            <ru.johnlife.uilibrary.widget.textviews.digitalclock.DigitalClockView
                                 android:id="@+id/trackTime"
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
@@ -226,7 +226,7 @@
                                 android:gravity="start"
                                 android:minWidth="48dp" />
 
-                            <ru.johnlife.lifetoolsmp3.ui.widget.digitalclock.DigitalClockView
+                            <ru.johnlife.uilibrary.widget.textviews.digitalclock.DigitalClockView
                                 android:id="@+id/trackTotalTime"
                                 style="@style/TextStyleLine2"
                                 android:layout_width="wrap_content"
@@ -241,7 +241,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" >
 
-                            <ru.johnlife.lifetoolsmp3.ui.widget.dsb.DiscreteSeekBar
+                            <ru.johnlife.uilibrary.widget.form.deeskretseekbar.DiscreteSeekBar
                                 android:id="@+id/progress_track"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -257,7 +257,7 @@
                     android:layout_height="wrap_content"
                     android:baselineAligned="false" >
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -270,9 +270,9 @@
                             android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_shuffle_grey" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -285,16 +285,16 @@
                             android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_rewind_grey" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_weight="1" >
 
-                        <ru.johnlife.lifetoolsmp3.ui.widget.PlayPauseView
+                        <ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView
                             android:id="@+id/playpause"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
@@ -304,9 +304,9 @@
                             app:pauseBackground="@android:color/transparent"
                             app:pauseBarHeight="40"
                             app:playBackground="@android:color/transparent" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -319,9 +319,9 @@
                             android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_fast_forward_grey" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
                         style="@style/RippleStyleCircle"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -334,16 +334,16 @@
                             android:layout_height="32dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_repeat_grey" />
-                    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
                 </LinearLayout>
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                <ru.johnlife.uilibrary.widget.customviews.RippleView
                     style="@style/RippleStyleRectangle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="8dp" >
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.processbutton.iml.ActionProcessButton
+                    <ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton
                         android:id="@+id/download"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
@@ -356,7 +356,7 @@
                         app:pb_colorProgress="?attr/colorAccent"
                         app:pb_textComplete="@string/downloaded"
                         app:pb_textProgress="@string/downloading" />
-                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
                 <TextView
                     android:id="@+id/textView1"
@@ -380,7 +380,7 @@
                     android:layout_height="wrap_content"
                     android:minHeight="48dp" >
 
-                    <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
+                    <ru.johnlife.uilibrary.widget.form.ProgressWheel
                         android:id="@+id/lyrics_progress"
                         style="@style/ProgressBar"
                         android:visibility="gone" />
@@ -395,6 +395,6 @@
                 </FrameLayout>
             </LinearLayout>
         </LinearLayout>
-    </ru.johnlife.lifetoolsmp3.ui.widget.NotifyingScrollView>
+    </ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView>
 
 </RelativeLayout>

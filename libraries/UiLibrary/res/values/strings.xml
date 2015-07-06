@@ -5,4 +5,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- undo bar -->
+    <string name="undo">Undo</string>
+    <string name="retry">Retry</string>
+    <string name="done">Done</string>
+    <string name="download_dialog_download">Download</string>
+    <string name="ellipsis">\u2026</string>
+
 </resources>

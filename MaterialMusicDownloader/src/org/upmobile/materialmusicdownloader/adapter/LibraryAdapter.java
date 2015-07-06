@@ -13,9 +13,8 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.MaterialDialog.ListCallback;
-import ru.johnlife.lifetoolsmp3.ui.widget.materialdialog.Theme;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ListCallback;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -120,7 +119,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			}
 		}
 		new MaterialDialog.Builder(getContext())
-		.theme(Theme.LIGHT)
+		.theme(ru.johnlife.uilibrary.widget.dialogs.materialdialog.Theme.LIGHT)
 		.title(R.string.select_playlist)
 		.backgroundColor(getContext().getResources().getColor(R.color.main_color_grey_100))
 		.dividerColorRes(R.color.md_divider_white)

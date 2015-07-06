@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.johnlife.uilibrary.widget.customviews.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_item_height"
@@ -44,7 +44,7 @@
                     android:visibility="gone" />
             </RelativeLayout>
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
+            <ru.johnlife.uilibrary.widget.customviews.CircleImageView
                 android:id="@+id/cover"
                 android:layout_width="@dimen/material_action_bar_hight"
                 android:layout_height="@dimen/material_action_bar_hight"
@@ -126,7 +126,7 @@
                     android:visibility="gone" />
             </LinearLayout>
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+            <ru.johnlife.uilibrary.widget.customviews.RippleView
                 style="@style/RippleStyleCircle"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
@@ -140,8 +140,8 @@
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_action_overflow"
                     android:visibility="visible" />
-            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+            </ru.johnlife.uilibrary.widget.customviews.RippleView>
         </LinearLayout>
     </LinearLayout>
 
-</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+</ru.johnlife.uilibrary.widget.customviews.RippleView>

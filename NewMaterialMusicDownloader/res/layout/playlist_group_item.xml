@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:gravity="center_vertical" >
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+    <ru.johnlife.uilibrary.widget.customviews.RippleView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         style="@style/RippleStyleShortPress"
@@ -40,7 +40,7 @@
                 android:gravity="center_vertical"
                 android:lines="1" />
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+            <ru.johnlife.uilibrary.widget.customviews.RippleView
                 style="@style/RippleStyleCircle"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
@@ -53,8 +53,8 @@
                     android:layout_gravity="center"
                     android:src="@drawable/ic_play"
                     android:tint="?attr/colorPrimary" />
-            </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+            </ru.johnlife.uilibrary.widget.customviews.RippleView>
         </LinearLayout>
-    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
 </FrameLayout>

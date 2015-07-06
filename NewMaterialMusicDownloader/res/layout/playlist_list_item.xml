@@ -5,7 +5,7 @@
     android:background="@android:color/white"
     android:paddingLeft="8dp" >
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+    <ru.johnlife.uilibrary.widget.customviews.RippleView
         xmlns:android="http://schemas.android.com/apk/res/android"
         style="@style/RippleStyleShortPress"
         android:layout_width="match_parent"
@@ -21,7 +21,7 @@
             android:paddingLeft="2dp"
             android:visibility="visible" >
 
-            <ru.johnlife.lifetoolsmp3.ui.widget.CircleImageView
+            <ru.johnlife.uilibrary.widget.customviews.CircleImageView
                 android:id="@+id/item_cover"
                 android:layout_width="@dimen/material_action_bar_hight"
                 android:layout_height="@dimen/material_action_bar_hight"
@@ -75,6 +75,6 @@
                     android:text="Artist" />
             </LinearLayout>
         </LinearLayout>
-    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
 </FrameLayout>

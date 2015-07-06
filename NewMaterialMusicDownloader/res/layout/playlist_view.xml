@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        <ru.johnlife.uilibrary.widget.customviews.RippleView
             style="@style/RippleStyleRectangle"
             android:layout_width="match_parent"
             android:layout_height="48dp" >
@@ -37,9 +37,9 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/last_played_playlist" />
             </LinearLayout>
-        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+        </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        <ru.johnlife.uilibrary.widget.customviews.RippleView
             style="@style/RippleStyleRectangle"
             android:layout_width="match_parent"
             android:layout_height="48dp"
@@ -67,7 +67,7 @@
                     android:paddingRight="16dp"
                     android:src="@android:drawable/ic_menu_add" />
             </LinearLayout>
-        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+        </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
         <View
             android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp" />
 
-            <ru.johnlife.lifetoolsmp3.ui.button.fab.FloatingActionButton
+            <ru.johnlife.uilibrary.widget.buttons.fab.FloatingActionButton
                 android:id="@+id/floatingButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

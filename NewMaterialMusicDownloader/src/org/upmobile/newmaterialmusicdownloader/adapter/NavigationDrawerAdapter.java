@@ -7,7 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 
 import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.ui.widget.RippleView;
+import ru.johnlife.uilibrary.widget.customviews.RippleView;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
