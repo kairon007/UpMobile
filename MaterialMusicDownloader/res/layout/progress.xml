@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.johnlife.uilibrary.widget.form.ProgressWheel xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ProgressBar"
     android:visibility="visible" />

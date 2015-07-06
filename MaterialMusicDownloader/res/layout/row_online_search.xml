@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ru.johnlife.lifetoolsmp3.ui.widget.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
+<ru.johnlife.uilibrary.widget.customviews.RippleView xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/RippleStyleRectangle"
     android:layout_width="match_parent"
     android:layout_height="72dp"
@@ -100,7 +100,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+        <ru.johnlife.uilibrary.widget.customviews.RippleView
             style="@style/RippleStyleCircle"
             android:layout_width="48dp"
             android:layout_height="48dp"
@@ -119,7 +119,7 @@
                 android:padding="4dp"
                 android:text="@string/three_dot"
                 android:textSize="32sp" />
-        </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+        </ru.johnlife.uilibrary.widget.customviews.RippleView>
     </LinearLayout>
 
-</ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+</ru.johnlife.uilibrary.widget.customviews.RippleView>

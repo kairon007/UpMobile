@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.pulltozoomview.PullToZoomScrollViewEx
+    <ru.johnlife.uilibrary.widget.layouts.pulltozoomview.PullToZoomScrollViewEx
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

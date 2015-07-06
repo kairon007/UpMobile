@@ -8,7 +8,7 @@
     android:paddingLeft="4dp"
     android:paddingRight="4dp" >
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+    <ru.johnlife.uilibrary.widget.customviews.RippleView
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -59,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical" >
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                <ru.johnlife.uilibrary.widget.customviews.RippleView
                     style="@style/RippleStyleCircle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -72,7 +72,7 @@
                         android:background="@android:color/transparent"
                         android:src="@null"
                         android:visibility="gone" />
-                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                </ru.johnlife.uilibrary.widget.customviews.RippleView>
             </FrameLayout>
 
             <FrameLayout
@@ -80,7 +80,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical" >
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+                <ru.johnlife.uilibrary.widget.customviews.RippleView
                     style="@style/RippleStyleCircle"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -93,13 +93,13 @@
                         android:background="@android:color/transparent"
                         android:src="@drawable/mini_player_pause"
                         android:visibility="gone" />
-                </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+                </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-                <ru.johnlife.lifetoolsmp3.ui.widget.ProgressWheel
+                <ru.johnlife.uilibrary.widget.form.ProgressWheel
                     android:id="@+id/mini_player_progress"
                     style="@style/ProgressBar" />
             </FrameLayout>
         </LinearLayout>
-    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
 </LinearLayout>

@@ -19,7 +19,7 @@
         android:visibility="gone"
         tools:text="Dialog message" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.text.FloatingEditText
+    <ru.johnlife.uilibrary.widget.textviews.FloatingEditText
         android:id="@android:id/edit"
         style="@style/FloatingEditText"
         android:layout_width="match_parent"

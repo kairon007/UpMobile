@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+    <ru.johnlife.uilibrary.widget.customviews.RippleView
         android:id="@+id/lastPlayedPlaylist"
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
@@ -18,9 +18,9 @@
             android:layout_gravity="center_vertical"
             android:text="@string/last_played_playlist"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.RippleView
+    <ru.johnlife.uilibrary.widget.customviews.RippleView
         style="@style/RippleStyleRectangle"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -48,7 +48,7 @@
                 android:text="@string/font_button_add"
                 android:textSize="16sp" />
         </LinearLayout>
-    </ru.johnlife.lifetoolsmp3.ui.widget.RippleView>
+    </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
     <View
         android:layout_width="match_parent"

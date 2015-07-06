@@ -4,7 +4,7 @@
     android:id="@+id/_undobar"
     style="@style/UBContainer" >
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.text.AutoResizeTextView
+    <ru.johnlife.uilibrary.widget.textviews.AutoResizeTextView
         android:id="@+id/undobar_message"
         android:ellipsize="none"
         style="@style/UBMessage" />
