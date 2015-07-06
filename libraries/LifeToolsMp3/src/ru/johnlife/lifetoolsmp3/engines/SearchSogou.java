@@ -46,7 +46,7 @@ public class SearchSogou extends SearchWithPages {
 					.userAgent("Mozilla/5.0 (iPad; CPU OS 6_1 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/6.0 Mobile/10B141 Safari/8536.25")
 					.timeout(20000)
 					.get();
-			
+			if (null == doc) return null;
 			Elements songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
 			if (songs.isEmpty()) return null;
 			//This eliminates the first row which is not a song element
@@ -76,7 +76,7 @@ public class SearchSogou extends SearchWithPages {
 			}
 			
 		
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.e(getClass().getSimpleName(), "IOError", e);
 		}
 		return null;
