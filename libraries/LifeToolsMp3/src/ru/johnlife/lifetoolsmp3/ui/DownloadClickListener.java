@@ -146,9 +146,7 @@ public class DownloadClickListener implements View.OnClickListener {
 		String path =  song.getPath();
 		listener.context = context;
 		File src = new File(path);
-		if (listener.setMetadataToFile(src, false, song)) {
-			listener.insertToMediaStore(song, path);
-		}
+		listener.setMetadataToFile(src, false, song);
 	}
 
 	public void createUpdater(DownloadManager manager, long id) {
@@ -210,7 +208,6 @@ public class DownloadClickListener implements View.OnClickListener {
 				@Override
 				public void success(String str) {
 					setMetadataToFile(new File(musicDir.getAbsolutePath() + "/" + sb), useAlbumCover, downloadingSong);
-					insertToMediaStore(downloadingSong, musicDir.getAbsolutePath() + "/" + sb);
 					showMessage(context, R.string.download_finished);
 				}
 
@@ -434,20 +431,6 @@ public class DownloadClickListener implements View.OnClickListener {
 			insertToMediaStore(song, src.getAbsolutePath());
 			return false;
 		}
-
-		// try {
-		// MP3File mp3File = (MP3File) AudioFileIO.read(src);
-		// if (mp3File.hasID3v1Tag()) {
-		// mp3File.delete(mp3File.getID3v1Tag());
-		// }
-		// if (mp3File.hasID3v2Tag()) {
-		// mp3File.delete(mp3File.getID3v2Tag());
-		// mp3File.delete(mp3File.getID3v2TagAsv24());
-		// }
-		// mp3File = (MP3File) AudioFileIO.read(src);
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// }
 		
 		if (useCover) {
 			downloadingSong.getCover(new OnBitmapReadyListener() {
@@ -488,6 +471,7 @@ public class DownloadClickListener implements View.OnClickListener {
 				dst.delete();
 			}
 		}
+		insertToMediaStore(song, src.getPath());
 	}
 
 	private final class UpdateTimerTask extends TimerTask {
@@ -576,9 +560,7 @@ public class DownloadClickListener implements View.OnClickListener {
 								}
 							}
 							src = new File(path);
-							if (setMetadataToFile(src, useAlbumCover, song)) {
-								insertToMediaStore(song, path);
-							}
+							setMetadataToFile(src, useAlbumCover, song);
 							setFileUri(currentDownloadId, src.getAbsolutePath());
 							prepare(src, song, path);
 							DownloadCache.getInstanse().remove(artist, title);
