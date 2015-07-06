@@ -7,6 +7,7 @@ import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -58,6 +59,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 			threeDot = view.findViewById(R.id.threeDot);
 			dowloadLabel = (TextView) view.findViewById(R.id.infoView);
 			indicator = (ImageView) info.findViewById(R.id.playingIndicator);
+			((ImageView) indicator).setColorFilter(getContext().getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary)));
 			threeDot.setOnClickListener(this);
 		}
 
