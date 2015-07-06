@@ -36,9 +36,6 @@ public class SearchView extends BaseSearchView {
 
 	@Override
 	protected boolean showFullElement() { return true; }
-
-	@Override
-	public boolean isUseDefaultSpinner() { return true; }
 	
 	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {

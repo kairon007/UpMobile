@@ -156,7 +156,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	private View touchInterceptor;
 	
 	public void specialInit(View view) {}
-	public boolean isUseDefaultSpinner(){ return false; }
 	
 	protected abstract BaseSettings getSettings();
 	protected abstract Nulldroid_Advertisment getAdvertisment();
@@ -170,7 +169,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	protected boolean showPopupMenu() { return false; }
 	protected boolean isAppPT () { return false; }
 	protected boolean onlyOnWifi() { return true; }
-	protected int getDropDownViewResource() { return 0;	}
 	protected void showShadow (boolean visible) { }
 
 	public BaseSearchView(LayoutInflater inflater) {
@@ -536,12 +534,9 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			} else {
 				enginesAdapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list);	
 			}
-			if (!isUseDefaultSpinner()) {
-				enginesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			} else {
-				if (getDropDownViewResource() > 0) {
-					enginesAdapter.setDropDownViewResource(getDropDownViewResource());
-				}
+			int dropDownViewRes = Util.getResIdFromAttribute((Activity) getContext(), R.attr.dropDownViewResource);
+			if (dropDownViewRes != 0) {
+				enginesAdapter.setDropDownViewResource(dropDownViewRes);
 			}
 			spEnginesChoiser.setAdapter(enginesAdapter);
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {

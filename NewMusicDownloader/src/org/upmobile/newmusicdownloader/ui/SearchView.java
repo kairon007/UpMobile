@@ -53,11 +53,6 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	}
 
 	@Override
-	public boolean isUseDefaultSpinner() {
-		return true;
-	}
-
-	@Override
 	public View getView() {
 		View view = super.getView();
 		listView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);

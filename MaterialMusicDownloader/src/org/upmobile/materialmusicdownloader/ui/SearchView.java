@@ -40,9 +40,6 @@ public class SearchView extends BaseSearchView implements Constants, PlaybackSer
 	protected boolean showFullElement() { return false; }
 	
 	@Override
-	public boolean isUseDefaultSpinner() { return true; }
-	
-	@Override
 	protected void click(final View view, int position) {
 		AbstractSong playingSong = (AbstractSong) getAdapter().getItem(position);
 		if (!service.isCorrectlyStateFullCheck(Song.class, getAdapter().getCount(), new ArrayList<AbstractSong>(getAdapter().getAll()))) {

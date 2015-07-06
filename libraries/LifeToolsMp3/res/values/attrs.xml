@@ -20,6 +20,7 @@
         <attr name="pause" format="reference" />
         <attr name="editorDialog" format="reference" />
         <attr name="coverScale" format="reference" />
+        <attr name="dropDownViewResource" format="reference" />
     </declare-styleable>
     
 

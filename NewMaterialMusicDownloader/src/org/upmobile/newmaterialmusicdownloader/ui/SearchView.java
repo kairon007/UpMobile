@@ -45,14 +45,6 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	protected boolean showFullElement() { return false; }
 	
 	@Override
-	public boolean isUseDefaultSpinner() { return true; }
-	
-	@Override
-	protected int getDropDownViewResource() {
-		return R.layout.drop_down_view;
-	}
-	
-	@Override
 	protected void click(final View view, int position) {
 		AbstractSong playingSong = (AbstractSong) getAdapter().getItem(position);
 		if (!service.isCorrectlyStateFullCheck(Song.class, getAdapter().getCount(), new ArrayList<AbstractSong>(getAdapter().getAll()))) {

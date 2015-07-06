@@ -33,6 +33,7 @@
         <item name="editorDialog">@layout/editor_dialog</item>
         <item name="android:alertDialogTheme">@style/AlertDialog</item>
         <item name="coverScale">@dimen/size_cover</item>
+        <item name="dropDownViewResource">@android:layout/simple_spinner_dropdown_item</item>
     </style>
 
     <style name="AlertDialog" parent="@android:style/Theme.Dialog">
@@ -65,6 +66,7 @@
         <item name="editorDialog">@layout/editor_dialog</item>
         <item name="android:alertDialogTheme">@style/AlertDialog</item>
         <item name="coverScale">@dimen/size_cover</item>
+        <item name="dropDownViewResource">@android:layout/simple_spinner_dropdown_item</item>
     </style>
 
     <style name="AppTheme.White" parent="AppThemeBase.White">
@@ -85,6 +87,7 @@
         <item name="pause">@drawable/pause_white</item>
         <item name="editorDialog">@layout/editor_dialog_white</item>
         <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
+        <item name="dropDownViewResource">@android:layout/simple_spinner_dropdown_item</item>
     </style>
 
     <style name="AppTheme.White2" parent="AppThemeBase.White">
@@ -105,6 +108,7 @@
         <item name="pause">@drawable/pause</item>
         <item name="editorDialog">@layout/editor_dialog_white</item>
         <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
+        <item name="dropDownViewResource">@android:layout/simple_spinner_dropdown_item</item>
     </style>
 
 

@@ -39,9 +39,6 @@ public class SearchView extends BaseSearchView {
 	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
 	
 	@Override
-	public boolean isUseDefaultSpinner() { return true; }
-	
-	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
 		try {
 			return Nulldroid_Advertisement.class.newInstance();

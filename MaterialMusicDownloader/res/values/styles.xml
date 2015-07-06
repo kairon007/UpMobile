@@ -13,6 +13,7 @@
         <item name="searchViewStyle">@style/SearchViewStyle</item>
         <item name="useRoboto">true</item>
         <item name="colorPrimary">@color/main_color_500</item>
+        <item name="dropDownViewResource">@null</item>
     </style>
 
     <style name="AppTheme.NoFonts" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -22,6 +23,7 @@
         <item name="searchViewStyle">@style/SearchViewStyle</item>
         <item name="useRoboto">false</item>
         <item name="colorPrimary">@color/main_color_500</item>
+        <item name="dropDownViewResource">@null</item>
     </style>
 
     <!-- <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.Light.PopupMenu"> -->

@@ -58,9 +58,6 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 
 	@Override
 	protected boolean showFullElement() { return false; }
-
-	@Override
-	public boolean isUseDefaultSpinner() { return true; }
 	
 	@Override
 	protected void click(final View view, int position) {
