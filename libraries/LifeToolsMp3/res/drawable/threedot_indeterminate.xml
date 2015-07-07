@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<animation-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    
-    <item android:drawable="@drawable/threedot_indeterminate_default" android:duration="300" />
-    <item android:drawable="@drawable/threedot_indeterminate1" android:duration="100" />
-    <item android:drawable="@drawable/threedot_indeterminate2" android:duration="100" />
-    <item android:drawable="@drawable/threedot_indeterminate3" android:duration="100" />
-
-</animation-list>
