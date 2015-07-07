@@ -304,11 +304,10 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				}
 			}
 			playlistCursor.close();
-			return playlistDatas;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return playlistDatas;
 		}
+		return playlistDatas;
 	}
 	
 	public Cursor myQuery(Context context, Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {

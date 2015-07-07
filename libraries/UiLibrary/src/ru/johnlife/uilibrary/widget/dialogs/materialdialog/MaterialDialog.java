@@ -274,6 +274,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				mBuilder.adapter = new MaterialDialogAdapter(mBuilder.context,
 						ListType.getLayoutForType(listType), R.id.title,
 						mBuilder.items, mBuilder.positions);
+				((MaterialDialogAdapter)mBuilder.adapter).setNotClickableItems(mBuilder.notClickableItems);
 			}
 		}
 		if (builder.icon != null) {
@@ -985,6 +986,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		protected int contentColor = -1;
 		protected CharSequence content;
 		protected CharSequence[] items;
+		protected CharSequence[] notClickableItems;
 		protected CharSequence positiveText;
 		protected CharSequence neutralText;
 		protected CharSequence negativeText;
@@ -1277,6 +1279,11 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 			this.listCallback = callback;
 			this.listCallbackSingle = null;
 			this.listCallbackMulti = null;
+			return this;
+		}
+		
+		public Builder notClickableItems(@NonNull CharSequence[] items) {
+			this.notClickableItems = items;
 			return this;
 		}
 
@@ -1917,6 +1924,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		if (mBuilder.adapter instanceof MaterialDialogAdapter) {
 			mBuilder.adapter = new MaterialDialogAdapter(mBuilder.context,
 					ListType.getLayoutForType(listType), R.id.title, items, mBuilder.positions);
+			((MaterialDialogAdapter)mBuilder.adapter).setNotClickableItems(mBuilder.notClickableItems);
 		} else {
 			throw new IllegalStateException(
 					"When using a custom adapter, setItems() cannot be used. Set items through the adapter instead.");
@@ -1924,6 +1932,10 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 		mBuilder.items = items;
 		listView.setAdapter(mBuilder.adapter);
 		invalidateCustomViewAssociations();
+	}
+	
+	public final void setNotClickableItems(CharSequence[] items) {
+		((MaterialDialogAdapter)mBuilder.adapter).setNotClickableItems(items);
 	}
 
 	public final int getCurrentProgress() {
@@ -2066,6 +2078,7 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 	private class MaterialDialogAdapter extends ArrayAdapter<CharSequence> {
 		final int itemColor;
 		private ArrayList<Integer> selectedPositions;
+		public List<CharSequence> notClickableObjects;
 
 		public MaterialDialogAdapter(Context context, int resource, int textViewResourceId, CharSequence[] objects) {
 			super(context, resource, textViewResourceId, objects);
@@ -2120,6 +2133,18 @@ public class MaterialDialog extends DialogBase implements View.OnClickListener, 
 				view.setBackgroundColor(Color.TRANSPARENT);
 			}
 			return view;
+		}
+
+		public void setNotClickableItems(CharSequence[] items) {
+			this.notClickableObjects = Arrays.asList(items);
+		}
+		
+		@Override
+		public boolean isEnabled(int position) {
+			if (notClickableObjects.contains(getItem(position))) {
+				return false;
+			}
+			return true;
 		}
 	}
 	

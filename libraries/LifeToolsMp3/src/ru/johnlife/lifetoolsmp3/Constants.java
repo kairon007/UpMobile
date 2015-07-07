@@ -25,6 +25,7 @@ public interface Constants {
 	public static final String EXTRA_DATA = "extra.data.to.service.helper";
 	
 	public static final String EMPTY_STRING = "";
+	public static final String AUDIO_END = ".mp3";
 	
 	public static final String PREF_SHOW_INFO_MESSAGE = "pref.show.info.message";
 	

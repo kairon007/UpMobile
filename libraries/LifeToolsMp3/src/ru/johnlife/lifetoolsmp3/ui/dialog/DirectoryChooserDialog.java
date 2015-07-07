@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -43,7 +44,7 @@ import android.widget.Toast;
 public class DirectoryChooserDialog {
 	
 	private static final String STORAGE = "/storage";
-	private List<String> m_subdirs = null;
+	private List<String> m_subfiles = null;
 	private ArrayAdapter<String> m_listAdapter = null;
 	private DialogInterface dialog;
 	private ChosenDirectoryListener m_chosenDirectoryListener = null;
@@ -115,7 +116,7 @@ public class DirectoryChooserDialog {
 			return;
 		}
 		m_dir = dir;
-		m_subdirs = getDirectories(dir);
+		m_subfiles = getDirectories(dir);
 		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 
 			public void onClick(DialogInterface dialog, int item) {
@@ -127,7 +128,7 @@ public class DirectoryChooserDialog {
 				updateDirectory();
 			}
 		}
-		AlertDialog.Builder dialogBuilder = createDirectoryChooserDialog(dir, m_subdirs, new DirectoryOnClickListener());
+		AlertDialog.Builder dialogBuilder = createDirectoryChooserDialog(dir, m_subfiles, new DirectoryOnClickListener());
 		dialogBuilder.setPositiveButton(android.R.string.ok, new OnClickListener() {
 			
 			@Override
@@ -176,28 +177,37 @@ public class DirectoryChooserDialog {
 	}
 
 	private List<String> getDirectories(String dir) {
-		List<String> dirs = new ArrayList<String>();
+		List<String> files = new ArrayList<String>();
+		List<String> songs = new ArrayList<String>();
 		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
 		parent = new File(dir).getParentFile();
 		try {
 			File dirFile = new File(dir);
-			if (!dirFile.exists() || !dirFile.isDirectory()) {
-				return dirs;
+			if (!dirFile.exists() || !dirFile.isDirectory() || !dirFile.canRead()) {
+				return files;
 			}
-
+			
 			for (File file : dirFile.listFiles()) {
-				if (file.isDirectory() && !file.getPath().equals(system.getPath())) {
-					dirs.add(file.getName());
+				if (!file.getPath().equals(system.getPath()) && file.canRead() && 
+						!file.getName().startsWith(".")) {
+					if (file.isDirectory()) {
+						files.add(file.getName());
+					} else if (file.getName().endsWith(Constants.AUDIO_END)) {
+						songs.add(file.getName());
+					}
 				}
 			}
-		} catch (Exception e) {
+			
+			Collections.sort(files, new Comparator<String>() {
+				public int compare(String o1, String o2) {
+					return o1.compareTo(o2);
+				}
+			});
+			files.addAll(songs);
+		} catch (Exception e) { 
+			e.printStackTrace();
 		}
-		Collections.sort(dirs, new Comparator<String>() {
-			public int compare(String o1, String o2) {
-				return o1.compareTo(o2);
-			}
-		});
-		return dirs;
+		return files;
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
@@ -277,13 +287,7 @@ public class DirectoryChooserDialog {
 	public void createNewDirDialog(String name) {
 		keeper.openDialog(StateKeeper.NEWDIR_DIALOG);
 		LayoutInflater inflater = (LayoutInflater) m_context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view;
-//		if (isWhiteTheme){
-//			view = inflater.inflate(R.layout.new_folder_dialog_white, null);
-//		} else {
-//			view = inflater.inflate(R.layout.new_folder_dialog, null);
-//		}
-		view = inflater.inflate(Util.getResIdFromAttribute((Activity) m_context, R.attr.new_folder_dialog), null);
+		View view = inflater.inflate(Util.getResIdFromAttribute((Activity) m_context, R.attr.new_folder_dialog), null);
 		final EditText input = (EditText) view.findViewById(R.id.etNewFolder);
 		input.addTextChangedListener(new CustomWatcher(input));
 		if (null != name) {
@@ -335,12 +339,12 @@ public class DirectoryChooserDialog {
 		if (!new File(m_dir).exists()) {
 			m_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		}
-		m_subdirs.clear();
-		m_subdirs.addAll(getDirectories(m_dir));
+		m_subfiles.clear();
+		m_subfiles.addAll(getDirectories(m_dir));
 		titleText.setText(m_dir);
 		m_listAdapter.notifyDataSetChanged();
 		if (m_listAdapter.isEmpty()) {
-			m_listAdapter.add("");
+			m_listAdapter.add(Constants.EMPTY_STRING);
 		}
 		StateKeeper.getInstance().setDirectoryChooserPath(m_dir);
 	}
@@ -360,11 +364,18 @@ public class DirectoryChooserDialog {
 					if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
 						tv.setTextColor(m_context.getResources().getColor(Util.getResIdFromAttribute((Activity)m_context, R.attr.directory_chooser_tv_color)));
 					}
-					
 					tv.setTextSize(16f);
 					tv.setEllipsize(null);
 				}
 				return v;
+			}
+			
+			@Override
+			public boolean isEnabled(int position) {
+				if (getItem(position).endsWith(Constants.AUDIO_END)) {
+					return false;
+				}
+				return true;
 			}
 		};
 	}

@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
@@ -110,12 +111,31 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		File[] contents = parentFolder.listFiles();
 		if (null == contents) return new File[0];
 		List<File> results = new ArrayList<File>();
+		List<File> audioFiles = new ArrayList<File>();
 		for (File fi : contents) {
-			if (fi.isDirectory())
-				results.add(fi);
+			if (fi.canRead() && !fi.getName().startsWith(".")) {
+				if (fi.isDirectory()) {
+					results.add(fi);
+				} else if (fi.getName().endsWith(Constants.AUDIO_END)) {
+					audioFiles.add(fi);
+				}
+			}
 		}
 		Collections.sort(results, new FolderSorter());
+		results.addAll(audioFiles);
 		return results.toArray(new File[results.size()]);
+	}
+	
+	private String[] getAudioFiles() {
+		File[] contents = parentFolder.listFiles();
+		if (null == contents) return new String[0];
+		List<String> audioFiles = new ArrayList<String>();
+		for (File fi : contents) {
+			if (fi.getName().endsWith(Constants.AUDIO_END)) {
+				audioFiles.add(fi.getName());
+			}
+		}
+		return audioFiles.toArray(new String[audioFiles.size()]);
 	}
 
 	@Override
@@ -123,6 +143,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		return new MaterialDialog.Builder(getActivity())
 				.title(parentFolder.getAbsolutePath())
 				.items(getContentsArray())
+				.notClickableItems(getAudioFiles())
 				.theme(Theme.LIGHT)
 				.dividerColorRes(R.color.md_divider_white)
 				.titleColorRes(R.color.main_color_500)
@@ -155,6 +176,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		MaterialDialog dialog = (MaterialDialog) getDialog();
 		dialog.setTitle(parentFolder.getAbsolutePath());
 		dialog.setItems(getContentsArray());
+		dialog.setNotClickableItems(getAudioFiles());
 	}
 	
 	@Override
