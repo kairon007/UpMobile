@@ -51,6 +51,7 @@
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.White</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
         <item name="editIndicator">@drawable/ic_player_edit_black</item>
         <item name="textViewColor">@android:color/black</item>
@@ -75,12 +76,17 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
         <item name="searchShadow">@drawable/shadow_light</item>
         <item name="dropDownViewResource">@null</item>
+        <item name="listview_divider">@drawable/layout_divider</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
 
     <style name="AppThemeWhite.BlackActionBar" parent="AppBaseTheme.DarkActionBar">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.Black</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
         <item name="editIndicator">@drawable/ic_player_edit_black</item>
         <item name="textViewColor">@android:color/white</item>
@@ -105,11 +111,16 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
         <item name="searchShadow">@drawable/shadow</item>
         <item name="dropDownViewResource">@null</item>
+        <item name="listview_divider">@drawable/layout_divider</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
     
     <style name="AppTheme.NoFonts" parent="AppBaseTheme.NoFonts">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
         <item name="editIndicator">@drawable/ic_player_edit</item>
         <item name="textViewColor">@android:color/white</item>
@@ -134,12 +145,17 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download</item>
         <item name="searchShadow">@drawable/shadow</item>
         <item name="dropDownViewResource">@null</item>
+        <item name="listview_divider">@drawable/layout_divider</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
 
     <style name="AppThemeWhite.NoFonts" parent="AppBaseTheme.Light.NoFonts">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.White</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
         <item name="editIndicator">@drawable/ic_player_edit_black</item>
         <item name="textViewColor">@android:color/black</item>
@@ -164,12 +180,17 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
         <item name="searchShadow">@drawable/shadow_light</item>
         <item name="dropDownViewResource">@null</item>
+        <item name="listview_divider">@drawable/layout_divider</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
 
     <style name="AppThemeWhite.BlackActionBar.NoFonts" parent="AppBaseTheme.DarkActionBar.NoFonts">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:actionBarStyle">@style/MyActionBar.Black</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyleWhite</item>
+        <item name="android:scrollbarStyle">insideOverlay</item>
         <item name="lyricsIndicator">@drawable/ic_player_lyrics_black</item>
         <item name="editIndicator">@drawable/ic_player_edit_black</item>
         <item name="textViewColor">@android:color/white</item>
@@ -194,6 +215,10 @@
         <item name="miniPlayerDownload">@drawable/mini_player_download_dark</item>
         <item name="searchShadow">@drawable/shadow</item>
         <item name="dropDownViewResource">@null</item>
+        <item name="listview_divider">@drawable/layout_divider</item>
+        <item name="listview_divider_height">@dimen/list_devider_height_1</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="directory_chooser_tv_color">@android:color/black</item>
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
