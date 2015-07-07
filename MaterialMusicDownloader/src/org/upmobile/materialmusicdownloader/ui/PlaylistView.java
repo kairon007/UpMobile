@@ -50,10 +50,10 @@ public class PlaylistView extends BasePlaylistView{
 			@Override
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
+				Util.hideKeyboard(getContext(), dialog.getCustomView());
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle =  input.getText().toString().trim();
 				if (newTitle.isEmpty()) {
-					dialog.cancel();
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);
 					return;
 				}
@@ -63,7 +63,7 @@ public class PlaylistView extends BasePlaylistView{
 						return;
 					}
 				}
-				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
+				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();
 			}

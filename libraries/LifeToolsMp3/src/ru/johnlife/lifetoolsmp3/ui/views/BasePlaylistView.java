@@ -304,7 +304,7 @@ public abstract class BasePlaylistView extends View {
 						return;
 					}
 				}
-				createPlaylist(getContext().getContentResolver(), ((EditText) dialoglayout.findViewById(R.id.newPlaylistET)).getText().toString());
+				createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), dialoglayout);
 				dialog.cancel();
 			}

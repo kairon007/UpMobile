@@ -76,17 +76,17 @@ public class PlaylistView extends BasePlaylistView {
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle = input.getText().toString().trim();
 				if (newTitle.isEmpty()) {
-					dialog.cancel();
 					showMessage(getContext(), R.string.playlist_cannot_be_empty);
 					return;
 				}
 				for (AbstractSong data : getAllItems()) {
-					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
+					if (data.getClass() == PlaylistData.class && 
+							((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
 						showMessage(getContext(), R.string.playlist_already_exists);
 						return;
 					}
 				}
-				PlaylistView.this.createPlaylist(getContext().getContentResolver(), input.getText().toString());
+				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();
 			}
