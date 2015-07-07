@@ -9,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener.State;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -55,8 +56,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	 */
 	private static final int SMODE_PLAYING = 0x00000004;
 	private static final int SMODE_PAUSE = 0x00000008;
-	private static final int SMODE_SHUFFLE = 0x00000010;
-	private static final int SMODE_REPEAT = 0x00000020;
+	private static final int SMODE_SHUFFLE_AUTO = 0x00000010;
+	private static final int SMODE_SHUFFLE_MANUAL = 0x00000020;
+	private static final int SMODE_REPEAT = 0x00008000;
 	private static final int SMODE_START_PREPARE = 0x00000040;
 	private static final int SMODE_DISABLED_DURING_CALL = 0x00000080;
 	private static final int SMODE_UNPLUG_HEADPHONES = 0x00000100;
@@ -296,7 +298,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				else if (pos >= arrayPlayback.size() ) playingSong = arrayPlayback.get(pos - 1);
 				else playingSong = arrayPlayback.get(pos);
 				if (check(SMODE_PLAYING)) {
-					shift(0);
+					shift(0, false);
 				} else if (check(SMODE_PAUSE)) {
 					reset();
 				}
@@ -417,22 +419,38 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	}
 	
-	public void shift(int delta) {
+	public void shift(int delta, boolean fromUser) {
 		if (null == arrayPlayback || arrayPlayback.isEmpty()) return;
 		int position = arrayPlayback.indexOf(playingSong);
 		position += delta;
 		if (position >= arrayPlayback.size()) {
-			stopPressed();
-			return;
+			if (fromUser) {
+				position = 0;
+				showMessage(R.string.repeat_list);
+			} else {
+				stopPressed();
+				return;
+			}
 		} else if (position < 0) {
 			position = arrayPlayback.size() - 1;
 		}
+		boolean nextOrig = fromUser && null != arrayPlaybackOriginal && enabledShuffleAuto();
+		if (nextOrig) {
+			position = arrayPlaybackOriginal.indexOf(playingSong);
+			position += delta;
+			if (position >= arrayPlaybackOriginal.size()) {
+				showMessage(R.string.repeat_list);
+				position = 0;
+			} else if (position < 0) {
+				position = arrayPlaybackOriginal.size() - 1;
+			}
+		}
 		previousSong = playingSong;
-		playingSong = arrayPlayback.get(position);
+		playingSong = (nextOrig ? arrayPlaybackOriginal : arrayPlayback).get(position);
 		handler.removeCallbacksAndMessages(null);
 		buildSendMessage(playingSong, MSG_SHIFT, position, 0);
 	}
-
+	
 	public void play(AbstractSong song) {
 		if (arrayPlayback == null || arrayPlayback.indexOf(song) == -1) return;
 		int position = arrayPlayback.indexOf(song);
@@ -496,9 +514,20 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public boolean offOnShuffle() {
-		mode ^= SMODE_SHUFFLE;
-		boolean result = enabledShuffle();
-		if (result) {
+		if (enabledShuffleAll()) {
+			if (enabledShuffleAuto()) {
+				mode ^= SMODE_SHUFFLE_AUTO;
+				mode ^= SMODE_SHUFFLE_MANUAL;
+				showMessage(R.string.manual_shuffle);
+			} else if (enabledShuffleManual()) {
+				mode ^= SMODE_SHUFFLE_MANUAL;
+			}
+		} else {
+			mode ^= SMODE_SHUFFLE_AUTO;
+			showMessage(R.string.auto_shuffle);
+		}
+		boolean result = enabledShuffleAll();
+		if (result && null == arrayPlaybackOriginal) {
 			arrayPlaybackOriginal = new ArrayList<AbstractSong>();
 			try {
 				for (AbstractSong song : arrayPlayback) {
@@ -509,8 +538,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			}
 			long seed = System.nanoTime();
 			Collections.shuffle(arrayPlayback, new Random(seed));
-		} else {
+		} else if (!enabledShuffleAll()){
 			arrayPlayback = new ArrayList<AbstractSong>(arrayPlaybackOriginal);
+			arrayPlaybackOriginal = null;
 		}
 		return result;
 	}
@@ -666,7 +696,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 	@Override
 	public void onCompletion(MediaPlayer paramMediaPlayer) {
-		shift(enabledRepeat() ? 0 : 1);
+		shift(enabledRepeat() ? 0 : 1, false);
 	}
 
 	@Override
@@ -695,8 +725,21 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		return playingSong;
 	}
 	
-	public boolean enabledShuffle() {
-		return check(SMODE_SHUFFLE);
+	public boolean enabledShuffleAuto() {
+		return check(SMODE_SHUFFLE_AUTO);
+	}
+	
+	public boolean enabledShuffleManual() {
+		return check(SMODE_SHUFFLE_MANUAL);
+	}
+	
+	public boolean enabledShuffleAll() {
+		if (enabledShuffleAuto()) {
+			return enabledShuffleAuto();
+		} else if (enabledShuffleManual()) {
+			return enabledShuffleManual();
+		}
+		return false;
 	}
 
 	public boolean enabledRepeat() {
@@ -735,7 +778,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	}
 	
 	public ArrayList<AbstractSong> getArrayPlayback() {
-		if (check(SMODE_SHUFFLE)) {
+		if (enabledShuffleAll()) {
 			return arrayPlaybackOriginal;
 		}
 		return arrayPlayback;
@@ -754,7 +797,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			result = false;
 		}
 		if (null != newArray && null != arrayPlayback) {
-			result = newArray.equals(enabledShuffle() ? arrayPlaybackOriginal : arrayPlayback);
+			result = newArray.equals(enabledShuffleAll()? arrayPlaybackOriginal : arrayPlayback);
 		}
 		return result;
 	}
@@ -830,7 +873,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					play(playingSong);
 				}
 			} else if (intent.getAction().equals(NEXT_ACTION)) {
-				shift(1);
+				shift(1, true);
 			}
 		}
 		if (null != activityContext) {
@@ -969,6 +1012,18 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 	}
 	
+	private void showMessage(Object o) {
+		if (o.getClass() == String.class) {
+			if (activityContext instanceof BaseMiniPlayerActivity) {
+				((BaseMiniPlayerActivity)activityContext).showMessage((String) o);
+			}
+		} else if (o.getClass() == Integer.class) {
+			if (activityContext instanceof BaseMiniPlayerActivity) {
+				((BaseMiniPlayerActivity)activityContext).showMessage((Integer) o);
+			}
+		}
+	}
+	
 	private OnBufferingUpdateListener bufferingUpdateListener = new OnBufferingUpdateListener() {
 		
 		@Override
@@ -1007,8 +1062,11 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		if (check(SMODE_REPEAT)) {
 			builder.append("| SMODE_REPEAT");
 		}
-		if (check(SMODE_SHUFFLE)) {
-			builder.append("| SMODE_SHUFFLE");
+		if (check(SMODE_SHUFFLE_AUTO)) {
+			builder.append("| SMODE_SHUFFLE_AUTO");
+		}
+		if (check(SMODE_SHUFFLE_MANUAL)) {
+			builder.append("| SMODE_SHUFFLE_MANUAL");
 		}
 		if (check(SMODE_START_PREPARE)) {
 			builder.append("| SMODE_START_PREPARE");

@@ -636,7 +636,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btnPreviousFooter:
 			if (fromLibrary) {
-				playbackService.shift(-1);
+				playbackService.shift(-1, true);
 			} else {
 				onClickPreviousFooter();
 			}
@@ -652,7 +652,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		case R.id.btnNextFooter:
 			if (fromLibrary) {
-				playbackService.shift(1);
+				playbackService.shift(1, true);
 			} else {
 				onClickNextFooter();
 			}

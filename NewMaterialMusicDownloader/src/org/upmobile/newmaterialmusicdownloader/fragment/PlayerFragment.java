@@ -126,6 +126,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private ImageView forward;
 	private ImageView shuffle;
 	private ImageView repeat;
+	private TextView shuffleMode;
 
 	// info sections
 	private TextView tvTitle;
@@ -223,6 +224,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		forward = (ImageView) contentView.findViewById(R.id.next);
 		shuffle = (ImageView) contentView.findViewById(R.id.shuffle);
 		repeat = (ImageView) contentView.findViewById(R.id.repeat);
+		shuffleMode = (TextView) contentView.findViewById(R.id.shuffleMode);
 		download = (ActionProcessButton) contentView.findViewById(R.id.download);
 		playerProgress = (DiscreteSeekBar) contentView.findViewById(R.id.progress_track);
 		tvTitle = (TextView) contentView.findViewById(R.id.songName);
@@ -249,8 +251,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void setListeners() {
+		contentView.findViewById(R.id.shuffleParent).setOnClickListener(this);
 		play.setOnClickListener(this);
-		shuffle.setOnClickListener(this);
+//		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -329,10 +332,20 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			drawableRepeat.setAlpha(!player.offOnRepeat() ? 125 : 255);
 			repeat.setImageDrawable(drawableRepeat);
 			break;
-		case R.id.shuffle: 
+		case R.id.shuffleParent: 
 			Drawable drawableShuffle = shuffle.getDrawable();
 			drawableShuffle.setAlpha(player.offOnShuffle() ? 255 : 125);
 			shuffle.setImageDrawable(drawableShuffle);
+			if (player.enabledShuffleAll()) {
+				shuffleMode.setVisibility(View.VISIBLE);
+				if (player.enabledShuffleAuto()) {
+					shuffleMode.setText("A");
+				} else {
+					shuffleMode.setText("M");
+				}
+			} else {
+				shuffleMode.setVisibility(View.INVISIBLE);
+			}
 			break;
 		case R.id.download:
 			download();
@@ -627,13 +640,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			hasPost = false;
 		}
 		play.setClickable(false);
-		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
-			player.play(player.getArrayPlayback().get(0));
-			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
-		} else {
-			player.pause();
-			player.shift(delta);
-		}
+		player.pause();
+		player.shift(delta, true);
 		setDownloadButtonState(!player.isGettingURl());
 		playerProgress.setProgress(0);
 		playerProgress.setSecondaryProgress(0);
@@ -680,12 +688,19 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			drawableRepeat.setAlpha(255);
 			repeat.setImageDrawable(drawableRepeat);
 		}
-		if (player.enabledShuffle()) {
+		if (player.enabledShuffleAll()) {
 			drawableShuffle.setAlpha(255);
-			shuffle.setImageDrawable(drawableShuffle);
+			shuffle.setImageDrawable(drawableShuffle); 
+			shuffleMode.setVisibility(View.VISIBLE);
+			if (player.enabledShuffleAuto()) {
+				shuffleMode.setText("A");
+			} else {
+				shuffleMode.setText("M");
+			}
 		} else {
 			drawableShuffle.setAlpha(125);
 			shuffle.setImageDrawable(drawableShuffle);
+			shuffleMode.setVisibility(View.INVISIBLE);
 		}
 	}
 

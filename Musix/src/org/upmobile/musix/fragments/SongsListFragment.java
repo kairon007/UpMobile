@@ -99,7 +99,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			}
 		}
 		setupViews();
-		btnShuffle.setAlpha(!musicService.enabledShuffle() ? (float) 0.5 : (float) 1);
+		btnShuffle.setAlpha(!musicService.enabledShuffleAll() ? (float) 0.5 : (float) 1);
 		musicBound = true;
 		return rootView;
 	}
@@ -212,7 +212,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		btnPrev.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				musicService.shift(-1);
+				musicService.shift(-1, true);
 				if (playbackPaused) {
 					playbackPaused = false;
 				}
@@ -226,7 +226,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		btnNext.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				musicService.shift(1);
+				musicService.shift(1, true);
 				if (playbackPaused) {
 					playbackPaused = false;
 				}
@@ -275,7 +275,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			@Override
 			public void onClick(View v) {
 				musicService.offOnShuffle();
-				if (!musicService.enabledShuffle()) {
+				if (!musicService.enabledShuffleAll()) {
 					btnShuffle.setAlpha((float) 0.5);
 				} else {
 					btnShuffle.setAlpha((float) 1);

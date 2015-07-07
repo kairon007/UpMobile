@@ -264,12 +264,26 @@
                         android:layout_gravity="center"
                         android:layout_weight="1" >
 
-                        <ImageView
-                            android:id="@+id/shuffle"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_shuffle_grey" />
+                        <LinearLayout
+                            android:id="@+id/shuffleParent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center" >
+
+                            <ImageView
+                                android:id="@+id/shuffle"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_shuffle_grey" />
+                            <TextView 
+                                android:id="@+id/shuffleMode"
+                                android:layout_width="16dp"
+                                android:layout_height="32dp"
+                                android:visibility="gone"
+                                android:textColor="?attr/colorPrimary"/>
+                        </LinearLayout>
                     </ru.johnlife.uilibrary.widget.customviews.RippleView>
 
                     <ru.johnlife.uilibrary.widget.customviews.RippleView

@@ -156,5 +156,6 @@
      <string name="not_show_again">Do not show again</string>
      <string name="changes_relevant_when_downloading">The changes will be relevant only when downloading songs</string>
      <string name="repeat_list">Playback is started with the beginning of the list</string>
-     
+     <string name="manual_shuffle">Manual shuffle mode on</string>
+     <string name="auto_shuffle">Auto shuffle mode on</string>
 	</resources>

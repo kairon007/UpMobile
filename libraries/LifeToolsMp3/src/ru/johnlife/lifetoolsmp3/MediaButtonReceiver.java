@@ -70,7 +70,7 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 			if (action == KeyEvent.ACTION_DOWN) {
 				long time = SystemClock.uptimeMillis();
 				if (time - sLastClickTime < 400) {
-					player.shift(1);
+					player.shift(1, true);
 				} else if (player.isPlaying()) {
 					player.pause();
 				} else {
@@ -81,12 +81,12 @@ public class MediaButtonReceiver extends BroadcastReceiver {
 			break;
 		case KeyEvent.KEYCODE_MEDIA_NEXT:
 			if (action == KeyEvent.ACTION_DOWN) {
-				player.shift(1);
+				player.shift(1, true);
 			}
 			break;
 		case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
 			if (action == KeyEvent.ACTION_DOWN) {
-				player.shift(-1);
+				player.shift(-1, true);
 			}
 			break;
 		case KeyEvent.KEYCODE_MEDIA_PLAY:

@@ -114,6 +114,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView shuffle;
 	private TextView repeat;
 	private Bitmap bitmap;
+	private TextView shuffleMode;
 
 	// info sections
 	private TextView tvTitle;
@@ -353,8 +354,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		case R.id.repeat:
 			repeat.setAlpha(player.offOnRepeat() ? 1 : (float) 0.5);
 			break;
-		case R.id.shuffle:
+		case R.id.shuffleParent:
 			shuffle.setAlpha(player.offOnShuffle() ? 1 : (float) 0.5);
+			if (player.enabledShuffleAll()) {
+				shuffleMode.setVisibility(View.VISIBLE);
+				if (player.enabledShuffleAuto()) {
+					shuffleMode.setText("A");
+				} else {
+					shuffleMode.setText("M");
+				}
+			} else {
+				shuffleMode.setVisibility(View.INVISIBLE);
+			}
 			break;
 		case R.id.download:
 			download();
@@ -451,12 +462,13 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		cbUseCover = (CheckBox) view.findViewById(R.id.cbUseCover);
 		artistBox = (LinearLayout) view.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
+		shuffleMode = (TextView) contentView.findViewById(R.id.shuffleMode);
 		undo = new UndoBar(getActivity());
 	}
 
 	private void setListeners() {
 		play.setOnClickListener(this);
-		shuffle.setOnClickListener(this);
+//		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -465,6 +477,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setOnClickListener(this);
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
+		playerContent.findViewById(R.id.shuffleParent).setOnClickListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
@@ -587,7 +600,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
 		} else {
 			player.pause();
-			player.shift(delta);
+			player.shift(delta, true);
 		}
 		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
 		if (song.getClass() == MusicData.class || isDownloaded) {
@@ -619,7 +632,17 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	private void setImageButton() {
 		repeat.setAlpha(player.enabledRepeat() ? 1 : (float) 0.5);
-		shuffle.setAlpha(player.enabledShuffle() ? 1 : (float) 0.5);
+		shuffle.setAlpha(player.enabledShuffleAll() ? 1 : (float) 0.5);
+		if (player.enabledShuffleAll()) {
+			shuffleMode.setVisibility(View.VISIBLE);
+			if (player.enabledShuffleAuto()) {
+				shuffleMode.setText("A");
+			} else {
+				shuffleMode.setText("M");
+			}
+		} else {
+			shuffleMode.setVisibility(View.INVISIBLE);
+		}
 	}
 
 

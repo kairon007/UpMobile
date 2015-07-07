@@ -751,15 +751,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.removeCallbacks(progressAction);
 		playProgress.setVisibility(View.VISIBLE);
 		playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
-		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
-			AbstractSong song = player.getArrayPlayback().get(0);
-			player.play(song);
-			getCover(song);
-			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
-		} else {
-			player.pause();
-			player.shift(delta);
-		}
+		player.pause();
+		player.shift(delta, true);
 		downloadButtonState(!player.isGettingURl());
 		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
 		if (MusicData.class == song.getClass() || StateKeeper.DOWNLOADED <= state) {

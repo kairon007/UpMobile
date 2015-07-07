@@ -74,6 +74,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageButton shuffle;
 	private ImageButton repeat;
 	private ImageButton stop;
+	private TextView shuffleMode;
 	private ImageView playerCover;
 	private Button btnDownload;
 	private Button playerSaveTags;
@@ -201,9 +202,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 		}
-		if (player.enabledShuffle()) {
+		if (player.enabledShuffleAll()) {
+			shuffleMode.setVisibility(View.VISIBLE);
+			if (player.enabledShuffleAuto()) {
+				shuffleMode.setText("A");
+			} else {
+				shuffleMode.setText("M");
+			}
 			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffleOn));
 		} else {
+			shuffleMode.setVisibility(View.INVISIBLE);
 			shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
 		}
 	}
@@ -284,6 +292,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		showLyrics = (ImageButton) view.findViewById(R.id.player_lyrics);
 		editTag = (ImageButton) view.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) view.findViewById(R.id.progress_volume);
+		shuffleMode = (TextView) view.findViewById(R.id.shuffleMode);
 		playerProgress = (SeekBar) view.findViewById(R.id.progress_track);
 		playerTitle = (TextView) view.findViewById(R.id.songName);
 		playerArtist = (TextView) view.findViewById(R.id.artistName);
@@ -302,7 +311,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		play.setOnClickListener(this);
 		btnDownload.setOnClickListener(this);
 		stop.setOnClickListener(this);
-		shuffle.setOnClickListener(this);
+		(view.findViewById(R.id.shuffleParent)).setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -363,11 +372,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
 			}
 			break;
-		case R.id.shuffle:
+		case R.id.shuffleParent:
 			if (player.offOnShuffle()) {
 				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffleOn));
 			} else {
 				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
+			}
+			if (player.enabledShuffleAll()) {
+				shuffleMode.setVisibility(View.VISIBLE);
+				if (player.enabledShuffleAuto()) {
+					shuffleMode.setText("A");
+				} else {
+					shuffleMode.setText("M");
+				}
+			} else {
+				shuffleMode.setVisibility(View.INVISIBLE);
 			}
 			break;
 		case R.id.stop:
@@ -581,13 +600,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			return;
 		}
 		playerCover.invalidate();
-		if (delta > 0 && (player.getArrayPlayback().size() - 1) == player.getArrayPlayback().indexOf(player.getPlayingSong())) {
-			player.play(player.getArrayPlayback().get(0));
-			((MainActivity) getActivity()).showMessage(ru.johnlife.lifetoolsmp3.R.string.repeat_list);
-		} else {
-			player.pause();
-			player.shift(delta);
-		}
+		player.pause();
+		player.shift(delta, true);
 		downloadButtonState(!player.isGettingURl());
 		getCover(player.getPlayingSong());
 	}
