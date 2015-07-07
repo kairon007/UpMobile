@@ -21,7 +21,18 @@ public class PlaylistFragment extends Fragment {
 		return playlistView.getView();
 	}
 	
-
+	@Override
+	public void onResume() {
+		playlistView.onResume();
+		super.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		playlistView.onPause();
+		super.onPause();
+	}
+	
 	public void setFilter(String filter) {
 		playlistView.applyFilter(filter);
 		playlistView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);

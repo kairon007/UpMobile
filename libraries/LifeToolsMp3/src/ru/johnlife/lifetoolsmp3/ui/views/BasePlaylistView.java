@@ -1,11 +1,13 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
@@ -44,6 +46,8 @@ import android.widget.Toast;
 public abstract class BasePlaylistView extends View {
 
 	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
+	private static final String PREF_LAST_OPENED = "pref.last.opened";
+	private static final String PLYLIST_TAG = "playlist";
 	private ViewGroup view;
 	protected ListView listView;
 	private View playLastPlaylist;
@@ -103,11 +107,39 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void onResume() {
+		BaseMiniPlayerActivity activity = (BaseMiniPlayerActivity) getContext();
+		if (activity.getFragmentManager().getBackStackEntryAt(activity.getFragmentManager().getBackStackEntryCount() - 1).getName().toLowerCase().contains(PLYLIST_TAG.toLowerCase())) {
+			setOpened();
+		}
 		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
 	}
 	
 	public void onPause () {
+		MusicApp.getSharedPreferences().edit().putStringSet(PREF_LAST_OPENED, getOpenedPlaylists()).commit();
 		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
+	}
+	
+	private void setOpened() {
+		ArrayList<AbstractSong> allItems = getAllItems();
+		HashSet<String> myHashSet = (HashSet<String>) MusicApp.getSharedPreferences().getStringSet(PREF_LAST_OPENED, new HashSet<String>());
+		for (AbstractSong data : getAllItems()) {
+			if (data.getClass() == PlaylistData.class && myHashSet.contains(String.valueOf(((PlaylistData)data).getId()))) {
+				if (((PlaylistData) data).getSongs().size() == 0 || ((PlaylistData) data).isExpanded()) continue;
+				allItems.addAll(allItems.indexOf(data) + 1, ((PlaylistData) data).getSongs());
+				((PlaylistData) data).setExpanded(true);
+			}
+		}
+		updateAdapter(allItems);
+	}
+	
+	private HashSet getOpenedPlaylists() {
+		HashSet<String> myHashSet = new HashSet<String>();
+		for (AbstractSong data : getAllItems()) {
+			if (data.getClass() == PlaylistData.class && ((PlaylistData) data).isExpanded()) {
+				myHashSet.add(String.valueOf(((PlaylistData) data).getId()));
+			}
+		}
+		return myHashSet;
 	}
 	
 	private void init(LayoutInflater inflater) {

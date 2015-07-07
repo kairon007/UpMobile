@@ -29,6 +29,13 @@ public class PlaylistFragment extends Fragment {
 		act.setSelectedItem(Constants.PLAYLIST_FRAGMENT);
 		act.setDrawerEnabled(true);
 		act.invalidateOptionsMenu();
+		playlistView.onResume();
+	}
+	
+	@Override
+	public void onPause() {
+		playlistView.onPause();
+		super.onPause();
 	}
 	
 	public void setFilter(String filter) {
