@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -108,14 +109,18 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
 		
 		@Override
 		protected void onPostExecute(String result) {
-			if (null == result) {
-				for (OnBitmapReadyListener listener : listeners) {
-					if (null != listener) {
-						listener.onBitmapReady(null);
+			try {
+				if (null == result) {
+					for (OnBitmapReadyListener listener : listeners) {
+						if (null != listener) {
+							listener.onBitmapReady(null);
+						}
 					}
+				} else {
+					ImageLoader.getInstance().loadImage(result, LastFmCoverLoaderTask.this);
 				}
-			} else {
-				ImageLoader.getInstance().loadImage(result, LastFmCoverLoaderTask.this);
+			} catch (Throwable e) {
+				Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 			}
 		}
 	}

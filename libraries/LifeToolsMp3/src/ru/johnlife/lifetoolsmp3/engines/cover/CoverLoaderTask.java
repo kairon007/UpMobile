@@ -42,7 +42,7 @@ public class CoverLoaderTask implements ImageLoadingListener {
 				return;
 			}
 		    ImageLoader.getInstance().loadImage(coverUrl, this);			
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 		}
 		return;

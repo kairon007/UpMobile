@@ -17,7 +17,7 @@ public class ImageUtil {
 		ImageLoader loader = ImageLoader.getInstance();
 		try {
 			loader.displayImage(path, view, DEFAULT_DISPLAY_IMAGE_OPTIONS, listener);
-		} catch (OutOfMemoryError e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			loader.clearMemoryCache();
 		}
@@ -27,7 +27,7 @@ public class ImageUtil {
 		ImageLoader loader = ImageLoader.getInstance();
 		try {
 			loader.displayImage(path, view, ROUND_DISPLAY_IMAGE_OPTIONS, listener);
-		} catch (OutOfMemoryError e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 			loader.clearMemoryCache();
 		}
@@ -37,7 +37,7 @@ public class ImageUtil {
 		ImageLoader loader = ImageLoader.getInstance();
 		try {
 			loader.loadImage(path, DEFAULT_DISPLAY_IMAGE_OPTIONS, listener);
-		} catch (OutOfMemoryError e) {
+		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}

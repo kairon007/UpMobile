@@ -64,14 +64,18 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 		
 		@Override
 		protected void onPostExecute(String result) {
-			if (null == result) {
-				for (OnBitmapReadyListener listener : listeners) {
-					if (null != listener) {
-						listener.onBitmapReady(null);
+			try {
+				if (null == result) {
+					for (OnBitmapReadyListener listener : listeners) {
+						if (null != listener) {
+							listener.onBitmapReady(null);
+						}
 					}
+				} else {
+					ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
 				}
-			} else {
-				ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
+			} catch (Throwable e) {
+				Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 			}
 		}
 	}
