@@ -72,13 +72,8 @@ public class PlaylistView extends BasePlaylistView {
 			@Override
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
-				Util.hideKeyboard(getContext(), dialog.getCustomView());
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle = input.getText().toString().trim();
-				if (newTitle.isEmpty()) {
-					showMessage(getContext(), R.string.playlist_cannot_be_empty);
-					return;
-				}
 				for (AbstractSong data : getAllItems()) {
 					if (data.getClass() == PlaylistData.class && 
 							((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
@@ -161,6 +156,7 @@ public class PlaylistView extends BasePlaylistView {
 									.positiveText(R.string.create)
 									.negativeText(android.R.string.cancel);
 		dialog = builder.build();
+		dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 		final FloatingEditText editText = (FloatingEditText) dialog.getCustomView().findViewById(android.R.id.edit);
 		editText.setHint(R.string.playlist_name);
 		final int defColor = editText.getHighlightedColor();
@@ -182,6 +178,9 @@ public class PlaylistView extends BasePlaylistView {
 					((FloatingEditText) editText).setHighlightedColor(defColor);
 					editText.setHint(R.string.playlist_name);
 					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+				}
+				if (s.toString().trim().isEmpty()) {
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 				}
 			}
 		});
