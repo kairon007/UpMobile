@@ -90,10 +90,8 @@ public class CompatIcs {
 			Bitmap bitmap = song.getCover();
 			if (bitmap != null) {
 				bitmap = bitmap.copy(Bitmap.Config.RGB_565, false);
-			} else {
-				bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ic_launcher);
+				editor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, bitmap);
 			}
-			editor.putBitmap(RemoteControlClient.MetadataEditor.BITMAP_KEY_ARTWORK, bitmap);
 		}
 		editor.apply();
 	}
