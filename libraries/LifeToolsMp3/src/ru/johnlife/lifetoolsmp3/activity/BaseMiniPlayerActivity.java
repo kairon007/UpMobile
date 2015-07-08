@@ -211,7 +211,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		boolean isPrepared = service.isPrepared();
+		boolean isPrepared = service.isEnqueueToStream();
 		StateKeeper keeper = StateKeeper.getInstance();
 		AbstractSong curr = service.getPlayingSong();
 		showPlayerElement(isPrepared);
