@@ -24,6 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="24dp"
                 android:fontFamily="sans-serif-thin"
                 android:gravity="center"
                 android:text="@string/search_your_results_appear_here"
@@ -80,11 +81,11 @@
                             style="@style/EditTextAppearance.Line"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:drawableRight="@drawable/fake_image"
                             android:hint="@string/hint_main_search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
                             android:lines="1"
-                            android:drawableRight="@drawable/fake_image"
                             android:singleLine="true" />
 
                         <ru.johnlife.uilibrary.widget.customviews.RippleView
