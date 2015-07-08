@@ -30,9 +30,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -282,7 +280,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
 		Cursor cursor;
 		synchronized (lock) {
-			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
+//			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
+			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
 			cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		}
 		return cursor;
@@ -295,10 +294,16 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			if (adapter.isEmpty()) {
 				adapter.add(list);
 			} else {
+				android.util.Log.d("logd", "handleMessage: ");
 				adapter.setDoNotifyData(false);
 				adapter.clear();
 				adapter.add(list);
-				adapter.notifyDataSetChanged();
+				if(!filterQuery.isEmpty()) {
+					applyFilter(filterQuery);
+				} else {
+					adapter.notifyDataSetChanged();
+				}
+
 			}
 			hideProgress(view);
 		}
@@ -342,5 +347,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 			}
 			super.onPostExecute(result);
 		}
+	}
+	
+	public String getFilterQuery() {
+		return filterQuery;
 	}
 }

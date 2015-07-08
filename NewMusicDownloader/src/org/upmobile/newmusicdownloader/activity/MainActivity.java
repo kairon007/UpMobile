@@ -58,6 +58,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	private final String APP_THEME_NO_FONTS = "AppTheme.NoFonts";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
+	private MenuItem searchItem;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
 	private boolean isVisibleSearchView = false;
@@ -107,7 +108,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu, menu);
-		MenuItem searchItem = menu.findItem(R.id.action_search);
+		searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 		searchView.setOnQueryTextListener(this);
@@ -395,6 +396,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	protected DownloadClickListener createDownloadListener(RemoteSong song) {
 		return new DownloadListener(this, song, 0);
+	}
+	
+	public SearchView getSearchView() {
+		return searchView;
+	}
+	
+	public MenuItem getSearchItem() {
+		return searchItem;
 	}
 
 }
