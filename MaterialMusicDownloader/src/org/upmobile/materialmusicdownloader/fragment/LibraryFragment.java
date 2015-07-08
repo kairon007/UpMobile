@@ -36,7 +36,6 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	
 	@Override
 	public void onPause() {
-		clearFilter();
 		libraryView.onPause();
 		super.onPause();
 	}

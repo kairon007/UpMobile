@@ -280,7 +280,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
 		Cursor cursor;
 		synchronized (lock) {
-//			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + filterQuery + "%'";
 			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
 			cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		}
@@ -291,19 +290,13 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	public boolean handleMessage(Message msg) {
 		if (msg.what == MSG_FILL_ADAPTER) {
 			ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
-			if (adapter.isEmpty()) {
-				adapter.add(list);
+			adapter.setDoNotifyData(false);
+			adapter.clear();
+			adapter.add(list);
+			if (!filterQuery.isEmpty()) {
+				applyFilter(filterQuery);
 			} else {
-				android.util.Log.d("logd", "handleMessage: ");
-				adapter.setDoNotifyData(false);
-				adapter.clear();
-				adapter.add(list);
-				if(!filterQuery.isEmpty()) {
-					applyFilter(filterQuery);
-				} else {
-					adapter.notifyDataSetChanged();
-				}
-
+				adapter.notifyDataSetChanged();
 			}
 			hideProgress(view);
 		}

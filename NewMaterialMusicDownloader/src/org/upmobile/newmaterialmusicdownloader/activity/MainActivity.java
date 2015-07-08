@@ -67,6 +67,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private Toolbar toolbar;
 	private View toolbarShadow;
 	private FragmentDrawer drawerFragment;
+	private MenuItem searchItem;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +104,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		MenuItem searchItem = menu.findItem(R.id.action_search);
+		searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -557,5 +558,4 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			}
 		}
 	}
-
 }

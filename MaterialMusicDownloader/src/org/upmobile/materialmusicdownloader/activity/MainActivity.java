@@ -61,7 +61,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			}
 		}
 	};
-
+	
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

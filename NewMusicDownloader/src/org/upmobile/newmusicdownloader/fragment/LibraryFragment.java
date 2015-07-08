@@ -18,6 +18,7 @@ public class LibraryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		libraryView = new LibraryView(inflater);
+		((MainActivity) inflater.getContext()).invalidateOptionsMenu();
 		return libraryView.getView();
 	}
 
@@ -25,16 +26,11 @@ public class LibraryFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		MainActivity activity = (MainActivity) getActivity();
-		activity.invalidateOptionsMenu();
 		activity.setSelectedItem(Constants.LIBRARY_FRAGMENT);
 		activity.setCurrentTag(getClass().getSimpleName());
 		activity.setTitle(R.string.tab_library);
 		activity.setDrawerEnabled(true);
 		libraryView.onResume();
-		if (!libraryView.getFilterQuery().isEmpty()) {
-			activity.getSearchItem().expandActionView();
-			activity.getSearchView().setQuery(libraryView.getFilterQuery(), false);
-		}
 	}
 	
 	@Override

@@ -18,6 +18,7 @@ public class LibraryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		libraryView = new LibraryView(inflater);
+		((MainActivity) inflater.getContext()).invalidateOptionsMenu();
 		return libraryView.getView();
 	}
 	
@@ -33,14 +34,13 @@ public class LibraryFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
+		super.onResume();
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.libraryFragment());
 		act.setDraverEnabled(true);
 		act.setTitle(R.string.tab_library);
-		act.invalidateOptionsMenu();
 		act.showToolbarShadow(true);
 		libraryView.onResume();
-		super.onResume();
 	}
 	
 	@Override
