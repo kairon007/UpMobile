@@ -50,13 +50,8 @@ public class PlaylistView extends BasePlaylistView{
 			@Override
 			public void onPositive(MaterialDialog dialog) {
 				super.onPositive(dialog);
-				Util.hideKeyboard(getContext(), dialog.getCustomView());
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle =  input.getText().toString().trim();
-				if (newTitle.isEmpty()) {
-					showMessage(getContext(), R.string.playlist_cannot_be_empty);
-					return;
-				}
 				for (AbstractSong data : getAllItems()) {
 					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
 						showMessage(getContext(), R.string.playlist_already_exists);
@@ -130,9 +125,11 @@ public class PlaylistView extends BasePlaylistView{
 		.negativeColorRes(R.color.material_red_500)
 		.callback(buttonCallback)
 		.autoDismiss(false)
+		.cancelable(false)
 		.positiveText(R.string.create)
 		.negativeText(android.R.string.cancel);
 		dialog = builder.build();
+		dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 		dialog.show();
 		EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 		final TextView errorView = (TextView) dialog.findViewById(org.upmobile.materialmusicdownloader.R.id.errorMessage);
@@ -152,6 +149,9 @@ public class PlaylistView extends BasePlaylistView{
 				} else {
 					errorView.setText("");
 					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+				}
+				if (s.toString().trim().isEmpty()) {
+					dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 				}
 			}
 		});

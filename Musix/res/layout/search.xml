@@ -23,10 +23,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
-                android:textColor="@color/wet_asphalt"
                 android:text="@string/search_your_results_appear_here"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/wet_asphalt" />
 
             <ProgressBar
                 android:id="@+id/progress"
@@ -100,17 +101,17 @@
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
-                        android:visibility="gone"
                         android:background="@drawable/selectable_item_bg"
-                        android:src="@drawable/ic_download" />
+                        android:src="@drawable/ic_download"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
-                    android:spinnerMode="dropdown"
+                    android:layout_height="48dp"
                     android:popupBackground="@color/wet_asphalt"
-                    android:layout_height="48dp" />
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

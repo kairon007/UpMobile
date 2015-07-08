@@ -51,7 +51,7 @@ public class NotifyingScrollView extends ScrollView {
 	public int getToolbarAlpha() {
 		int alpha = 255;
 		float alphaScale = (float)getScrollY() / (float)image.getHeight();
-		return (int)(alphaScale * alpha);
+		return alphaScale > 1 ? alpha : (int)(alphaScale * alpha);
 	}
 	
 	public void setOnScrollChangedListener(OnScrollChangedListener listener) {

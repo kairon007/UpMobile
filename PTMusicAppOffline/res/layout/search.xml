@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:background="@android:color/transparent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent" >
 
     <RelativeLayout
         android:id="@+id/touch_interceptor"
@@ -13,14 +13,15 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/transparent"
-            android:layout_weight="1" >
+            android:layout_weight="1"
+            android:background="@android:color/transparent" >
 
             <TextView
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="@string/search_your_results_appear_here"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -40,7 +41,6 @@
                 android:clickable="true"
                 android:listSelector="@drawable/selectable_item_bg" >
             </ListView>
-
         </FrameLayout>
 
         <LinearLayout
@@ -50,17 +50,19 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:orientation="vertical"
-            android:scrollbars="none">
-            <View android:layout_width="match_parent"
+            android:scrollbars="none" >
+
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/white"/>
+                android:background="@android:color/white" />
 
             <LinearLayout
                 android:id="@+id/choise_engines_layout"
                 android:layout_width="match_parent"
                 android:layout_height="96dp"
                 android:background="@color/red_light"
-                android:orientation="vertical">
+                android:orientation="vertical" >
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -77,18 +79,18 @@
 
                         <EditText
                             android:id="@+id/text"
+                            style="@style/EditTextAppTheme"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:hint="@string/hint_main_search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
-                            android:textColor="@android:color/white"
-                            android:textColorHint="@android:color/white"
                             android:lines="1"
-                            style="@style/EditTextAppTheme"
-                            android:paddingRight="48dp"
                             android:paddingLeft="16dp"
-                            android:singleLine="true" />
+                            android:paddingRight="48dp"
+                            android:singleLine="true"
+                            android:textColor="@android:color/white"
+                            android:textColorHint="@android:color/white" />
 
                         <ImageButton
                             android:id="@+id/clear"
@@ -118,9 +120,9 @@
                 <Spinner
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
-                    android:spinnerMode="dropdown"
+                    android:layout_height="48dp"
                     android:popupBackground="@drawable/bg_header"
-                    android:layout_height="48dp" />
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

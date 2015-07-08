@@ -25,6 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="24dp"
                 android:gravity="center"
                 android:text="@string/search_your_results_appear_here"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -80,6 +81,7 @@
                             android:id="@+id/text"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:drawableRight="@drawable/fake_image"
                             android:hint="@string/hint_main_search"
                             android:imeOptions="actionSearch"
                             android:inputType="text"
@@ -87,7 +89,6 @@
                             android:paddingRight="50dp"
                             android:singleLine="true"
                             android:textColor="?attr/textViewColor"
-                            android:drawableRight="@drawable/fake_image"
                             android:textColorHint="?attr/textViewColor" />
 
                         <ImageButton
@@ -123,10 +124,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/spinner_selector"
-                    android:popupBackground="?attr/searchBackgroundColor"
-                    android:spinnerMode="dropdown"
                     android:dropDownVerticalOffset="-48dip"
-                    android:overlapAnchor="false" />
+                    android:overlapAnchor="false"
+                    android:popupBackground="?attr/searchBackgroundColor"
+                    android:spinnerMode="dropdown" />
             </LinearLayout>
 
             <View
