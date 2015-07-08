@@ -12,6 +12,7 @@
         <item name="android:ratingBarStyle">@style/Widget.AppCompat.RatingBar</item>
         <item name="android:textViewStyle">@style/TextViewStyle</item>
         <item name="android:editTextStyle">@style/EditTextStyle</item>
+        <item name="dropDownViewResource">@layout/drop_down_view</item>
     </style>
 
     <style name="ToolbarTitle" parent="android:Widget.TextView">

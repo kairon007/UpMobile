@@ -9,5 +9,6 @@
     <attr name="cpbSelectorIdle" format="reference" />
     <attr name="cpbSelectorComplete" format="reference" />
     <attr name="cpbSelectorError" format="reference" />
+    <attr name="editTextCursor" format="reference" />
 
 </resources>

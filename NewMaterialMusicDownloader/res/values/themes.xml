@@ -39,13 +39,12 @@
         <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl</item>
         <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl</item>
         <item name="actionModeBackground">@color/black_material_primary</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
+        <item name="editTextCursor">@drawable/edit_text_cursor_default</item>
     </style>
     
     <style name="MaterialAppThemeNoFonts" parent="MaterialAppTheme">
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
 	</style>
     
     <!-- Application black theme. -->
@@ -69,13 +68,12 @@
         <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_black</item>
         <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_black</item>
         <item name="actionModeBackground">@color/black_material_primary</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
+        <item name="editTextCursor">@drawable/edit_text_cursor_black</item>
     </style>
 
     <style name="MaterialAppTheme.BlackNoFonts" parent="MaterialAppTheme.Black">
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
 	</style>
     
     <!-- Application brown theme. -->
@@ -100,13 +98,12 @@
         <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_brown</item>
         <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_brown</item>
         <item name="actionModeBackground">@color/brown_material_primary</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
+        <item name="editTextCursor">@drawable/edit_text_cursor_brown</item>
     </style>
 
     <style name="MaterialAppTheme.BrownNoFonts" parent="MaterialAppTheme.Brown">
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
 	</style>
     
     <!-- Application deep orange theme. -->
@@ -130,13 +127,12 @@
         <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_orange</item>
         <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_orange</item>
         <item name="actionModeBackground">@color/orange_material_primary</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
+        <item name="editTextCursor">@drawable/edit_text_cursor_orange</item>
     </style>
 
 	<style name="MaterialAppTheme.DeepOrangeNoFonts" parent="@style/MaterialAppTheme.DeepOrange">
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
 	</style>
 	
 	<!-- Application green theme. -->
@@ -160,13 +156,12 @@
         <item name="android:textSelectHandleRight">@drawable/text_select_handle_right_mtrl_green</item>
         <item name="android:textSelectHandle">@drawable/text_select_handle_middle_mtrl_green</item>
         <item name="actionModeBackground">@color/green_material_primary</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
+        <item name="editTextCursor">@drawable/edit_text_cursor_green</item>
     </style>
 
 	<style name="MaterialAppTheme.GreenNoFonts" parent="@style/MaterialAppTheme.Green">
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
-        <item name="dropDownViewResource">@layout/drop_down_view</item>
 	</style>
 	
 </resources>
