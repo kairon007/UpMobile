@@ -130,6 +130,7 @@ public class PlaylistView extends BasePlaylistView{
 		.negativeColorRes(R.color.material_red_500)
 		.callback(buttonCallback)
 		.autoDismiss(false)
+		.cancelable(false)
 		.positiveText(R.string.create)
 		.negativeText(android.R.string.cancel);
 		dialog = builder.build();
