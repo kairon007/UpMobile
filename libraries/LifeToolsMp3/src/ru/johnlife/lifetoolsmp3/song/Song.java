@@ -227,7 +227,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 				flags |= FLAG_NO_COVER;
 				return cover;
 			}
-			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata);
+			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata, path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

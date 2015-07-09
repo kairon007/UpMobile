@@ -126,7 +126,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-			return Util.getArtworkImage(2, metadata);
+			return Util.getArtworkImage(2, metadata, path);
 		} catch (Exception e) {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 			return null;
@@ -141,7 +141,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 				try {
 					MusicMetadataSet src_set = new MyID3().read(file);
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-					readyListener.onBitmapReady(Util.getArtworkImage(2, metadata));
+					readyListener.onBitmapReady(Util.getArtworkImage(2, metadata, path));
 				} catch (Exception e) {
 					android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 					readyListener.onBitmapReady(null);

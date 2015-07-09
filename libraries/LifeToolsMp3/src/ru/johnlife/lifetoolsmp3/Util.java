@@ -20,6 +20,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.media.MediaMetadataRetriever;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -105,14 +106,17 @@ public final class Util {
 		return result;
 	}
 	
-	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata) {
+	public static Bitmap getArtworkImage(int maxWidth, MusicMetadata metadata, String path) {
 		synchronized (obj) {
 			if (maxWidth == 0) {
 				return null;
 			}
 			Vector<ImageData> pictureList = metadata.getPictureList();
 			if ((pictureList == null) || (pictureList.size() == 0)) {
-				return null;
+				MediaMetadataRetriever myRetriever = new MediaMetadataRetriever();
+	            myRetriever.setDataSource(path);
+	            byte[] artwork = myRetriever.getEmbeddedPicture();
+	            return BitmapFactory.decodeByteArray(artwork, 0, artwork.length);
 			}
 			ImageData imageData = (ImageData) pictureList.get(0);
 			if (imageData == null) {
