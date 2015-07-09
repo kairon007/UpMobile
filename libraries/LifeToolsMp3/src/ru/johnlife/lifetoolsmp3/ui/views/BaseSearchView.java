@@ -590,7 +590,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 					if (!str.isEmpty()) {
 						trySearch();
 					}
-				}
+				} 
 
 				@Override
 				public void onNothingSelected(AdapterView<?> parent) {
