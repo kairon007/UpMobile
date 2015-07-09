@@ -51,6 +51,9 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.media.audiofx.Visualizer;
 import android.os.AsyncTask;
@@ -65,6 +68,7 @@ import android.support.v7.graphics.Palette.PaletteAsyncListener;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -95,6 +99,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private PlaybackService player;
 	private DownloadListener downloadListener;
 	private ProgressUpdaterListener progressListener;
+	private Bitmap bigDefaultCover;
 
 	private View contentView;
 
@@ -219,6 +224,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void init() {
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
 		scrollView.setImageResource(R.id.scrollable_cover);
+		generateDefaultCover();
+		scrollView.setImageBitmap(bigDefaultCover);
 		play = (PlayPauseView) contentView.findViewById(R.id.playpause);
 		previous = (ImageView) contentView.findViewById(R.id.prev);
 		forward = (ImageView) contentView.findViewById(R.id.next);
@@ -248,7 +255,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		forward.setColorFilter(primaryColor);
 		shuffle.setColorFilter(primaryColor);
 		repeat.setColorFilter(primaryColor);
-	}
+	}	
 
 	private void setListeners() {
 		contentView.findViewById(R.id.shuffleParent).setOnClickListener(this);
@@ -938,7 +945,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			scrollView.setImageBitmap(bitmap);
 		} else {
 			visualizerView.setUpVizualizerColor(-1, -1);
-			scrollView.setImageBitmap(R.drawable.big_album);
+			scrollView.setImageBitmap(bigDefaultCover);
 		}
 	}
 	
@@ -1113,6 +1120,29 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (playerProgress.isIndeterminate()) {
 			playerProgress.showFloater();	
 		}	
+	}
+	
+	private void generateDefaultCover() {		
+		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+		int height = (int)(display.getHeight()/2);
+
+		bigDefaultCover = Bitmap.createBitmap(height, height, Bitmap.Config.RGB_565);
+
+		Canvas canvas = new Canvas(bigDefaultCover);
+		canvas.drawColor(Color.WHITE);
+		
+		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
+		
+		p.setColor(getResources().getColor(R.color.def_cover_grey));
+		canvas.drawCircle(height/2, height/2, height/2 - 50, p);
+		
+		p.setColor(Color.WHITE);
+		canvas.drawCircle(height/2, height/2, height/5, p);
+		
+		p.setColor(getResources().getColor(R.color.def_cover_grey));
+		canvas.drawCircle(height/2, height/2, height/18, p);
+		
+		canvas.setBitmap(bigDefaultCover);
 	}
 	
 }
