@@ -32,7 +32,6 @@
         <attr name="navigationSettings" format="reference" />
         <attr name="icDrawerCompat" format="reference" />
         <attr name="actionBarTitleBg" format="reference" />
-        <attr name="actionBarBg" format="reference" />
     </declare-styleable>
 
 </resources>
