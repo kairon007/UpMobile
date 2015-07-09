@@ -791,17 +791,31 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (etArtist.getVisibility() == View.VISIBLE || etTitle.getVisibility() == View.VISIBLE) {
 			Boolean isSameWord = false;
 			Util.hideKeyboard(getActivity(), contentView);
-			if (etTitle.getVisibility() == View.VISIBLE && !song.getTitle().equals(etTitle.getText().toString())) {
-				String title = Util.removeSpecialCharacters(etTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etTitle.getText().toString());
-				song.setTitle(title);
-				tvTitle.setText(title);
-			} else if (etArtist.getVisibility() == View.VISIBLE && !song.getArtist().equals(etArtist.getText().toString())) {
-				String artist = Util.removeSpecialCharacters(etArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : etArtist.getText().toString());
-				song.setArtist(artist);
-				tvArtist.setText(artist);
+			String title = song.getTitle();
+			String artist = song.getArtist();
+			String changedTitle = etTitle.getText().toString();
+			String changedArtist = etArtist.getText().toString();
+			if (etTitle.getVisibility() == View.VISIBLE && !title.equals(changedTitle)) {
+				String newTitle = Util.removeSpecialCharacters(changedTitle.isEmpty() ? MP3Editor.UNKNOWN : changedTitle);
+				song.setTitle(newTitle);
+				tvTitle.setText(newTitle);
+			} else if (etArtist.getVisibility() == View.VISIBLE && !artist.equals(changedArtist)) {
+				String newArtist = Util.removeSpecialCharacters(changedArtist.isEmpty() ? MP3Editor.UNKNOWN : changedArtist);
+				song.setArtist(newArtist);
+				tvArtist.setText(newArtist);
 			} else {
 				isSameWord = true;
 			}
+			if (!isSameWord) {
+				if (etTitle.getVisibility() == View.VISIBLE && isSameNameExists(artist, changedTitle)) {
+					song.setTitle(title);
+					tvTitle.setText(title);
+				} else if (etArtist.getVisibility() == View.VISIBLE && isSameNameExists(changedArtist, title)) {
+					song.setArtist(artist);
+					tvArtist.setText(artist);
+				}
+			}
+			
 			contentView.findViewById(R.id.artistNameBox).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.songNameBox).setVisibility(View.VISIBLE);
 			etArtist.setVisibility(View.GONE);
@@ -815,13 +829,17 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 	}
 
-	private void saveTags() {
-		File f = new File(song.getPath());
-		StringBuilder path = new StringBuilder(f.getParentFile().toString()).append("/").append(song.getArtist()).append(" - ").append(song.getTitle()).append(".mp3");
+	private boolean isSameNameExists(String artist, String title) {
+		StringBuilder path = new StringBuilder(new File(song.getPath()).getParentFile().toString())
+				.append("/").append(artist).append(" - ").append(title).append(".mp3");
 		if (new File(path.toString()).exists()) {
 			((MainActivity) getActivity()).showMessage(R.string.file_already_exists);
-			return;
+			return true;
 		}
+		return false;
+	}
+
+	private void saveTags() {
 		RenameTaskSuccessListener renameListener = new RenameTaskSuccessListener() {
 	
 			@Override
@@ -832,9 +850,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 	
 			@Override
-			public void error() {
-			}
-	
+			public void error() { }	
 		};
 		renameTask = new RenameTask(new File(song.getPath()), getActivity(), renameListener, song.getArtist(), song.getTitle(), song.getAlbum());
 		renameTask.start(true, false);
