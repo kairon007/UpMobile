@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.Constants;
@@ -21,8 +22,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
-
-import com.csform.android.uiapptemplate.R;
 
 public class FolderSelectorDialog extends DialogFragment implements	MaterialDialog.ListCallback {
 

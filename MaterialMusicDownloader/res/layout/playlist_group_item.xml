@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:clickable="true" >
 
-        <com.csform.android.uiapptemplate.font.MusicTextView
+        <org.upmobile.materialmusicdownloader.font.MusicTextView
             android:id="@+id/customGroupIndicator"
             style="@style/TextViewAppearance.CustomMusicButtons.Colored"
             android:layout_width="wrap_content"
@@ -20,7 +20,7 @@
             android:text="@string/font_arrow_down"
             android:textSize="16sp" />
 
-        <com.csform.android.uiapptemplate.font.RobotoTextView
+        <org.upmobile.materialmusicdownloader.font.RobotoTextView
             android:id="@+id/textTitle"
             style="@style/TextViewAppearance.Body"
             android:layout_width="0dp"
@@ -35,7 +35,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp" >
 
-            <com.csform.android.uiapptemplate.font.MusicTextView
+            <org.upmobile.materialmusicdownloader.font.MusicTextView
                 android:id="@+id/playAll"
                 style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"

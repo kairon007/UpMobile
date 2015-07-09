@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical" >
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
+                <org.upmobile.materialmusicdownloader.font.RobotoTextView
                     android:id="@+id/titleLine"
                     style="@style/TextViewAppearance.Body"
                     android:layout_width="match_parent"
@@ -45,7 +45,7 @@
                     android:ellipsize="end"
                     android:singleLine="true" />
 
-                <com.csform.android.uiapptemplate.font.RobotoTextView
+                <org.upmobile.materialmusicdownloader.font.RobotoTextView
                     android:id="@+id/artistLine"
                     style="@style/CaptionLineGray"
                     android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                     android:singleLine="true" />
             </RelativeLayout>
 
-            <com.csform.android.uiapptemplate.font.MusicTextView
+            <org.upmobile.materialmusicdownloader.font.MusicTextView
                 android:id="@+id/playingIndicator"
                 style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center_vertical" >
 
-            <com.csform.android.uiapptemplate.font.MusicTextView
+            <org.upmobile.materialmusicdownloader.font.MusicTextView
                 android:id="@+id/threeDot"
                 style="@style/TextViewAppearance.CustomMusicButtons.Colored"
                 android:layout_width="wrap_content"

@@ -26,6 +26,10 @@
         <item name="dropDownViewResource">@null</item>
     </style>
 
+    <style name="AppTheme.Title" parent="Theme.AppCompat">
+        <item name="android:textColorPrimary">@android:color/white</item>
+    </style>
+
     <!-- <style name="myPopupMenuStyle" parent="@android:style/Widget.Holo.Light.PopupMenu"> -->
     <!-- <item name="android:popupBackground">@color/main_color_background</item> -->
     <!-- </style> -->
@@ -57,6 +61,12 @@
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
         <item name="android:textColor">@color/main_color_gray_text</item>
+    </style>
+
+    <style name="TextViewAppearance.Title1" parent="@style/TextViewAppearance">
+        <item name="typeface">robotoMedium</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/main_color_grey_400</item>
     </style>
 
     <style name="TitleLineGray" parent="TextViewAppearance.Title">
@@ -213,5 +223,25 @@
         <item name="floating_et_char_count">30</item>
         <item name="floating_et_show_count">true</item>
     </style>
+
+    <style name="Spinner.Material" parent="@android:Widget.Material.Spinner">
+        <item name="android:background">@drawable/spinner_selector</item>
+        <item name="android:clickable">true</item>
+        <item name="android:popupBackground">@color/main_color_500</item>
+        <item name="android:dropDownWidth">wrap_content</item>
+        <item name="android:gravity">start|center_vertical</item>
+    </style>
+    
+        <!-- ListView related themes -->
+    <style name="ListViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/main_color_grey_100</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+    <!-- ListView related themes end here -->
 
 </resources>

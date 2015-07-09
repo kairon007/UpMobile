@@ -5,6 +5,7 @@ import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+import org.upmobile.materialmusicdownloader.font.MusicTextView;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
@@ -18,8 +19,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.csform.android.uiapptemplate.font.MusicTextView;
 
 public class SearchAdapter extends BaseSearchAdapter {
 

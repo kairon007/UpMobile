@@ -2,6 +2,7 @@ package org.upmobile.materialmusicdownloader.ui;
 
 import java.util.ArrayList;
 
+import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
@@ -31,7 +32,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.csform.android.uiapptemplate.R;
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 

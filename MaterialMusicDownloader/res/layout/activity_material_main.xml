@@ -69,7 +69,7 @@
 
             <fragment
                 android:id="@+id/navigation_drawer"
-                android:name="com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment"
+                android:name="org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment"
                 android:layout_width="@dimen/drawer_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"

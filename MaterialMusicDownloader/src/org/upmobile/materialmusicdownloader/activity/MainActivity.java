@@ -1,24 +1,29 @@
 package org.upmobile.materialmusicdownloader.activity;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+import org.upmobile.materialmusicdownloader.font.MusicTextView;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.OnNavigationDrawerState;
 import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.materialmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
 import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog;
 import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -27,36 +32,48 @@ import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.util.TypedValue;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
-import com.csform.android.uiapptemplate.UIMainActivity;
-import com.csform.android.uiapptemplate.font.MusicTextView;
-import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+public class MainActivity extends BaseMiniPlayerActivity implements FolderSelectCallback, NavigationDrawerCallbacks, Constants {
 
-public class MainActivity extends UIMainActivity implements Constants, FolderSelectCallback {
-
-	private final String folderPath = MaterialMusicDownloaderApp.getDirectory();
 	private int currentFragmentID;
+	private CharSequence mTitle;
+	private String query = null;
+	private SearchView searchView;
+	private NavigationDrawerFragment navigationDrawerFragment;
+	private boolean isVisibleSearchView = false;
+	protected boolean isEnabledFilter = false;
+	protected boolean hadClosedDraver = false;
+	private int currentPosition = -1;
 
-	private FileObserver fileObserver = new FileObserver(folderPath) {
+	private FileObserver fileObserver = new FileObserver(MaterialMusicDownloaderApp.getDirectory()) {
 
 		@Override
 		public void onEvent(int event, String path) {
 			if (event == FileObserver.DELETE_SELF) {
-				File file = new File(folderPath);
+				File file = new File(MaterialMusicDownloaderApp.getDirectory());
 				file.mkdirs();
-				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + folderPath + "%'", null);
+				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + MaterialMusicDownloaderApp.getDirectory() + "%'", null);
 				getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
 			}
 		}
@@ -65,28 +82,157 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		File file = new File(folderPath);
-		if (!file.exists()) file.mkdirs();
+		setContentView(R.layout.activity_material_main);
+		navigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+		navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
+		navigationDrawerFragment.setDrawerState(new OnNavigationDrawerState() {
+
+			@Override
+			public void onDrawerOpen() {
+				navigationDrawerOpened();
+			}
+		});
+		File file = new File(MaterialMusicDownloaderApp.getDirectory());
+		if (!file.exists())
+			file.mkdirs();
 		fileObserver.startWatching();
-//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+
+		// Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+	}
+
+
+	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
+		if (null != searchView) {
+			Util.hideKeyboard(this, searchView);
+		}
+		isEnabledFilter = false;
+		if (null != searchView) {
+			searchView.setIconified(true);
+			searchView.setIconified(true);
+		}
+		if (((Fragment) baseMaterialFragment).isAdded()) {
+			((Fragment) baseMaterialFragment).onResume();
+		}
+		FragmentTransaction tr = getFragmentManager().beginTransaction();
+		if (isAnimate && isAnimationEnabled()) {
+			tr.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
+		}
+		tr.replace(R.id.content_frame, (Fragment) baseMaterialFragment, baseMaterialFragment.getClass().getSimpleName()).addToBackStack(baseMaterialFragment.getClass().getSimpleName()).commit();
+	}
+
+	protected String getPreviousFragmentName(int position) {
+		if (getFragmentManager().getBackStackEntryCount() < position) return SearchFragment.class.getSimpleName();
+		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
+		String previousFragmentName = backEntry.getName();
+		return previousFragmentName;
 	}
 
 	@Override
-	protected ArrayList<BaseMaterialFragment> getFragments() {
-		ArrayList<BaseMaterialFragment> fragments = new ArrayList<BaseMaterialFragment>();
-		fragments.add(new SearchFragment());
-		fragments.add(new DownloadsFragment());
-		fragments.add(new PlaylistFragment());
-		fragments.add(new LibraryFragment());
-		fragments.add(new PlayerFragment());
-		return fragments;
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
+		return super.onPrepareOptionsMenu(menu);
 	}
-	
+
 	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		View view = findViewById(R.id.drawer_layout);
+		Util.hideKeyboard(this, view);
+		int itemId = item.getItemId();
+		if (itemId == R.id.action_search) {
+			searchView.setIconified(false);// to Expand the SearchView when clicked
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onNavigationDrawerItemSelected(int position) {
+		if (position == currentPosition && (position != SETTINGS_FRAGMENT && position != 6)) {
+			return;
+		}
+		if (position == PLAYER_FRAGMENT) {
+			showMiniPlayer(false);
+		} else if (position <= LIBRARY_FRAGMENT) {
+			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
+		}
+		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : position != SETTINGS_FRAGMENT && position != 6 ? 16 : 0);
+		currentFragmentIsPlayer = false;
+		switch (position) {
+		case SEARCH_FRAGMENT:
+			changeFragment(new SearchFragment(), false);
+			break;
+		case DOWNLOADS_FRAGMENT:
+			changeFragment(new DownloadsFragment(), false);
+			break;
+		case PLAYLIST_FRAGMENT:
+			changeFragment(new PlaylistFragment(), false);
+			break;
+		case LIBRARY_FRAGMENT:
+			changeFragment(new LibraryFragment(), false);
+			break;
+		case PLAYER_FRAGMENT:
+			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+			String lastFragmentName = backEntry.getName();
+			currentFragmentIsPlayer = true;
+			BaseMaterialFragment fragment = new PlayerFragment();
+			if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
+				changeFragment(fragment, true);
+			}
+			break;
+		case SETTINGS_FRAGMENT:
+		case 6:
+			showDialog();
+			break;
+		default:
+			break;
+		}
+		currentPosition = position;
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		View v = findViewById(android.R.id.home);
+		if (null != v) {
+			if (useOldToggle()) {
+				((View) v.getParent().getParent()).setPadding(32, 0, 0, 0);
+			}
+		}
+		getMenuInflater().inflate(R.menu.main, menu);
+		MenuItem searchItem = menu.findItem(R.id.action_search);
+		searchView = (SearchView) searchItem.getActionView();
+		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		searchView.setOnSearchClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (navigationDrawerFragment.isDrawerOpen()) {
+					navigationDrawerFragment.closeDrawer();
+				}
+			}
+		});
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String q) {
+				searchView.clearFocus();
+				Util.hideKeyboard(MainActivity.this, searchView);
+				onQueryTextSubmitAct(q);
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				onQueryTextChangeAct(newText);
+				return false;
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
+	}
+
 	protected void clickOnSearchView(String message) {
 		changeFragment(new SearchFragment(message), false);
 	}
-	
+
 	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
@@ -98,10 +244,16 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		super.checkOnStart(null == player || !player.isVisible());
 	}
-	
+
 	@Override
 	public void onBackPressed() {
-		super.onBackPressed();
+		if (getPreviousFragmentName(2).equals(SearchFragment.class.getSimpleName())) {
+			getSupportActionBar().setElevation(0);
+		}
+		hadClosedDraver = navigationDrawerFragment.isDrawerOpen();
+		if (hadClosedDraver) {
+			navigationDrawerFragment.closeDrawer();
+		}
 		if (hadClosedDraver) {
 			hadClosedDraver = false;
 			return;
@@ -119,7 +271,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 				showMiniPlayer(service.isEnqueueToStream());
 				getFragmentManager().popBackStack();
 			}
-		} else if (currentFragmentID == LIBRARY_FRAGMENT){
+		} else if (currentFragmentID == LIBRARY_FRAGMENT) {
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
 			Fragment fragment;
 			if (current == MusicData.class) {
@@ -141,11 +293,11 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			}
 		}
 	}
-	
+
 	public void showPlayerElement(boolean flag) {
 		addPlayerElement(flag);
 	}
-	
+
 	public void showMessage(String message) {
 		UndoBar undoBar = new UndoBar(this);
 		undoBar.clear();
@@ -153,16 +305,16 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		undoBar.style(UndoBarController.MESSAGESTYLE);
 		undoBar.show(false);
 	}
-	
+
 	public void showMessage(int message) {
 		showMessage(getString(message));
 	}
-	
+
 	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image) {
-			return property < 0 ? null : getDefaultBitmapCover(outWidth, outHeight, property, image, 0, 0, 0);
+		return property < 0 ? null : getDefaultBitmapCover(outWidth, outHeight, property, image, 0, 0, 0);
 	}
-	
-	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor, int pL,int pT) {
+
+	public Bitmap getDefaultBitmapCover(int outWidth, int outHeight, int property, String image, int customColor, int pL, int pT) {
 		MusicTextView textCover = new MusicTextView(this);
 		textCover.setText(image);
 		textCover.setTextColor(getResources().getColor(customColor == 0 ? R.color.main_color_500 : customColor));
@@ -188,32 +340,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
-	
-	@Override
-	protected boolean isAnimationEnabled() {
-		return Nulldroid_Settings.ENABLE_ANIMATIONS;
-	}
 
-	@Override
-	public String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectory();
-	}
-	
-	@Override
-	public void showDialog() {
-		new FolderSelectorDialog().show(this);
-	}
-	
-	@Override
-	protected int getMiniPlayerID() {
-		return R.id.mini_player;
-	}
-	
-	@Override
-	protected int getMiniPlayerClickableID() {
-		return R.id.mini_player_main;
-	}
-	
 	@Override
 	public void setCover(Bitmap bmp) {
 		if (null == bmp) {
@@ -221,28 +348,28 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			bmp = getDefaultBitmapCover(64, 62, 60, cover);
 		}
 		service.updatePictureNotification(bmp);
-		((ImageView)findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
+		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
-	
+
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
 		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), playPayse ? getString(R.string.font_pause_mini) : getString(R.string.font_play_mini));
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 	}
-	
+
 	@Override
 	protected void setImageDownloadButton() {
 		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), getString(R.string.font_download_button));
 		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bmp);
 	}
-	
+
 	public void setupDownloadBtn() { // in PlayerFragment
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (null != player && player.isVisible()) {
 			((PlayerFragment) player).setupDownloadButton();
 		}
 	}
-	
+
 	@Override
 	public void onFolderSelection(final File folder) {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
@@ -262,8 +389,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			}
 		}).start();
 	}
-	
-	@Override
+
 	protected void navigationDrawerOpened() {
 		String lastFragmentName = getPreviousFragmentName(1);
 		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
@@ -271,8 +397,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			fragment.forceDelete();
 		}
 	}
-	
-	@Override
+
 	public void onQueryTextSubmitAct(String query) {
 		String lastFragmentName = getPreviousFragmentName(1);
 		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
@@ -284,7 +409,7 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 					fragment.setFilter(query);
 				}
 			}
-		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
+		} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
 			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 			if (fragment.isVisible()) {
 				fragment.collapseAll();
@@ -297,10 +422,9 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		}
 	}
 
-	@Override
 	public void onQueryTextChangeAct(String newText) {
 		if ("".equals(newText)) {
-			String fragmentName =  getPreviousFragmentName(1);
+			String fragmentName = getPreviousFragmentName(1);
 			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
 			if (LibraryFragment.class == fragment.getClass()) {
 				if (fragment.isVisible()) {
@@ -313,33 +437,23 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 			}
 		}
 	}
-	
+
 	@Override
 	protected void showPlayerFragment() {
 		setDrawerEnabled(false);
 		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
 	}
-	
-	@Override
-	public int getSettingsIcon() {
-		return R.string.font_play_settings;
-	}
-	
-	@Override
-	protected int getFakeViewID() {
-		return R.id.fake_view;
+
+	protected Bitmap getSearchActinBarIcon() {
+		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online),
+				R.color.main_color_for_search_fragment_text, 0, 0);
 	}
 
-	@Override
-	protected Bitmap getSearchActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online), R.color.main_color_for_search_fragment_text, 0, 0);
-	}
-	
-	@Override
 	protected Bitmap getCloseActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel),  R.color.main_color_for_search_fragment_text, 0, 0);
+		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel), R.color.main_color_for_search_fragment_text,
+				0, 0);
 	}
-	
+
 	@Override
 	protected void download(RemoteSong song) {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
@@ -349,19 +463,102 @@ public class MainActivity extends UIMainActivity implements Constants, FolderSel
 		downloadListener.downloadSong(false);
 	}
 
-	@Override
-	protected int getMiniPlayerDuplicateID() {
-		return R.id.mini_player_duplicate;
-	}
-	
 	public boolean isPlayerFragment() {
 		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 		return backEntry.getName().equals(PlayerFragment.class.getSimpleName());
 	}
-	
+
 	@Override
 	protected DownloadClickListener createDownloadListener(RemoteSong song) {
 		return new DownloadListener(this, song, 0);
 	}
 	
+	public void addPlayerElement(boolean flag) {
+		if (null == navigationDrawerFragment) return;
+		navigationDrawerFragment.setAdapter(flag);
+	}
+
+	public void setDrawerEnabled(boolean isEnabled) {
+		navigationDrawerFragment.setEnabled(isEnabled);
+	}
+
+	protected boolean isDraverClosed() {
+		return navigationDrawerFragment.isDrawerIndicatorEnabled();
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setSelectedItem(int position) {
+		currentPosition = position;
+		if (null != navigationDrawerFragment) {
+			navigationDrawerFragment.setSelectedItem(position);
+		}
+	}
+
+	public void setVisibleSearchView(boolean flag) {
+		if (flag != isVisibleSearchView) {
+			invalidateOptionsMenu();
+		}
+		isVisibleSearchView = flag;
+	}
+
+	public SearchView getSearchView() {
+		return searchView;
+	}
+
+	private boolean useOldToggle() {
+		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
+	}
+	
+	@Override
+	protected int getMiniPlayerDuplicateID() {
+		return R.id.mini_player_duplicate;
+	}
+	
+	public int getSettingsIcon() {
+		return R.string.font_play_settings;
+	}
+
+	@Override
+	protected int getFakeViewID() {
+		return R.id.fake_view;
+	}
+	
+	@Override
+	protected boolean isAnimationEnabled() {
+		return Nulldroid_Settings.ENABLE_ANIMATIONS;
+	}
+
+	@Override
+	public String getDirectory() {
+		return MaterialMusicDownloaderApp.getDirectory();
+	}
+
+	public void showDialog() {
+		new FolderSelectorDialog().show(this);
+	}
+
+	@Override
+	protected int getMiniPlayerID() {
+		return R.id.mini_player;
+	}
+
+	@Override
+	protected int getMiniPlayerClickableID() {
+		return R.id.mini_player_main;
+	}
+	
+	@Override
+	public void setTitle(int titleId) {
+		setTitle(getString(titleId));
+	}
+
+	@Override
+	public void setTitle(CharSequence title) {
+		mTitle = title;
+		navigationDrawerFragment.setTitle(mTitle);
+	}
+
 }

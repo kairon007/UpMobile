@@ -8,6 +8,7 @@ import org.upmobile.materialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
 import org.upmobile.materialmusicdownloader.ui.TrueSeekBar;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
@@ -75,8 +76,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-
-import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class PlayerFragment extends Fragment implements OnClickListener, BaseMaterialFragment, OnCheckedChangeListener, PlaybackService.OnErrorListener, OnEditorActionListener {
 
