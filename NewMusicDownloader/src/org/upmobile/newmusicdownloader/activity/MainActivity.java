@@ -79,10 +79,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		setContentView(R.layout.activity_main);
 		getSupportActionBar().setIcon(android.R.color.transparent);
 		getSupportActionBar().setElevation(0);
-		int bgColor = Util.getResIdFromAttribute(this, R.attr.actionBarBg);
-		if (bgColor != 0) {
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(bgColor)));
-		}
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
 		File file = new File(folderPath);
