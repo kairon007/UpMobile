@@ -3,6 +3,7 @@ package org.upmobile.materialmusicdownloader.fragment;
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
 import org.upmobile.materialmusicdownloader.ui.LibraryView;
 
 import android.app.Fragment;
@@ -10,8 +11,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 
 public class LibraryFragment extends Fragment implements BaseMaterialFragment, Constants {
 

@@ -18,32 +18,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
-
-public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
+public class PlaylistAdapter extends BasePlaylistsAdapter {
 
 	public PlaylistAdapter(Context context, int resource) {
 		super(context, resource);
-	}
-
-	@Override
-	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
-		View view = paramView;
-		if (view == null) {
-			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
-		}
-		return view;
-	}
-
-	@Override
-	public View getUndoClickView(View paramView) {
-		return paramView.findViewById(R.id.undo_button);
 	}
 	
 	@Override
