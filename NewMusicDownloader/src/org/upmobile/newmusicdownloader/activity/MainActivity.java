@@ -24,12 +24,9 @@ import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
@@ -42,7 +39,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,8 +79,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		setContentView(R.layout.activity_main);
 		getSupportActionBar().setIcon(android.R.color.transparent);
 		getSupportActionBar().setElevation(0);
-		if (!isDarkActionBar(this)) {
-			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.light_grey)));
+		int bgColor = Util.getResIdFromAttribute(this, R.attr.actionBarBg);
+		if (bgColor != 0) {
+			getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(bgColor)));
 		}
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -94,7 +91,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
 		View v1 = findViewById(resId);
 		if (null != v1) {
-			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(!isDarkActionBar(this)? android.R.color.white : android.R.color.black));
+			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.actionBarTitleBg)));
 		}
 		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
@@ -341,36 +338,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		showMiniPlayer(false);
 		Fragment fragment = new PlayerFragment();
     	changeFragment(fragment, true);
-	}
-	
-	public boolean isWhiteTheme(Context context) {
-		    PackageInfo packageInfo;
-		    try {
-		        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-		        int themeResId = packageInfo.applicationInfo.theme;
-		        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE) 
-		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR)
-		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS)
-		        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_NO_FONTS);
-		    } catch (Exception e) {
-		    	Log.e(Util.class.getSimpleName(), e.getMessage());
-		        return false;
-		    }
-	}
-	
-	public boolean isDarkActionBar(Context context) {
-	    PackageInfo packageInfo;
-	    try {
-	        packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_META_DATA);
-	        int themeResId = packageInfo.applicationInfo.theme;
-	        return context.getResources().getResourceEntryName(themeResId).equals(APP_THEME) 
-	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR)
-	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS)
-	        		|| context.getResources().getResourceEntryName(themeResId).equals(APP_THEME_NO_FONTS) ;
-	    } catch (Exception e) {
-	    	Log.e(Util.class.getSimpleName(), e.getMessage());
-	        return false;
-	    }
 	}
 	
 	@Override

@@ -1166,7 +1166,6 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		alertDialog = null;
 		keeper.openDialog(StateKeeper.EDITTAG_DIALOG);
 		final File file = PlaybackService.get(this).getFilePath(type, id);
-		//TODO remove isWhiteTheme param from constructor
 		editor = new MP3Editor(this, new OnActionEndListener() {
 			
 			@Override

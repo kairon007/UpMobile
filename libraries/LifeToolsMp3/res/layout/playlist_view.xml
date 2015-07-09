@@ -70,12 +70,11 @@
         android:text="@string/playlists_are_missing"
         android:visibility="gone" />
 
-    <ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView
+    <ListView
         android:id="@+id/expandableListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="4dp"
-        android:layout_marginRight="8dp" >
-    </ru.johnlife.lifetoolsmp3.ui.widget.AnimatedExpandableListView>
+        android:layout_marginRight="8dp" />
 
 </LinearLayout>

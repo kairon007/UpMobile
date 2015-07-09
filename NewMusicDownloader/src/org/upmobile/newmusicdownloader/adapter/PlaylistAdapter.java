@@ -8,11 +8,13 @@ import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -26,11 +28,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 
-	private boolean isWhiteTheme;
-
 	public PlaylistAdapter(Context context, int resource) {
 		super(context, resource);
-		isWhiteTheme = ((MainActivity) getContext()).isWhiteTheme(getContext());
 	}
 
 	@Override
@@ -96,13 +95,11 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			super.hold(data, position);
 			if (data.getClass() == PlaylistData.class) {
 				if (((PlaylistData) data).isExpanded()) {
-					((ImageView) customGroupIndicator).setImageDrawable(!isWhiteTheme ? 
-							getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_white_18dp)
-							: getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp));
+					((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
+							Util.getResIdFromAttribute((Activity) getContext(), R.attr.icKeyboardArrowUp)));
 				} else {
-					((ImageView) customGroupIndicator).setImageDrawable(!isWhiteTheme ? 
-							getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_white_18dp)
-							: getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp));
+					((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
+							Util.getResIdFromAttribute((Activity) getContext(), R.attr.icKeyboardArrowDown)));
 				}
 			}
 		}
