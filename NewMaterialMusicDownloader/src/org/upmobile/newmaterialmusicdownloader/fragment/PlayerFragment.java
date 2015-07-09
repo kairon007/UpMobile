@@ -53,7 +53,9 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.media.audiofx.Visualizer;
 import android.os.AsyncTask;
@@ -1126,21 +1128,21 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
 		int height = (int)(display.getHeight()/2);
 
-		bigDefaultCover = Bitmap.createBitmap(height, height, Bitmap.Config.RGB_565);
+		bigDefaultCover = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888);
 
 		Canvas canvas = new Canvas(bigDefaultCover);
-		canvas.drawColor(Color.WHITE);
+		canvas.drawARGB(0, 255, 255, 255);
 		
 		Paint p = new Paint(Paint.ANTI_ALIAS_FLAG);
-		
+
 		p.setColor(getResources().getColor(R.color.def_cover_grey));
-		canvas.drawCircle(height/2, height/2, height/2 - 50, p);
+		p.setStyle(Style.STROKE);
+		p.setStrokeWidth(height/5);
+		canvas.drawCircle(height/2, height/2, height/2 - height/6, p);				
 		
-		p.setColor(Color.WHITE);
-		canvas.drawCircle(height/2, height/2, height/5, p);
-		
+		p.setStyle(Style.FILL);
 		p.setColor(getResources().getColor(R.color.def_cover_grey));
-		canvas.drawCircle(height/2, height/2, height/18, p);
+		canvas.drawCircle(height/2, height/2, height/20, p);
 		
 		canvas.setBitmap(bigDefaultCover);
 	}

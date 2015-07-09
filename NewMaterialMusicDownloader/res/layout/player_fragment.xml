@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_gravity="center_horizontal"
-            android:scaleType="centerCrop"
-            android:src="@drawable/big_album" />
+            android:scaleType="centerCrop" />
     </FrameLayout>
 
     <ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView
