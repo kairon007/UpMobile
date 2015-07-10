@@ -58,8 +58,12 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 					StateKeeper.getInstance().setLibaryFirstPosition(0);
 					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
-					String temp = input.getText().toString();
+					String temp = input.getText().toString().trim();
 					String newDirName = temp.length() > 29 ? temp.substring(0, 30) : temp;
+					if (newDirName.isEmpty()) {
+						((MainActivity) getActivity()).showMessage("Folder name can not be empty");
+						return;
+					}
 					if (createSubDir(parentFolder.getAbsolutePath() + "/" + newDirName)) {
 						parentFolder = new File(parentFolder.getAbsolutePath() + "/" + newDirName);
 						updateList();

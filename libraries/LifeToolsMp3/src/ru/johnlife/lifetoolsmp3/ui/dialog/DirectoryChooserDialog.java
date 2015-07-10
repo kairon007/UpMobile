@@ -303,6 +303,10 @@ public class DirectoryChooserDialog {
 				keeper.closeDialog(StateKeeper.NEWDIR_DIALOG);
 				Editable newDir = input.getText();
 				String newDirName = newDir.toString();
+				if (newDirName.isEmpty()) {
+					Toast.makeText(m_context, "Folder name can not be empty", Toast.LENGTH_SHORT).show();
+					return;
+				}
 				// Create new directory
 				if (createSubDir(m_dir + "/" + newDirName)) {
 					// Navigate into the new directory
