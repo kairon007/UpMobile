@@ -243,7 +243,7 @@ public class DownloadClickListener implements View.OnClickListener {
 			request.setDestinationInExternalPublicDir(BaseSearchView.getSimpleDownloadPath(musicDir.getAbsolutePath()), sb);
 			request.setMimeType(downloadingSong.getComment());
 			request.setDescription(songTitle);
-			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION);
+			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 //			request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE | DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
 		} catch (Exception e) {
 			Log.e(getClass().getSimpleName(), e.getMessage());
