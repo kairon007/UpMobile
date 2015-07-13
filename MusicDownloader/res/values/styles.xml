@@ -11,9 +11,11 @@
         <item name="search_background">@color/window_background_dark</item>
         <item name="icon_ok">@drawable/icon_ok</item>
         <item name="icon_cancel">@drawable/icon_cancel</item>
+        <item name="choise_engines_layout_bg">@drawable/selectable_item_bg</item>
     </style>
 
     <style name="AppTheme.Black" parent="AppThemeBase">
+        <item name="choise_engines_layout_bg">@drawable/selectable_item_bg</item>
         <item name="android:windowBackground">@color/window_background_black</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview_white</item>
         <item name="icon_ok">@drawable/icon_ok</item>
@@ -21,6 +23,7 @@
     </style>
 
     <style name="AppTheme.White" parent="AppThemeBase.White">
+        <item name="choise_engines_layout_bg">@drawable/spinner_background</item>
         <item name="android:windowBackground">@color/window_background_light</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
         <item name="icon_ok">@drawable/icon_ok_black</item>

@@ -22,9 +22,6 @@
 
 package org.kreed.musicdownloader;
 
-import org.kreed.musicdownloader.ui.activity.MainActivity;
-import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -32,119 +29,110 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
+import org.kreed.musicdownloader.ui.activity.MainActivity;
+import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
 /**
  * Framework methods only in Honeycomb or above go here.
  */
 @TargetApi(11)
 public class CompatHoneycomb {
-	/**
-	 * Add ActionBar tabs for MainActivity.
-	 *
-	 * @param activity The activity to add to.
-	 */
-	public static void addActionBarTabs(final MainActivity activity)
-	{
-		ActionBar.TabListener listener = new ActionBar.TabListener() {
-			private final MainActivity mActivity = activity;
+    /**
+     * Add ActionBar tabs for MainActivity.
+     *
+     * @param activity The activity to add to.
+     */
+    public static void addActionBarTabs(final MainActivity activity) {
+        ActionBar.TabListener listener = new ActionBar.TabListener() {
+            private final MainActivity mActivity = activity;
 
-			@Override
-			public void onTabReselected(Tab tab, FragmentTransaction ft)
-			{
-			}
+            @Override
+            public void onTabReselected(Tab tab, FragmentTransaction ft) {
+            }
 
-			@Override
-			public void onTabSelected(Tab tab, FragmentTransaction ft)
-			{
-				mActivity.getViewPager().setCurrentItem(tab.getPosition());
-			}
+            @Override
+            public void onTabSelected(Tab tab, FragmentTransaction ft) {
+                mActivity.getViewPager().setCurrentItem(tab.getPosition());
+            }
 
-			@Override
-			public void onTabUnselected(Tab tab, FragmentTransaction ft)
-			{
-			}
-		};
+            @Override
+            public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+            }
+        };
 
-		ActionBar ab =  activity.getActionBar();
-			ab.removeAllTabs();
-		
-			int[] order = activity.getPagerAdapter().mTabOrder;
-		int[] titles = ViewPagerAdapter.TITLES;
-		for (int i = 0, n = activity.getPagerAdapter().getCount(); i != n; ++i) {
-			ab.addTab
-			(ab.newTab()
-					.setText(titles[order[i]])
-					.setTabListener(listener));
-		}
-		ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-	}
+        ActionBar ab = activity.getActionBar();
+        ab.removeAllTabs();
 
-	/**
-	 * Call {@link ListView#setFastScrollAlwaysVisible(boolean)} on the given
-	 * ListView with value true.
-	 */
-	public static void setFastScrollAlwaysVisible(ListView view)
-	{
-		view.setFastScrollAlwaysVisible(true);
-	}
+        int[] order = activity.getPagerAdapter().mTabOrder;
+        int[] titles = ViewPagerAdapter.TITLES;
+        for (int i = 0, n = activity.getPagerAdapter().getCount(); i != n; ++i) {
+            ab.addTab
+                    (ab.newTab()
+                            .setText(titles[order[i]])
+                            .setTabListener(listener));
+        }
+        ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+    }
 
-	/**
-	 * Call {@link MenuItem#setActionView(View)} on the given MenuItem.
-	 */
-	public static void setActionView(MenuItem item, View view)
-	{
-		item.setActionView(view);
-	}
+    /**
+     * Call {@link ListView#setFastScrollAlwaysVisible(boolean)} on the given
+     * ListView with value true.
+     */
+    public static void setFastScrollAlwaysVisible(ListView view) {
+        view.setFastScrollAlwaysVisible(true);
+    }
 
-	/**
-	 * Call {@link MenuItem#setShowAsAction(int)} on the given MenuItem.
-	 */
-	public static void setShowAsAction(MenuItem item, int mode)
-	{
-		item.setShowAsAction(mode);
-	}
+    /**
+     * Call {@link MenuItem#setActionView(View)} on the given MenuItem.
+     */
+    public static void setActionView(MenuItem item, View view) {
+        item.setActionView(view);
+    }
 
-	/**
-	 * Select the ActionBar tab at the given position.
-	 *
-	 * @param activity The activity that owns the ActionBar.
-	 * @param position The tab's position.
-	 */
-	public static void selectTab(Activity activity, int position)
-	{
-		ActionBar ab = activity.getActionBar();
-		if (position < ab.getTabCount()) {
-			ab.selectTab(ab.getTabAt(position));
-		}
-	}
+    /**
+     * Call {@link MenuItem#setShowAsAction(int)} on the given MenuItem.
+     */
+    public static void setShowAsAction(MenuItem item, int mode) {
+        item.setShowAsAction(mode);
+    }
 
-	/**
-	 * Call {@link android.provider.MediaStore.Audio.Genres#getContentUriForAudioId(String,int)}
-	 * on the external volume.
-	 */
-	public static Uri getContentUriForAudioId(int id)
-	{
-		return MediaStore.Audio.Genres.getContentUriForAudioId("external", id);
-	}
+    /**
+     * Select the ActionBar tab at the given position.
+     *
+     * @param activity The activity that owns the ActionBar.
+     * @param position The tab's position.
+     */
+    public static void selectTab(Activity activity, int position) {
+        ActionBar ab = activity.getActionBar();
+        if (position < ab.getTabCount()) {
+            ab.selectTab(ab.getTabAt(position));
+        }
+    }
 
-	/**
-	 * Call {@link KeyEvent#hasNoModifiers()}.
-	 */
-	public static boolean hasNoModifiers(KeyEvent event)
-	{
-		return event.hasNoModifiers();
-	}
+    /**
+     * Call {@link android.provider.MediaStore.Audio.Genres#getContentUriForAudioId(String, int)}
+     * on the external volume.
+     */
+    public static Uri getContentUriForAudioId(int id) {
+        return MediaStore.Audio.Genres.getContentUriForAudioId("external", id);
+    }
 
-	/**
-	 * Call {@link KeyEvent#hasModifiers(int)}.
-	 */
-	public static boolean hasModifiers(KeyEvent event, int modifiers)
-	{
-		return event.hasModifiers(modifiers);
-	}
+    /**
+     * Call {@link KeyEvent#hasNoModifiers()}.
+     */
+    public static boolean hasNoModifiers(KeyEvent event) {
+        return event.hasNoModifiers();
+    }
+
+    /**
+     * Call {@link KeyEvent#hasModifiers(int)}.
+     */
+    public static boolean hasModifiers(KeyEvent event, int modifiers) {
+        return event.hasModifiers(modifiers);
+    }
 }
