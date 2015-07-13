@@ -1,36 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.activity;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
-import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
-import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
-import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer;
-import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer.FragmentDrawerListener;
-import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
-import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
-import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
-import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.uilibrary.widget.customviews.CircleImageView;
-import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -55,10 +24,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
+import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
+import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer;
+import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer.FragmentDrawerListener;
+import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.newmaterialmusicdownloader.fragment.PlaylistFragment;
+import org.upmobile.newmaterialmusicdownloader.fragment.SearchFragment;
+import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog;
+import org.upmobile.newmaterialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.uilibrary.widget.customviews.CircleImageView;
+import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+
 public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback, FragmentDrawerListener, DrawerListener {
 
-	private int currentFragmentId = Integer.valueOf(-1);
-	private int lastCheckPosition = Integer.valueOf(0);
+	private int currentFragmentId = -1;
+	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
 	private boolean isOpenFromDraver = false;
 	private boolean isDrawerOpen = false;
@@ -67,9 +68,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private Toolbar toolbar;
 	private View toolbarShadow;
 	private FragmentDrawer drawerFragment;
-	private MenuItem searchItem;
 
-	@Override
+    @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
@@ -104,7 +104,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
-		searchItem = menu.findItem(R.id.action_search);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
@@ -172,10 +172,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		isOpenFromDraver = fromDraver;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
-			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
+			showMiniPlayer(null != service && service.isEnqueueToStream());
 		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		Fragment selectedFragment = null;
+		Fragment selectedFragment;
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
@@ -193,11 +193,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else {
 			selectedFragment = new SearchFragment();
 		}
-		if (null != selectedFragment) {
-			setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
-			transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-		}
-	}
+        setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
+        transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+    }
 	
 	@Override
 	public void onFolderSelection(final File folder) {
@@ -205,7 +203,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
-		editor.commit();
+		editor.apply();
 		new Thread(new Runnable() {
 
 			@Override
@@ -364,8 +362,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	protected String getPreviousFragmentName(int position) {
 		if (getFragmentManager().getBackStackEntryCount() < position) return SearchFragment.class.getSimpleName();
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
-		String previousFragmentName = backEntry.getName();
-		return previousFragmentName;
+        return backEntry.getName();
 	}
 	
 	@Override
@@ -510,7 +507,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	public List<NavDrawerItem> getData() {
-		List<NavDrawerItem> data = new ArrayList<NavDrawerItem>();
+		List<NavDrawerItem> data = new ArrayList<>();
 		data.add(new NavDrawerItem(R.drawable.ic_search_grey, getResources().getString(R.string.tab_search), NavDrawerItem.Type.Primary));
 		data.add(new NavDrawerItem(R.drawable.ic_file_download_grey, getResources().getString(R.string.tab_downloads), NavDrawerItem.Type.Primary));
 		data.add(new NavDrawerItem(R.drawable.ic_my_library_music_grey , getResources().getString(R.string.tab_library), NavDrawerItem.Type.Primary));

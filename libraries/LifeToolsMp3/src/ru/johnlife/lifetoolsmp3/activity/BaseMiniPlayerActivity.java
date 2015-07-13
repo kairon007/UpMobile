@@ -1,21 +1,5 @@
 package ru.johnlife.lifetoolsmp3.activity;
 
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.HelperService;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -36,6 +20,23 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.HelperService;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 
 public abstract class BaseMiniPlayerActivity extends AppCompatActivity implements OnClickListener {
 
@@ -61,7 +62,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	protected boolean currentFragmentIsPlayer = false;
 	
 	private int checkIdCover;
-	private DownloadClickListener downloadListener;
 	private DownloadPressListener downloadPressListener;
 	
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
@@ -139,7 +139,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	protected void setImageDownloadButton() {}
 	
 	public interface DownloadPressListener {
-		public void downloadButtonPressed(RemoteSong song);
+		void downloadButtonPressed(RemoteSong song);
 	}
 	
 	@Override
@@ -457,7 +457,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		if (null == service) {
 			service = PlaybackService.get(this);
 		}
-		if (service.isPlaying() &&  (null != service && song.equals(service.getPlayingSong()))) return;
+		if (service.isPlaying() && song.equals(service.getPlayingSong())) return;
 		this.song = song;
 		isShown = show;
 		service.play(song);
@@ -503,30 +503,30 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 	
 	private void downloadSong() {
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+		song.getDownloadUrl(new DownloadUrlListener() {
 
-			@Override
-			public void success(String url) {
-				((RemoteSong) song).setDownloadUrl(url);
-				download(((RemoteSong) song));
-				if (null != downloadPressListener) {
-					downloadPressListener.downloadButtonPressed((RemoteSong) song);
-				}
-			}
+            @Override
+            public void success(String url) {
+                ((RemoteSong) song).setDownloadUrl(url);
+                download(((RemoteSong) song));
+                if (null != downloadPressListener) {
+                    downloadPressListener.downloadButtonPressed((RemoteSong) song);
+                }
+            }
 
-			@Override
-			public void error(final String error) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						showMessage(getString(R.string.error_getting_url_songs));
-					}
-				});
-			}
-		});
+            @Override
+            public void error(final String error) {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        showMessage(getString(R.string.error_getting_url_songs));
+                    }
+                });
+            }
+        });
 	}
 	
 	protected void download(RemoteSong song) {
-		downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, song, 0);
+        DownloadClickListener downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
@@ -577,7 +577,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 	
 	protected ArrayList<RemoteSong> checkDownloadingUrl(boolean expandAction) {
-		ArrayList<RemoteSong> result = new ArrayList<RemoteSong>();
+		ArrayList<RemoteSong> result = new ArrayList<>();
 		DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
 		if (null != manager) {
 			Cursor pending = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_PENDING));

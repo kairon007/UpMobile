@@ -1,23 +1,5 @@
 package org.upmobile.clearmusicdownloader.activity;
 
-import java.io.File;
-
-import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.DownloadListener;
-import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
-import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
-import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
-import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.clearmusicdownloader.fragment.PlaylistFragment;
-import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -40,13 +22,30 @@ import com.special.BaseClearActivity;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
+import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.DownloadListener;
+import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
+import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
+import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.clearmusicdownloader.fragment.PlaylistFragment;
+import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+
 public class MainActivity extends BaseClearActivity implements Constants {
 
 	private Fragment[] fragments;
-	private ResideMenuItem[] items;
-	private SearchView searchView;
-	private String[] titles;
-	private String query;
+    private SearchView searchView;
+    private String query;
 	private boolean useCoverHelper = true;
 	private String folder_path = ClearMusicDownloaderApp.getDirectory();
 	private FileObserver fileObserver = new FileObserver(folder_path) {
@@ -154,8 +153,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	
 	private String getLastFragmentName() {
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
-		String lastFragmentName = backEntry.getName();
-		return lastFragmentName;
+        return backEntry.getName();
 	}
 
 	public String getQuery() {
@@ -188,7 +186,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected ResideMenuItem[] getMenuItems() {
-		items = new ResideMenuItem[COUNT_FRAGMENT];
+        ResideMenuItem[] items = new ResideMenuItem[COUNT_FRAGMENT];
 		items[SEARCH_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
 		items[DOWNLOADS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads, ResideMenuItem.Types.TYPE_MENU);
 		items[PLAYLIST_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_playlist, R.string.tab_playlist, ResideMenuItem.Types.TYPE_MENU);
@@ -200,8 +198,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 	@Override
 	protected String[] getTitlePage() {
-		titles = getResources().getStringArray(R.array.titles);
-		return titles;
+        return getResources().getStringArray(R.array.titles);
 	}
 
 	public void setCoverHelper(boolean val) {
@@ -238,7 +235,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 				Editor editor = sp.edit();
 				editor.putString(PREF_DIRECTORY, chDir);
 				editor.putString(PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
-				editor.commit();
+				editor.apply();
 				reDrawMenu();
 			}
 		});
