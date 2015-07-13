@@ -19,7 +19,8 @@
         <item name="icMpPlaylistRecentlyAddedList">@drawable/ic_mp_playlist_recently_added_list</item>
         <item name="icMpPlaylistList">@drawable/ic_mp_playlist_list</item>
         <item name="touchInterceptorBgColor">@android:color/black</item>
-        <item name="albumBackground">@android:color/black</item>        
+        <item name="albumBackground">@android:color/black</item>
+        <item name="choise_engines_layout_bg">@drawable/search_background</item>
     </style>
 
 	<style name="AppTheme.White" parent="Theme.White_action_bar">
@@ -33,6 +34,7 @@
         <item name="trackListItemChild">@layout/track_list_item_child_white</item>
         <item name="editTrackListItem">@layout/edit_track_list_item_white</item>
         <item name="albumartMpUnknownList">@drawable/albumart_mp_unknown_list_white</item>
+        <item name="choise_engines_layout_bg">@drawable/spinner_background</item>
         <item name="albumartMpUnknown">@drawable/albumart_mp_unknown_white</item>
         <item name="audioPlayer">@layout/audio_player_white</item>
         <item name="icMpPlaylistRecentlyAddedList">@drawable/ic_mp_playlist_recently_added_list_white</item>
