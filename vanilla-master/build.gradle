@@ -1,7 +1,8 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':libraries:LifeToolsMp3')
 }
 
 android {

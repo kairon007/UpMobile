@@ -1,7 +1,11 @@
-apply plugin: 'com.android.library'
+apply plugin: 'com.android.application'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':libraries:LifeToolsMp3')
+    compile project(':libraries:AppMsgLib')
+    compile project(':libraries:view_pager_indicator')
+    compile project(':libraries:actionbarsherlock')
 }
 
 android {

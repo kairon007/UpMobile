@@ -5,6 +5,4 @@
     android:layout_height="match_parent"
     android:cacheColorHint="@android:color/transparent"
     android:choiceMode="singleChoice"
-    android:clickable="true"
-    android:divider="?attr/listview_divider"
-    android:dividerHeight="?attr/listview_divider_height"/>
+    android:clickable="true"/>

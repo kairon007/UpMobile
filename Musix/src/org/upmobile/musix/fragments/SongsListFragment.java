@@ -89,7 +89,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			setTime();
 			seekBar.setMax(musicService.getDuration());
 			seekBar.setProgress(musicService.getCurrentPosition());
-			abstractSongArrayList = new ArrayList<MusicData>((Collection<? extends MusicData>) musicService.getArrayPlayback());
+			abstractSongArrayList = new ArrayList(musicService.getArrayPlayback());
 		} else {
 			if (!abstractSongArrayList.isEmpty()) {
 				song = abstractSongArrayList.get(0);

@@ -2,6 +2,9 @@ apply plugin: 'com.android.library'
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':libraries:LifeToolsMp3')
+    compile project(':libraries:StickyListHeaders')
+    compile project(':libraries:appcompat_v7')
 }
 
 android {

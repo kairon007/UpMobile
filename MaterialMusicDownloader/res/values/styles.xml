@@ -63,12 +63,6 @@
         <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
 
-    <style name="TextViewAppearance.Title1" parent="@style/TextViewAppearance">
-        <item name="typeface">robotoMedium</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/main_color_grey_400</item>
-    </style>
-
     <style name="TitleLineGray" parent="TextViewAppearance.Title">
         <item name="android:textColor">@color/main_color_gray_text</item>
     </style>
@@ -91,7 +85,7 @@
         <item name="android:textSize">24sp</item>
     </style>
 
-    <style name="EditTextAppearance.Line" parent="@android:Widget.EditText">
+    <style name="EditTextAppearance.Line" parent="@android:style/Widget.EditText">
         <item name="android:background">@drawable/underline_edit_text</item>
         <item name="android:textColor">@color/main_color_for_text</item>
         <item name="android:textColorHint">@color/main_color_for_text</item>
@@ -224,7 +218,7 @@
         <item name="floating_et_show_count">true</item>
     </style>
 
-    <style name="Spinner.Material" parent="@android:Widget.Material.Spinner">
+    <style name="Spinner.Material" parent="@android:style/Widget.Material.Spinner">
         <item name="android:background">@drawable/spinner_selector</item>
         <item name="android:clickable">true</item>
         <item name="android:popupBackground">@color/main_color_500</item>

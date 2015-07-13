@@ -37,7 +37,7 @@ public class SearchVmusice extends BaseSearchTask {
 			for (Element songItem : document.select("li.x-track")) {
 				try {
 					String author = songItem.select("strong").text();  
-					String name = songItem.select("span").last().text().replace(author, "").replace(" – ", "");  
+					String name = songItem.select("span").last().text().replace(author, "").replace(" - ", "");
 					String duration = songItem.select("em").text();
 					String downloadUrl = songItem.select("a.download").first().attr("href");
 					String playUrl = songItem.select("a").attr("data-url");
