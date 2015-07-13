@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.cmc.music.metadata.ImageData;
 import org.cmc.music.metadata.MusicMetadata;
@@ -29,12 +31,18 @@ import android.view.inputmethod.InputMethodManager;
 
 public final class Util {
 	
-	public final static String WHITE_THEME2 = "AppTheme.White2";
-	public final static String WHITE_THEME = "AppTheme.White";
 	private final static int SMALL_BITMAP_SIZE = 100;
 	private final static String ZAYCEV_TAG = "(zaycev.net)";
 	private final static Object obj = new Object();
-	
+	private static ExecutorService executorService;
+
+    public static ExecutorService getExecutorService() {
+        if (null == executorService) {
+            executorService = Executors.newFixedThreadPool(20);
+        }
+        return executorService;
+    }
+
 	public static long formatTime(String duration) {
 		long durationLong;
 	    int curSor = duration.indexOf(":");

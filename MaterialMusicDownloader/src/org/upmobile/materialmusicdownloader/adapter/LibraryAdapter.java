@@ -28,6 +28,8 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
 
+	private Bitmap defaultBitmap;
+
 	public LibraryAdapter(Context context, int resource) {
 		super(context, resource);
 	}
@@ -82,8 +84,11 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	
 	@Override
 	protected Bitmap getDefaultCover() {
-		String cover =  getContext().getResources().getString(R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
+		if (null == defaultBitmap) {
+			String cover = getContext().getResources().getString(R.string.font_musics);
+			defaultBitmap = ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
+		}
+		return defaultBitmap;
 	}
 	
 	@Override
