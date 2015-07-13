@@ -47,9 +47,9 @@ public class SearchFragment extends BaseFragment implements Constants {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_search, container, false);
-		listResult = new ArrayList<Song>();
+		listResult = new ArrayList<>();
 		if (null != savedInstanceState) {
-			listResult.addAll((Collection<? extends Song>) savedInstanceState.getParcelableArrayList(STATE_SEARCH_RESULTS));
+			listResult.addAll(savedInstanceState.<Song>getParcelableArrayList(STATE_SEARCH_RESULTS));
 		}
 		initUIBase(view);
 		initControl(view);
