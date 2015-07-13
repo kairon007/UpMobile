@@ -303,7 +303,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 						getNextResults(false);
 					}
 				} catch (Exception e) {
-					Log.e(getClass().getSimpleName(), e + "");
+					Log.e(getClass().getSimpleName(), e.toString());
 				}
 			}
 		}
@@ -480,14 +480,13 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	}
 	
 	public View getViewByPosition(int pos) {
-		pos = pos + 1;
+		pos++;
 	    final int firstListItemPosition = listView.getFirstVisiblePosition();
 	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
 	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
 	        return listView.getAdapter().getView(pos, null, listView);
 	    }
-		final int childIndex = pos - firstListItemPosition;
-		return listView.getChildAt(childIndex);
+		return listView.getChildAt(pos - firstListItemPosition);
 	}
 
 	public void initSearchEngines(Context context, String valueEngines) {
@@ -517,12 +516,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 		engines = new ArrayList<Engine>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
-				
-				Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(engineArray[i][0]);
-				int maxPages = Integer.parseInt(engineArray[i][1]);
-				for (int page = 1; page <= maxPages; page++) {
-					engines.add(new Engine(engineClass, page));
-				}
+			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(engineArray[i][0]);
+			int maxPages = Integer.parseInt(engineArray[i][1]);
+			for (int page = 1; page <= maxPages; page++) {
+				engines.add(new Engine(engineClass, page));
+			}
 		}
 	}
 	
@@ -596,7 +594,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				public void onNothingSelected(AdapterView<?> parent) {
 				}
 			});
-
 		} else {
 			spEnginesChoiser.setVisibility(View.GONE);
 		}
@@ -915,12 +912,10 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			} else {
 				player.hideCoverProgress();
 			}
-		} else {
-			if (keeper.checkState(StateKeeper.STREAM_DIALOG)) {
-				streamDialog = (AlertDialog) createStreamDialog(song);
-				streamDialog.show();
-				player.setTitle(song.getArtist() + " - " + song.getTitle());
-			}
+		} else if (keeper.checkState(StateKeeper.STREAM_DIALOG)) {
+			streamDialog = (AlertDialog) createStreamDialog(song);
+			streamDialog.show();
+			player.setTitle(song.getArtist() + " - " + song.getTitle());
 		}
 		downloadListener = new DownloadClickListener(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {

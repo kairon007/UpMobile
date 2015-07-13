@@ -45,6 +45,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_toLeftOf="@+id/chunkTime"
                 android:layout_toStartOf="@+id/chunkTime"
+                android:textColor="@color/wet_asphalt"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
@@ -57,6 +58,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
                 android:gravity="end"
+                android:textColor="@color/wet_asphalt"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/font_size_title"
@@ -66,6 +68,7 @@
                 android:id="@+id/titleLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/wet_asphalt"
                 android:layout_alignParentBottom="true"
                 android:ellipsize="end"
                 android:singleLine="true"
@@ -82,6 +85,6 @@
         android:contentDescription="@string/expand"
         android:longClickable="true"
         android:scaleType="center"
-        android:src="@drawable/icon_download" />
+        android:src="@drawable/icon_download_black" />
 
 </LinearLayout>
