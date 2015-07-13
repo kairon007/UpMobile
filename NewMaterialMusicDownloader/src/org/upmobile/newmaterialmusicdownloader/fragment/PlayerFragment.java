@@ -1,47 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
-import java.io.File;
-
-import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener.OnCancelDownload;
-import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
-import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import ru.johnlife.uilibrary.widget.buttons.CheckBox;
-import ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton;
-import ru.johnlife.uilibrary.widget.customviews.RippleView;
-import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
-import ru.johnlife.uilibrary.widget.customviews.visualizer.SimpleVisualizerView;
-import ru.johnlife.uilibrary.widget.form.deeskretseekbar.DiscreteSeekBar;
-import ru.johnlife.uilibrary.widget.form.deeskretseekbar.DiscreteSeekBar.OnProgressChangeListener;
-import ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView;
-import ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView.OnScrollChangedListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
-import ru.johnlife.uilibrary.widget.textviews.digitalclock.DigitalClockView;
-import ru.johnlife.uilibrary.widget.textviews.digitalclock.font.DFont;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Fragment;
@@ -52,8 +10,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
@@ -90,6 +46,49 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.DownloadListener;
+import org.upmobile.newmaterialmusicdownloader.DownloadListener.OnCancelDownload;
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
+import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
+import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.uilibrary.widget.buttons.CheckBox;
+import ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton;
+import ru.johnlife.uilibrary.widget.customviews.RippleView;
+import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
+import ru.johnlife.uilibrary.widget.customviews.visualizer.SimpleVisualizerView;
+import ru.johnlife.uilibrary.widget.form.deeskretseekbar.DiscreteSeekBar;
+import ru.johnlife.uilibrary.widget.form.deeskretseekbar.DiscreteSeekBar.OnProgressChangeListener;
+import ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView;
+import ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView.OnScrollChangedListener;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoListener;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
+import ru.johnlife.uilibrary.widget.textviews.digitalclock.DigitalClockView;
+import ru.johnlife.uilibrary.widget.textviews.digitalclock.font.DFont;
 
 public class PlayerFragment extends Fragment implements Constants, OnClickListener , OnCheckedChangeListener, OnEditorActionListener {
 
@@ -793,8 +792,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			Util.hideKeyboard(getActivity(), contentView);
 			String title = song.getTitle();
 			String artist = song.getArtist();
-			String changedTitle = etTitle.getText().toString();
-			String changedArtist = etArtist.getText().toString();
+			String changedTitle = Util.removeSpecialCharacters(etTitle.getText().toString());
+			String changedArtist = Util.removeSpecialCharacters(etArtist.getText().toString());
 			if (etTitle.getVisibility() == View.VISIBLE && !title.equals(changedTitle)) {
 				String newTitle = Util.removeSpecialCharacters(changedTitle.isEmpty() ? MP3Editor.UNKNOWN : changedTitle);
 				song.setTitle(newTitle);
