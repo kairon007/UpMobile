@@ -264,7 +264,7 @@ public class StateKeeper {
 		
 	}
 	
-	public void initSongHolder(String folder) {
+	public void initSongHolder(final String folder) {
 		if (BaseSearchView.EMPTY_DIRECTORY.equals(folder)) {
 			return;
 		}
@@ -272,12 +272,17 @@ public class StateKeeper {
 			new File(folder).mkdir();
 		}
 		songHolder.clear();
-		File[] files = new File(folder).listFiles();
-		if (null == files) return;
-		for (int i = 0; i < files.length; i++) {
-			File file = files[i];
-			initSongInfo(file);
-		}
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				File[] files = new File(folder).listFiles();
+				if (null == files) return;
+				for (int i = 0; i < files.length; i++) {
+					File file = files[i];
+					initSongInfo(file);
+				}
+			}
+		}).start();
 	}
 	
 	public void initSongHolderAllFolders(Context context) {
