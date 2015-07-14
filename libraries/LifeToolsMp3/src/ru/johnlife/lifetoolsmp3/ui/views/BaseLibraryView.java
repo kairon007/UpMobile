@@ -52,6 +52,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private String filterQuery = "";
 	private Object lock = new Object();
 	private CheckRemovedFiles checkRemovedFiles;
+	private Cursor cursor;
 	
 	private ContentObserver observer = new ContentObserver(null) {
 
@@ -278,8 +279,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
-		Cursor cursor;
 		synchronized (lock) {
+			if (null != cursor && !cursor.isClosed()) {
+				cursor.close();
+			}
 			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
 			cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
 		}

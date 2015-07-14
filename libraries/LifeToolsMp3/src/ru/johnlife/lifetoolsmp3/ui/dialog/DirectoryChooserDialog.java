@@ -1,16 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -41,8 +30,20 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+
 public class DirectoryChooserDialog {
-	
+
 	private static final String STORAGE = "/storage";
 	private List<String> m_subfiles = null;
 	private ArrayAdapter<String> m_listAdapter = null;
@@ -57,7 +58,9 @@ public class DirectoryChooserDialog {
 	private String m_sdcardDirectory = "";
 	private String m_dir = "";
 	private boolean m_isNewFolderEnabled = true;
-	OnShowListener showlistener = new OnShowListener() {
+	private AlertDialog dirsDialog;
+	private AlertDialog.Builder dialogBuilder;
+	private OnShowListener showlistener = new OnShowListener() {
 
 		@Override
 		public void onShow(DialogInterface dialog) {
@@ -68,6 +71,10 @@ public class DirectoryChooserDialog {
 			((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE).setTextSize(textSize);
 		}
 	};
+
+	private interface OnDirScanFinish {
+		public void onFinishScan(List<String> directories);
+	}
 
 	//////////////////////////////////////////////////////
 	// Callback interface for selected directory        //
@@ -87,7 +94,7 @@ public class DirectoryChooserDialog {
 		} catch (IOException ioe) {
 		}
 	}
-	
+
 	protected boolean getResourcefromTheme() {
 		return false;
 	}
@@ -116,55 +123,66 @@ public class DirectoryChooserDialog {
 			return;
 		}
 		m_dir = dir;
-		m_subfiles = getDirectories(dir);
-		class DirectoryOnClickListener implements DialogInterface.OnClickListener {
-
-			public void onClick(DialogInterface dialog, int item) {
-				String directory = (String) ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
-				if (directory.equals(""))
-					return;
-				m_dir += "/" + directory;
-				enableButtons();
-				updateDirectory();
-			}
-		}
-		AlertDialog.Builder dialogBuilder = createDirectoryChooserDialog(dir, m_subfiles, new DirectoryOnClickListener());
-		dialogBuilder.setPositiveButton(android.R.string.ok, new OnClickListener() {
-			
+		final String finalDir = dir;
+		getDirectories(dir, new OnDirScanFinish() {
 			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				if (m_chosenDirectoryListener != null) {
-					m_chosenDirectoryListener.onChosenDir(m_dir);
-				}
-				StateKeeper.getInstance().setLibaryFirstPosition(0);
-				keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
-			}
-		}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
+			public void onFinishScan(List<String> directories) {
+				m_subfiles = directories;
+				((Activity) m_context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						class DirectoryOnClickListener implements DialogInterface.OnClickListener {
 
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
-				StateKeeper.getInstance().setDirectoryChooserPath(null);
+							public void onClick(DialogInterface dialog, int item) {
+								String directory = (String) ((AlertDialog) dialog).getListView().getAdapter().getItem(item);
+								if (directory.equals(""))
+									return;
+								m_dir += "/" + directory;
+								enableButtons();
+								updateDirectory();
+							}
+						}
+						dialogBuilder = createDirectoryChooserDialog(finalDir, m_subfiles, new DirectoryOnClickListener());
+						dialogBuilder.setPositiveButton(android.R.string.ok, new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								if (m_chosenDirectoryListener != null) {
+									m_chosenDirectoryListener.onChosenDir(m_dir);
+								}
+								StateKeeper.getInstance().setLibaryFirstPosition(0);
+								keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
+							}
+						}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
+								StateKeeper.getInstance().setDirectoryChooserPath(null);
+							}
+						});
+						dirsDialog = dialogBuilder.create();
+						dirsDialog.setOnShowListener(showlistener);
+						dirsDialog.setOnKeyListener(new OnKeyListener() {
+
+							@Override
+							public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+								if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+									dirsDialog.dismiss();
+									keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
+									return true;
+								}
+								return false;
+							}
+						});
+						dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+						// Show directory chooser dialog
+						dirsDialog.show();
+						keeper.openDialog(StateKeeper.DIRCHOOSE_DIALOG);
+					}
+				});
 			}
 		});
-		final AlertDialog dirsDialog = dialogBuilder.create();
-		dirsDialog.setOnShowListener(showlistener);
-		dirsDialog.setOnKeyListener(new OnKeyListener() {
-			
-			@Override
-			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-					dirsDialog.dismiss();
-					keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
-					return true;
-				}
-				return false;
-			}
-		});
-		dirsDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		// Show directory chooser dialog
-		dirsDialog.show();
-		keeper.openDialog(StateKeeper.DIRCHOOSE_DIALOG);
 	}
 
 	private boolean createSubDir(String newDir) {
@@ -176,38 +194,44 @@ public class DirectoryChooserDialog {
 		return false;
 	}
 
-	private List<String> getDirectories(String dir) {
-		List<String> files = new ArrayList<String>();
-		List<String> songs = new ArrayList<String>();
-		File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
-		parent = new File(dir).getParentFile();
-		try {
-			File dirFile = new File(dir);
-			if (!dirFile.exists() || !dirFile.isDirectory() || !dirFile.canRead()) {
-				return files;
-			}
-			
-			for (File file : dirFile.listFiles()) {
-				if (!file.getPath().equals(system.getPath()) && file.canRead() && 
-						!file.getName().startsWith(".")) {
-					if (file.isDirectory()) {
-						files.add(file.getName());
-					} else if (file.getName().endsWith(Constants.AUDIO_END)) {
-						songs.add(file.getName());
+	private void getDirectories(final String dir, final OnDirScanFinish scanFinish) {
+		final List<String> files = new ArrayList<String>();
+		final List<String> songs = new ArrayList<String>();
+		final File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				parent = new File(dir).getParentFile();
+				try {
+					File dirFile = new File(dir);
+					if (!dirFile.exists() || !dirFile.isDirectory() || !dirFile.canRead()) {
+						scanFinish.onFinishScan(files);
+						return;
 					}
+
+					for (File file : dirFile.listFiles()) {
+						if (!file.getPath().equals(system.getPath()) && file.canRead() &&!file.getName().startsWith(".")) {
+							if (file.isDirectory()) {
+								files.add(file.getName());
+							} else if (file.getName().endsWith(Constants.AUDIO_END)) {
+								songs.add(file.getName());
+							}
+						}
+					}
+
+					Collections.sort(files, new Comparator<String>() {
+						public int compare(String o1, String o2) {
+							return o1.compareTo(o2);
+						}
+					});
+					files.addAll(songs);
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
+				scanFinish.onFinishScan(files);
 			}
-			
-			Collections.sort(files, new Comparator<String>() {
-				public int compare(String o1, String o2) {
-					return o1.compareTo(o2);
-				}
-			});
-			files.addAll(songs);
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
-		return files;
+		}).start();
+
 	}
 
 	private AlertDialog.Builder createDirectoryChooserDialog(String title, List<String> listItems, DialogInterface.OnClickListener onClickListener) {
@@ -274,7 +298,7 @@ public class DirectoryChooserDialog {
 		dialogBuilder.setView(contentView);
 		return dialogBuilder;
 	}
-	
+
 	public void enableButtons() {
 		boolean enable = keeper.checkState(StateKeeper.BTN_ENABLED);
 		((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(enable);
@@ -343,14 +367,24 @@ public class DirectoryChooserDialog {
 		if (!new File(m_dir).exists()) {
 			m_dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC).getAbsolutePath();
 		}
-		m_subfiles.clear();
-		m_subfiles.addAll(getDirectories(m_dir));
-		titleText.setText(m_dir);
-		m_listAdapter.notifyDataSetChanged();
-		if (m_listAdapter.isEmpty()) {
-			m_listAdapter.add(Constants.EMPTY_STRING);
-		}
-		StateKeeper.getInstance().setDirectoryChooserPath(m_dir);
+		getDirectories(m_dir, new OnDirScanFinish() {
+			@Override
+			public void onFinishScan(final List<String> directories) {
+				((Activity) m_context).runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						m_subfiles.clear();
+						m_subfiles.addAll(directories);
+						titleText.setText(m_dir);
+						m_listAdapter.notifyDataSetChanged();
+						if (m_listAdapter.isEmpty()) {
+							m_listAdapter.add(Constants.EMPTY_STRING);
+						}
+						StateKeeper.getInstance().setDirectoryChooserPath(m_dir);
+					}
+				});
+			}
+		});
 	}
 
 	private ArrayAdapter<String> createListAdapter(List<String> items) {
@@ -373,7 +407,7 @@ public class DirectoryChooserDialog {
 				}
 				return v;
 			}
-			
+
 			@Override
 			public boolean isEnabled(int position) {
 				if (getItem(position).endsWith(Constants.AUDIO_END)) {

@@ -1,17 +1,11 @@
 package com.special;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -19,6 +13,14 @@ import android.widget.TextView;
 
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 
 public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements Constants {
 	
@@ -54,6 +56,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         tvTitle.setText(titles[Constants.SEARCH_FRAGMENT]);
         hidePlayerElement();
     }
+
+
 
 	private void init() {
 		topFrame = (LinearLayout) findViewById(R.id.layout_top);
