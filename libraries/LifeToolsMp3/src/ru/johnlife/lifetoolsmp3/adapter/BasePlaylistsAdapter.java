@@ -60,7 +60,7 @@ public abstract class BasePlaylistsAdapter extends BaseAbstractAdapter<AbstractS
 		
 		protected TextView title;
 		protected TextView artist;
-		protected TextView duaration;
+		protected TextView duration;
 		protected View cover;
 		protected TextView groupTitle;
 		protected View playAll;
@@ -76,7 +76,7 @@ public abstract class BasePlaylistsAdapter extends BaseAbstractAdapter<AbstractS
 					artist.setText(data.getArtist());
 					Bitmap image = data.getCover();
 					((ImageView) cover).setImageBitmap(image == null ? getDefaultCover() : image);
-					duaration.setText(Util.getFormatedStrDuration(data.getDuration()));
+					duration.setText(Util.getFormatedStrDuration(data.getDuration()));
 				}
 			} else {
 				isChild = false;

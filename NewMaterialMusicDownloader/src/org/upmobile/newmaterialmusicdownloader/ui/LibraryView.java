@@ -88,9 +88,10 @@ public class LibraryView extends BaseLibraryView {
             Log.d("logd", "Exception: " + e);
         }
 	}
-	
-	public void forceDelete () {
-		swipeUndoAdapter.forceDelete();
-	}
+
+    @Override
+    public void forceDelete() {
+        swipeUndoAdapter.forceDelete();
+    }
 	
 }

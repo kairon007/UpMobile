@@ -47,33 +47,18 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		private ImageView indicator;
 
 		public LibraryViewHolder(View v) {
-			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
 			cover = (ImageView) v.findViewById(R.id.cover);
 			title = (TextView) v.findViewById(R.id.titleLine);
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
-			indicator = (ImageView) info.findViewById(R.id.playingIndicator);
+			indicator = (ImageView) v.findViewById(R.id.playingIndicator);
 			indicator.setColorFilter(getContext().getResources().getColor(Util.getResIdFromAttribute((MainActivity) getContext(), R.attr.colorPrimary)));
 		}
 
 		@Override
 		protected void hold(MusicData md, int position) {
 			data = md;
-			info.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Util.hideKeyboard(getContext(), v);
-					if (!service.isCorrectlyState(MusicData.class, getCount())) {
-						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-						service.setArrayPlayback(list);
-					}
-					if (!service.isPrepared() || !data.getPath().equals(service.getPlayingSong().getPath())) {
-						((MainActivity) getContext()).startSong(data);
-					}
-				}
-			});
 			boolean isPlaying = service.isPrepared() && md.getPath().equals(service.getPlayingSong().getPath());
 			indicator.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
 			super.hold(md, position);

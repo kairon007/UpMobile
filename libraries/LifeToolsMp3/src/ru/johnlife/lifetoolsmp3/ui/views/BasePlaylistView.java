@@ -370,7 +370,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void createPlaylist(ContentResolver resolver, String pName) {
-		pName = getDirectory() + pName; 
+		pName = getDirectory() + pName;
 		try {
 			Uri uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
 			ContentValues values = new ContentValues();

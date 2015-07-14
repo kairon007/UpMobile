@@ -38,7 +38,10 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	protected int getLayoutId() {
 		return R.layout.fragment_list_transition;
 	}
-	
+
+	@Override
+	protected void forceDelete() {}
+
 	@Override
 	public TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);

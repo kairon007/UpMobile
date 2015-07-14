@@ -38,12 +38,9 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return new LibraryViewHolder(v);
 	}
 
-	private class LibraryViewHolder extends BaseLibraryViewHolder implements OnClickListener, OnLongClickListener {
-
-		private MusicData data;
+	private class LibraryViewHolder extends BaseLibraryViewHolder {
 
 		public LibraryViewHolder(View v) {
-			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
 			cover = (ImageView) v.findViewById(R.id.cover);
 			title = (TextView) v.findViewById(R.id.titleLine);
 			artist = (TextView) v.findViewById(R.id.artistLine);
@@ -53,33 +50,8 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 
 		@Override
 		protected void hold(MusicData data, int position) {
-			this.data = data;
 			super.hold(data, position);
-			setListener();
 		}
-		
-		private void setListener() {
-			info.setOnClickListener(this);
-			info.setOnLongClickListener(this);
-		}
-
-		@Override
-		public void onClick(View view) {
-			switch (view.getId()) {
-			case R.id.boxInfoItem:
-				if (!service.isCorrectlyState(MusicData.class, getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-					service.setArrayPlayback(list);
-				}
-				if (service.isPrepared() && service.getPlayingSong().equals(data)) return;
-				((MainActivity) getContext()).showPlayerElement();
-				((MainActivity) getContext()).startSong(data);
-				break;
-			}
-		}
-
-		@Override
-		public boolean onLongClick(View view) { return false; }
 	}
 	
 	@Override

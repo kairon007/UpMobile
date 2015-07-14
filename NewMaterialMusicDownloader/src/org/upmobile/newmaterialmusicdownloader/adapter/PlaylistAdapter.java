@@ -91,7 +91,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			title = (TextView) v.findViewById(R.id.textTitle);
 			artist = (TextView) v.findViewById(R.id.textHint);
 			cover = v.findViewById(R.id.item_cover);
-			duaration = (TextView) v.findViewById(R.id.textDuration);
+			duration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
 			playAll = (View) v.findViewById(R.id.playAll);
 			customGroupIndicator = (ImageView) v.findViewById(R.id.customGroupIndicator);

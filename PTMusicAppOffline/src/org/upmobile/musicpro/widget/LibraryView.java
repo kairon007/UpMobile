@@ -39,7 +39,12 @@ public class LibraryView extends BaseLibraryView {
 	protected int getLayoutId() {
 		return R.layout.fragment_library;
 	}
-	
+
+	@Override
+	protected void forceDelete() {
+
+	}
+
 	@Override
 	public TextView getMessageView(View view) {
 		return (TextView) view.findViewById(R.id.message_listview);

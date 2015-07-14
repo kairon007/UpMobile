@@ -1,18 +1,5 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import java.util.ArrayList;
-
-import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -23,6 +10,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
+import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 
@@ -82,10 +83,10 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			title = (TextView) v.findViewById(R.id.textTitle);
 			artist = (TextView) v.findViewById(R.id.textHint);
 			cover = v.findViewById(R.id.item_cover);
-			duaration = (TextView) v.findViewById(R.id.textDuration);
+			duration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
-			playAll = (View) v.findViewById(R.id.playAll);
-			customGroupIndicator = (ImageView) v.findViewById(R.id.customGroupIndicator);
+			playAll = v.findViewById(R.id.playAll);
+			customGroupIndicator = v.findViewById(R.id.customGroupIndicator);
 		}
 
 		@Override

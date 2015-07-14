@@ -109,7 +109,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
 		v.findViewById(R.id.progress).startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.rotate));
 	}
-	
+
+	@Override
 	public void forceDelete() {
 		swipeUndoAdapter.forceDelete();
 	}

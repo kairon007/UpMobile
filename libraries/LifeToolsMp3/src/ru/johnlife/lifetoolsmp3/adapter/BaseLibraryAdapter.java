@@ -136,8 +136,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		protected TextView artist;
 		protected TextView duration;
 		protected View threeDot;
-		protected ViewGroup info;
-		
+
 		@Override
 		protected void hold(final MusicData item, int position) {
 			title.setText(item.getTitle());
@@ -148,7 +147,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 				
 				@Override
 				public void onClick(View v) {
-					showMenu(v, info);
+					showMenu(v);
 				}
 			});
 			
@@ -193,7 +192,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	}
 	
 	@SuppressLint("NewApi")
-	public void showMenu(final View v, final ViewGroup info) {
+	public void showMenu(final View v) {
 		PopupMenu menu = new PopupMenu(getContext(), v);
 		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
 		menu.getMenu().getItem(2).setVisible(showDeleteItemMenu());

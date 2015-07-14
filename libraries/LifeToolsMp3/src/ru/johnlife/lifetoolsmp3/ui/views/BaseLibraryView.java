@@ -7,6 +7,7 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -53,6 +54,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	private Object lock = new Object();
 	private CheckRemovedFiles checkRemovedFiles;
 	private Cursor cursor;
+	private PlaybackService service;
 	
 	private ContentObserver observer = new ContentObserver(null) {
 
@@ -112,7 +114,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	public abstract TextView getMessageView(View view);
 	protected abstract String getFolderPath();
 	protected abstract int getLayoutId();
-	
+	protected abstract void forceDelete();
+
 	public void onPause() {
 		((BaseLibraryAdapter) adapter).resetListener();
 		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
@@ -226,9 +229,25 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		listView = getListView(view);
 		emptyMessage = getMessageView(view);
 		adapter = getAdapter();
+		service = PlaybackService.get(view.getContext());
+		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+				forceDelete();
+				Util.hideKeyboard(getContext(), view);
+				if (!service.isCorrectlyState(MusicData.class, adapter.getCount())) {
+					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(adapter.getAll());
+					service.setArrayPlayback(list);
+				}
+				if (!service.isPrepared() || !((MusicData) adapter.getItem(i)).equals(service.getPlayingSong().getPath())) {
+					((BaseMiniPlayerActivity) getContext()).startSong(((MusicData) adapter.getItem(i)));
+				}
+			}
+		});
 		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+				forceDelete();
 				AbstractSong data = (AbstractSong) adapter.getItem(position);
 				showMenu(view, (MusicData) data);
 				return true;

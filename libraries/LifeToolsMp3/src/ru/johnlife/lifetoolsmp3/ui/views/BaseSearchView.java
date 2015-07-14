@@ -1,56 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import org.json.JSONArray;
-
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
-import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSpinnerAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.Engine;
-import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
-import ru.johnlife.lifetoolsmp3.engines.SearchGoearV2;
-import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
-import ru.johnlife.lifetoolsmp3.engines.SearchHulkShare;
-import ru.johnlife.lifetoolsmp3.engines.SearchJamendo;
-import ru.johnlife.lifetoolsmp3.engines.SearchKugou;
-import ru.johnlife.lifetoolsmp3.engines.SearchMp3World;
-import ru.johnlife.lifetoolsmp3.engines.SearchMp3skull;
-import ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3;
-import ru.johnlife.lifetoolsmp3.engines.SearchPleer;
-import ru.johnlife.lifetoolsmp3.engines.SearchPleerV2;
-import ru.johnlife.lifetoolsmp3.engines.SearchPoisk;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin;
-import ru.johnlife.lifetoolsmp3.engines.SearchSogou;
-import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud;
-import ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3;
-import ru.johnlife.lifetoolsmp3.engines.SearchTing;
-import ru.johnlife.lifetoolsmp3.engines.SearchVK;
-import ru.johnlife.lifetoolsmp3.engines.SearchVmusice;
-import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
-import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
-import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
-import ru.johnlife.lifetoolsmp3.engines.SearchZvukoff;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.GrooveSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.lifetoolsmp3.ui.Player;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -102,6 +51,58 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import org.json.JSONArray;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSpinnerAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.engines.BaseSearchTask;
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.engines.FinishedParsingSongs;
+import ru.johnlife.lifetoolsmp3.engines.SearchGoearV2;
+import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
+import ru.johnlife.lifetoolsmp3.engines.SearchHulkShare;
+import ru.johnlife.lifetoolsmp3.engines.SearchJamendo;
+import ru.johnlife.lifetoolsmp3.engines.SearchKugou;
+import ru.johnlife.lifetoolsmp3.engines.SearchMp3World;
+import ru.johnlife.lifetoolsmp3.engines.SearchMp3skull;
+import ru.johnlife.lifetoolsmp3.engines.SearchMyFreeMp3;
+import ru.johnlife.lifetoolsmp3.engines.SearchPleer;
+import ru.johnlife.lifetoolsmp3.engines.SearchPleerV2;
+import ru.johnlife.lifetoolsmp3.engines.SearchPoisk;
+import ru.johnlife.lifetoolsmp3.engines.SearchSoArdIyyin;
+import ru.johnlife.lifetoolsmp3.engines.SearchSogou;
+import ru.johnlife.lifetoolsmp3.engines.SearchSoundCloud;
+import ru.johnlife.lifetoolsmp3.engines.SearchTaringaMp3;
+import ru.johnlife.lifetoolsmp3.engines.SearchTing;
+import ru.johnlife.lifetoolsmp3.engines.SearchVK;
+import ru.johnlife.lifetoolsmp3.engines.SearchVmusice;
+import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
+import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
+import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
+import ru.johnlife.lifetoolsmp3.engines.SearchZvukoff;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.GrooveSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.ui.Player;
 
 public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener {
 
@@ -299,7 +300,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 							adapter.add(song);
 						}
 					}
-					if (adapter.getCount() <= 3 && !(adapter.getCount() > 12) && taskIterator.hasNext()) {
+					if (adapter.getCount() <= 3 && taskIterator.hasNext()) {
 						getNextResults(false);
 					}
 				} catch (Exception e) {

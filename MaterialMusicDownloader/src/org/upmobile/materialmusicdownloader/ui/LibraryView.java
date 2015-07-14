@@ -54,7 +54,12 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	protected int getLayoutId() {
 		return R.layout.fragment_list_transition;
 	}
-	
+
+	@Override
+	public void forceDelete() {
+		swipeUndoAdapter.forceDelete();
+	}
+
 	@Override
 	public TextView getMessageView(View view) {
 		message = (TextView) view.findViewById(R.id.message_listview);
@@ -91,7 +96,4 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		((MainActivity)getContext()).showMessage(message);
 	}
 	
-	public void forceDelete () {
-		swipeUndoAdapter.forceDelete();
-	}
 }

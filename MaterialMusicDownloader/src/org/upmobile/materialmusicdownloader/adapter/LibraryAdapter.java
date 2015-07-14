@@ -10,6 +10,7 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
@@ -49,32 +50,17 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		private View indicator;
 
 		public LibraryViewHolder(View v) {
-			info = (ViewGroup) v.findViewById(R.id.boxInfoItem);
 			cover = (ImageView) v.findViewById(R.id.cover);
 			title = (TextView) v.findViewById(R.id.titleLine);
 			artist = (TextView) v.findViewById(R.id.artistLine);
 			duration = (TextView) v.findViewById(R.id.chunkTime);
 			threeDot = v.findViewById(R.id.threeDot);
-			indicator = info.findViewById(R.id.playingIndicator);
+			indicator = v.findViewById(R.id.playingIndicator);
 		}
 		
 		@Override
 		protected void hold(MusicData md, int position) {
 			data = md;
-			info.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					Util.hideKeyboard(getContext(), v);
-					if (!service.isCorrectlyState(MusicData.class, getCount())) {
-						ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(getAll());
-						service.setArrayPlayback(list);
-					}
-					if (!service.isPrepared() || !data.getPath().equals(service.getPlayingSong().getPath())) {
-						((MainActivity) getContext()).startSong(data);
-					}
-				}
-			});
 			boolean isPlaying = service.isPrepared() && md.getPath().equals(service.getPlayingSong().getPath());
 			indicator.setVisibility(isPlaying ? View.VISIBLE : View.GONE);
 			super.hold(md, position);
