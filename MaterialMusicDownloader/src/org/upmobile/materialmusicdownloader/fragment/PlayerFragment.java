@@ -762,6 +762,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private boolean isSameNameExists(String artist, String title) {
+		if (null == song.getPath()) return false;
 		StringBuilder path = new StringBuilder(new File(song.getPath()).getParentFile().toString())
 				.append("/").append(artist).append(" - ").append(title).append(".mp3");
 		if (new File(path.toString()).exists()) {
