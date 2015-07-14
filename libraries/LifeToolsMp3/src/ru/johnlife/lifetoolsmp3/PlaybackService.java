@@ -529,12 +529,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		boolean result = enabledShuffleAll();
 		if (result && null == arrayPlaybackOriginal) {
 			arrayPlaybackOriginal = new ArrayList<AbstractSong>();
-			try {
-				for (AbstractSong song : arrayPlayback) {
-					arrayPlaybackOriginal.add(song.cloneSong());
-				}
-			} catch (CloneNotSupportedException e) {
-				e.printStackTrace();
+			for (AbstractSong song : arrayPlayback) {
+				arrayPlaybackOriginal.add(song);
 			}
 			long seed = System.nanoTime();
 			Collections.shuffle(arrayPlayback, new Random(seed));
