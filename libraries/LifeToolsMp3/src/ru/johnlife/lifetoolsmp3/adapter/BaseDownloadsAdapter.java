@@ -1,12 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
@@ -16,6 +9,14 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import ru.johnlife.lifetoolsmp3.DownloadCache;
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+
 public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData> {
 
 	public BaseDownloadsAdapter(Context context, int resource) {
@@ -24,8 +25,7 @@ public abstract class BaseDownloadsAdapter extends BaseAbstractAdapter<MusicData
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
-		View view = super.getView(position, convertView, p);
-		return view;
+        return super.getView(position, convertView, p);
 	}
 	
 	protected abstract class BaseDownloadsViewHolder extends ViewHolder<MusicData> {

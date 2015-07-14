@@ -67,12 +67,12 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
-		public void update(AbstractSong song) {
-			BaseMiniPlayerActivity.this.song = song;
+		public void update(AbstractSong s) {
+			song = s;
 			if (miniPlayer.getVisibility() == View.GONE || miniPlayer.getVisibility() == View.INVISIBLE) {
-				setData(song);
+				setData(s);
 			} else {
-				showMiniPlayer(true, true);
+				showMiniPlayer(true, false);
 			}
 		}
 
