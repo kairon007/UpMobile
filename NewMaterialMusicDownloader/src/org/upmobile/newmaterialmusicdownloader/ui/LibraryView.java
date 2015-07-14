@@ -13,6 +13,7 @@ import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,26 +62,31 @@ public class LibraryView extends BaseLibraryView {
 	
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
-		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
-			
-	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-	        	for (int position : reverseSortedPositions) {
-	            	MusicData data = ((MusicData) adapter.getItem(position));
-	            	isUserDeleted = true;
-	            	PlaybackService.get(getContext()).remove(data);
-	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
-	            	adapter.remove(data);
-	            	data.reset(getContext());
-	            	if (adapter.isEmpty()) {
-	        			lView.setEmptyView(message);
-	        		}
-	            }
-	        }
-	    });
-		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
-		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
-		((DynamicListView)listView).enableSimpleSwipeUndo();
+        try {
+            swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+
+                @Override
+                public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
+                    for (int position : reverseSortedPositions) {
+                        MusicData data = ((MusicData) adapter.getItem(position));
+					    if (null == data) return;
+                        isUserDeleted = true;
+                        PlaybackService.get(getContext()).remove(data);
+                        StateKeeper.getInstance().removeSongInfo(data.getComment());
+                        adapter.remove(data);
+                        data.reset(getContext());
+                        if (adapter.isEmpty()) {
+                            lView.setEmptyView(message);
+                        }
+                    }
+                }
+            });
+            swipeUndoAdapter.setAbsListView((DynamicListView) listView);
+            ((DynamicListView) listView).setAdapter(swipeUndoAdapter);
+            ((DynamicListView) listView).enableSimpleSwipeUndo();
+        } catch (Throwable e){
+            Log.d("logd", "Exception: " + e);
+        }
 	}
 	
 	public void forceDelete () {
