@@ -815,6 +815,12 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public void setArrayPlayback(ArrayList<AbstractSong> arrayPlayback) {
 		this.arrayPlayback = arrayPlayback;
+		this.arrayPlaybackOriginal = null;
+		if (enabledShuffleAuto()) {
+			mode ^= SMODE_SHUFFLE_AUTO;
+		} else if (enabledShuffleManual()) {
+			mode ^= SMODE_SHUFFLE_MANUAL;
+		}
 		if (null != arrayPlayback && !arrayPlayback.isEmpty()) {
 			onMode(arrayPlayback.get(0).getClass() == MusicData.class ? SMODE_SONG_FROM_LIBRARY : SMODE_SONG_FROM_INTERNET, SONG_SOURCE_MASKS);
 		} else {

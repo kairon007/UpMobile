@@ -85,7 +85,7 @@ public class LibraryView extends BaseLibraryView {
             ((DynamicListView) listView).setAdapter(swipeUndoAdapter);
             ((DynamicListView) listView).enableSimpleSwipeUndo();
         } catch (Throwable e){
-            Log.d("logd", "Exception: " + e);
+            Log.d(getClass().getSimpleName(), "Exception: " + e);
         }
 	}
 
