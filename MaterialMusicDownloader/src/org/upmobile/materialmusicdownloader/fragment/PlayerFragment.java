@@ -738,7 +738,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			} else {
 				isSameWord = true;
 			}
-			if (!isSameWord) {
+			if (!isSameWord && song.getClass() == MusicData.class) {
 				if (etTitle.getVisibility() == View.VISIBLE && isSameNameExists(artist, changedTitle)) {
 					song.setTitle(title);
 					tvTitle.setText(title);
@@ -762,7 +762,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private boolean isSameNameExists(String artist, String title) {
-		if (null == song.getPath()) return false;
 		StringBuilder path = new StringBuilder(new File(song.getPath()).getParentFile().toString())
 				.append("/").append(artist).append(" - ").append(title).append(".mp3");
 		if (new File(path.toString()).exists()) {
