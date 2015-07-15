@@ -113,7 +113,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 	
 	@Override
 	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
-		int position = ((MainActivity) getContext()).getLastCheckPosition();
 		ArrayList<Integer> selectedPositions = new ArrayList<>();
 		for (int i=0;i <  playlistDatas.size(); i++) {
 			if (contains(playlistDatas.get(i), ((MusicData) v.getTag()))) {
@@ -126,7 +125,7 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 			.positiveColorAttr(R.attr.colorPrimary)
 			.items(data)
 			.setSelectedItems(selectedPositions)
-			.itemsCallbackSingleChoice(position, new MaterialDialog.ListCallback() {
+			.itemsCallbackSingleChoice(0, new MaterialDialog.ListCallback() {
 				@Override
 				public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
 					((MainActivity) getContext()).setLastCheckPosition(which);
