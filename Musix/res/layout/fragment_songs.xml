@@ -25,10 +25,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:text="@string/library_empty"
             android:textColor="@color/wet_asphalt"
-            android:visibility="gone"
-            android:text="@string/library_empty" />
-
+            android:visibility="gone" />
     </FrameLayout>
 
     <LinearLayout
@@ -68,15 +67,35 @@
             android:padding="4dp"
             android:src="@drawable/ic_action_play" />
 
-        <ImageButton
-            android:id="@+id/btnRandom"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_bg"
-            android:contentDescription="@string/shuffle"
-            android:padding="4dp"
-            android:src="@drawable/ic_action_random" />
+            android:layout_weight="0.8"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:gravity="center"
+            android:padding="4dp" >
+
+            <ImageButton
+                android:id="@+id/btnRandom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selectable_item_bg"
+                android:contentDescription="@string/shuffle"
+                android:src="@drawable/ic_action_random" />
+
+            <TextView
+                android:id="@+id/txtShuffleMode"
+                android:layout_width="16dp"
+                android:layout_height="32dp"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@+id/btnRandom"
+                android:layout_toEndOf="@+id/btnRandom"
+                android:gravity="center"
+                android:textColor="@color/blue_holo"
+                android:textSize="16sp"
+                android:visibility="visible" />
+        </RelativeLayout>
 
         <ImageButton
             android:id="@+id/btnNext"

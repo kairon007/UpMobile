@@ -70,7 +70,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 	private SeekBar seekBar;
 	private ImageView playingAlbumCover;
 	private ImageButton btnPrev, btnNext, btnStop, btnPlayPause, btnShuffle;
-	private TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName;
+	private TextView txtStartTimeField, txtEndTimeField, txtCurrentSongTitle, txtCurrentSongArtistName, txtShuffleMode;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -276,8 +276,15 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 			public void onClick(View v) {
 				musicService.offOnShuffle();
 				if (!musicService.enabledShuffleAll()) {
+					txtShuffleMode.setVisibility(View.INVISIBLE);
 					btnShuffle.setAlpha((float) 0.5);
 				} else {
+					txtShuffleMode.setVisibility(View.VISIBLE);
+					if (musicService.enabledShuffleAuto()) {
+						txtShuffleMode.setText("A");
+					} else {
+						txtShuffleMode.setText("M");
+					}
 					btnShuffle.setAlpha((float) 1);
 				}
 			}
@@ -301,6 +308,7 @@ public class SongsListFragment extends Fragment implements MediaController.Media
 		btnPrev = (ImageButton) root.findViewById(R.id.btnPrev);
 		btnShuffle = (ImageButton) root.findViewById(R.id.btnRandom);
 		btnStop = (ImageButton) root.findViewById(R.id.btnStop);
+		txtShuffleMode = (TextView) root.findViewById(R.id.txtShuffleMode);
 		txtCurrentSongTitle = (TextView) root.findViewById(R.id.txtCurrentSongTitle);
 		txtCurrentSongArtistName = (TextView) root.findViewById(R.id.txtCurrentSongArtistName);
 		playingAlbumCover = (ImageView) root.findViewById(R.id.imageAlbumPlaying);
