@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,6 +49,7 @@ public class CompatHoneycomb {
      * @param activity The activity to add to.
      */
     public static void addActionBarTabs(final MainActivity activity) {
+
         ActionBar.TabListener listener = new ActionBar.TabListener() {
             private final MainActivity mActivity = activity;
 

@@ -241,7 +241,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 
 	@Override
 	public String toString() {
-		return String.format(Locale.getDefault(), "%d %d %s", id, albumId, path);
+		return String.format(Locale.getDefault(), "%d %d %s %s", id, albumId, path, artist + " - " + title);
 	}
 
 	/**

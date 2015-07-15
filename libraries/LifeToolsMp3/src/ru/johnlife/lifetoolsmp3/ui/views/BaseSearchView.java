@@ -24,6 +24,8 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
@@ -104,7 +106,7 @@ import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.Player;
 
-public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener {
+public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener, FinishedParsingSongs {
 
 	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
@@ -177,7 +179,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		init(inflater);
 		initSearchEngines(getContext(), null);
 		keeper = StateKeeper.getInstance();
-		keeper.restoreState(this);
 		sPref = MusicApp.getSharedPreferences();
 		keyEngines = sPref.getString(SPREF_CURRENT_ENGINES, getTitleSearchEngine());
 		float width = searchField.getPaint().measureText(getResources().getString(R.string.hint_main_search));
@@ -272,8 +273,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 	};
 
-	FinishedParsingSongs resultsListener = new FinishedParsingSongs() {
-
 		@Override
 		public void onFinishParsing(List<Song> songsList) {
 			adapter.setVisibilityProgress(false);
@@ -300,16 +299,21 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 							adapter.add(song);
 						}
 					}
-					if (adapter.getCount() <= 3 && taskIterator.hasNext()) {
+					if (adapter.getCount() < 15 && !(adapter.getCount() > 20)&& taskIterator.hasNext()) {
 						getNextResults(false);
 					}
 				} catch (Exception e) {
 					Log.e(getClass().getSimpleName(), e.toString());
 				}
+				keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			}
 		}
-	};
-	
+
+	public void restoreAdapter(ArrayList<Song> list, int position) {
+		adapter.add(list);
+		listView.setSelection(position);
+	}
+
 	private boolean contains (Song song) {
 		for (int i = 0; i < adapter.getCount(); i++) {
 			if (((Song) adapter.getItem(i)).getComment().equals(song.getComment())) {
@@ -318,6 +322,32 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 		return false;
 	}
+
+	private void init(LayoutInflater inflater) {
+		view = (ViewGroup) inflater.inflate(R.layout.search, null);
+		listView = getListView(view);
+		adapter = getAdapter();
+		message = (TextView) view.findViewById(R.id.message);
+		progress = view.findViewById(R.id.progress);
+		clearBtn = view.findViewById(R.id.clear);
+		searchBtn = view.findViewById(R.id.search);
+		downloads = view.findViewById(R.id.downloads);
+		touchInterceptor = view.findViewById(R.id.touch_interceptor);
+		searchField = (TextView) view.findViewById(R.id.text);
+		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
+		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
+		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
+		specialInit(view);
+		setListeners();
+	}
+
+	private void setListeners() {
+		clearBtn.setOnClickListener(this);
+		searchBtn.setOnClickListener(this);
+		touchInterceptor.setOnTouchListener(this);
+		searchField.setOnTouchListener(this);
+		listView.setOnItemClickListener(this);
+	}
 	
 	public View getView() {
 		if (!showFullElement()) {
@@ -325,12 +355,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		} else {
 			downloads.setOnClickListener(this);
 		}
-		if (!isRestored) {
-			listView.addHeaderView(emptyHeader);
-			listView.addFooterView(adapter.getProgressView(), null, false);
-			listView.setAdapter(adapter);
-			animateListView(false);
-		}
+		listView.addHeaderView(emptyHeader);
+		listView.addFooterView(adapter.getProgressView(), null, false);
+		listView.setAdapter(adapter);
+		animateListView(false);
+		adapter.clear();
 		listView.setEmptyView(message);
 		listView.setOnScrollListener(new OnScrollListener() {
 			
@@ -338,11 +367,12 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			int maxScroll = spEnginesChoiserScroll.getLayoutParams().height;
 			
 			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) {}
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+			}
 			
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-				if (firstVisibleItem + visibleItemCount == totalItemCount - 1) {
+				if (firstVisibleItem + visibleItemCount == totalItemCount - 1 && adapter.getCount() > 0) {
 					getNextResults(false);
 				}
 				int scrollBy = getScrollListView() - lastScroll;
@@ -387,6 +417,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			hideBaseProgress();
 		}
 		searchField.setFocusable(false);
+		keeper.restoreState(this);
 		return view;
 	}
 	
@@ -446,32 +477,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 	}
 	
-	private void init(LayoutInflater inflater) {
-		view = (ViewGroup) inflater.inflate(R.layout.search, null);
-		listView = getListView(view);
-		adapter = getAdapter();
-		message = (TextView) view.findViewById(R.id.message);
-		progress = view.findViewById(R.id.progress);
-		clearBtn = view.findViewById(R.id.clear);
-		searchBtn = view.findViewById(R.id.search);
-		downloads = view.findViewById(R.id.downloads);
-		touchInterceptor = view.findViewById(R.id.touch_interceptor);
-		searchField = (TextView) view.findViewById(R.id.text);
-		spEnginesChoiser = (Spinner) view.findViewById(R.id.choise_engines);
-		spEnginesChoiserScroll = view.findViewById(R.id.search_scroll);
-		emptyHeader = inflate(getContext(), R.layout.empty_header, null);
-		specialInit(view);
-		setListeners();
-	}
-	
-	private void setListeners() {
-		clearBtn.setOnClickListener(this);
-		searchBtn.setOnClickListener(this);
-		touchInterceptor.setOnTouchListener(this);
-		searchField.setOnTouchListener(this);
-		listView.setOnItemClickListener(this);
-	}
-	
 	public int getScrollListView() {
 	    View c = listView.getChildAt(1);
 	    if (c == null) return 0;
@@ -515,7 +520,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		} else if (keyEngines.equals(getTitleSearchEngine8())) {
 			engineArray = getSettings().getSearchEnginesArray8(context);
 		}
-		engines = new ArrayList<Engine>(engineArray.length);
+		engines = new ArrayList<>(engineArray.length);
 		for (int i = 0; i < engineArray.length; i++) {
 			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(engineArray[i][0]);
 			int maxPages = Integer.parseInt(engineArray[i][1]);
@@ -550,6 +555,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 
 				@Override
 				public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+					if (keyEngines.equals(enginesAdapter.getItem(position))) return;
 					lastSearchString = searchField.getText().toString();
 					keyEngines = enginesAdapter.getItem(position);
 					sPref = MusicApp.getSharedPreferences();
@@ -752,12 +758,16 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			Engine engine = taskIterator.next();
 			String str = null != extraSearch ? extraSearch : searchField.getText().toString();
 			extraSearch = null;
-			searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] { resultsListener, str});
+			searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] {this, str});
 			if (searchTask instanceof SearchWithPages) {
 				int page = engine.getPage();
 				((SearchWithPages) searchTask).setPage(page);
 			}
-			searchTask.execute(NO_PARAMS);
+			if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+				searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+			}  else {
+				searchTask.execute();
+			}
 		} catch (Exception e) {
 			getNextResults(false);
 		}
@@ -1009,16 +1019,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	}
 	
 	protected void animateListView(boolean isRestored) { } // Animate list view in childs, if need
-	
-	public void restoreAdapter(ArrayList<Song> list, int position) {
-		adapter.add(list);
-		listView.addHeaderView(emptyHeader);
-		listView.addFooterView(adapter.getProgressView(), null, false);
-		listView.setAdapter(adapter);
-		animateListView(true);
-		listView.setSelection(position);
-		isRestored = true;
-	}
 	
 	public RemoteSong getDownloadSong() {
 		return downloadSong;
