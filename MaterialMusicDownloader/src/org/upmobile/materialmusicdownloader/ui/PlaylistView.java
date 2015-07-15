@@ -1,23 +1,5 @@
 package org.upmobile.materialmusicdownloader.ui;
 
-import java.util.ArrayList;
-
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.Theme;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -34,6 +16,25 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.Theme;
 
 public class PlaylistView extends BasePlaylistView{
 	
@@ -181,44 +182,36 @@ public class PlaylistView extends BasePlaylistView{
 	
 	@Override
 	protected void animateListView(ListView listView, final BasePlaylistsAdapter adapter) {
-		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
-			
-	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-	        	for (int position : reverseSortedPositions) {
-	        		try {
-						AbstractSong data = (AbstractSong) adapter.getItem(position);
-						if (null == data) return;
-						if (data.equals(swipeUndoAdapter.getSongs().get(position))) {
+		try {
+			swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
+
+				@Override
+				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
+					for (int position : reverseSortedPositions) {
+						try {
+							AbstractSong data = (AbstractSong) adapter.getItem(position);
+							if (null == data || !swipeUndoAdapter.getSongs().contains(data)) return;
 							if (data.getClass() == MusicData.class) {
 								removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
 							} else {
 								removeData((PlaylistData) data, null);
 							}
-						} else {
-							data = swipeUndoAdapter.getSongs().get(position);
-							if (null == data) return;
-							if (data.getClass() == MusicData.class) {
-								PlaylistData playlistBySong = getPlaylistBySong((MusicData) data);
-								if (null == playlistBySong) return;
-								playlistBySong.removeFromPlaylist(getContext(), playlistBySong.getId(), data.getId());
-							} else {
-								((PlaylistData) data).deletePlaylist(getContext(), data.getId());
-							}
-							swipeUndoAdapter.getSongs().remove(position);
+							swipeUndoAdapter.getSongs().remove(data);
+						} catch (Exception e) {
+							Log.e(getClass().getSimpleName(), e + "");
 						}
-					} catch (Exception e) {
-						Log.e(getClass().getSimpleName(), e + "");
 					}
-	            }
-            	if (adapter.isEmpty()) {
-        			lView.setEmptyView(message);
-        		}
-	        }
-	    });
-		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
-		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
-		((DynamicListView)listView).enableSimpleSwipeUndo();
+					if (adapter.isEmpty()) {
+						lView.setEmptyView(message);
+					}
+				}
+			});
+			swipeUndoAdapter.setAbsListView((DynamicListView) listView);
+			((DynamicListView) listView).setAdapter(swipeUndoAdapter);
+			((DynamicListView) listView).enableSimpleSwipeUndo();
+		} catch (Throwable e) {
+			Log.d(getClass().getSimpleName(), "Exception: " + e);
+		}
 	}
 	
 	public void forceDelete () {

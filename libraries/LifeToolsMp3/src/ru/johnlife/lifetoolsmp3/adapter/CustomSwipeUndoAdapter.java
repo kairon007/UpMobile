@@ -1,11 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,12 +10,18 @@ import android.widget.BaseAdapter;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+
 public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	private final int DELAY = 3000;
 	private CanNotifyListener listener;
 	private ArrayList<DissmissTimer> timers = new ArrayList<DissmissTimer>();
-	private LinkedHashMap<Integer, AbstractSong> songs = new LinkedHashMap<Integer, AbstractSong>();
+	private ArrayList<AbstractSong> songs = new ArrayList<>();
 	private BaseAdapter adapter;
 	
 	public interface CanNotifyListener {
@@ -40,7 +40,8 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 			listener.canNotify(false);
 		}
 		startTimer(position);
-		songs.put(position, (AbstractSong) adapter.getItem(position));
+		AbstractSong song = (AbstractSong) adapter.getItem(position);
+		if (!songs.contains(song)) songs.add(song);
 		super.onUndoShown(view, position);
 	}
 	
@@ -180,7 +181,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		timers.removeAll(removed);
 	}
 
-	public LinkedHashMap<Integer, AbstractSong> getSongs() {
+	public ArrayList<AbstractSong> getSongs() {
 		return songs;
 	}
 }
