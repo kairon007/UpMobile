@@ -314,7 +314,11 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	}
 
 	public void setEqualizerPreset(Short preset, int p1, int p2, int p3, int p4, int p5) {
-		equalizer.usePreset(preset);
+		try {
+			equalizer.usePreset(preset);
+		} catch(Throwable e) {
+			e.printStackTrace();
+		}
 		sb1.setProgressAndThumb(15 + p1);
 		sb2.setProgressAndThumb(15 + p2);
 		sb3.setProgressAndThumb(15 + p3);
