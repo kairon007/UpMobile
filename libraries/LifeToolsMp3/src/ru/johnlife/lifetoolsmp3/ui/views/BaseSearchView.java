@@ -170,7 +170,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	protected boolean showDownloadLabel() { return false; }
 	protected boolean showFullElement() { return true; }
 	protected boolean showPopupMenu() { return false; }
-	protected boolean isAppPT () { return false; }
 	protected boolean onlyOnWifi() { return true; }
 	protected void showShadow (boolean visible) { }
 
@@ -905,7 +904,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			View v = inflater.inflate(layoutId > 0 ? layoutId : R.layout.download_dialog, null);
 			player = new Player(v, song);
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
-			player.setIsAppPT(isAppPT());
 			player.execute(song.getUrl());
 			if (song instanceof GrooveSong) {
 				player.setSongId(((GrooveSong) song).getSongId());

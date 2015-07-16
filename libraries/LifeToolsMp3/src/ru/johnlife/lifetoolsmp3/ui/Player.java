@@ -82,7 +82,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean isDefaultCover = true;
-	private boolean isAppPT = false;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -104,10 +103,6 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		if (textView != null) {
 			textView.setText(title);
 		}
-	}
-	
-	public void setIsAppPT(boolean value){
-		isAppPT = value;
 	}
 	
 	public void setDownloadSong(RemoteSong downloadSong) {
@@ -453,25 +448,11 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void onPaused() {
-		if (!isAppPT) {
-//			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.play_white : R.drawable.play;
-			imagePause = Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.play);
-		} else {
-			imagePause = R.drawable.play_pt;
-		}
-		Log.d("logd", "onPaused: " + imagePause);
-		button.setImageResource(imagePause);
+		button.setImageResource(Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.play));
 	}
 
 	public void onResumed() {
-		if (!isAppPT) {
-//			imagePause = (!Util.isDifferentApp(view.getContext()) && Util.getThemeName(view.getContext()).equals("AppTheme.White")) ? R.drawable.pause_white : R.drawable.pause;
-			imagePause = Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.pause);
-		} else {
-			imagePause = R.drawable.pause_pt;
-		}
-		Log.d("logd", "onResumed: " + imagePause);
-		button.setImageResource(imagePause);
+		button.setImageResource(Util.getResIdFromAttribute((Activity) view.getContext(), R.attr.pause));
 	}
 
 

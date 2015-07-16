@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppThemeBase" parent="android:Theme.NoTitleBar" />
-
-    <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
-
-    <style name="AppTheme" parent="AppThemeBase">
+    <style name="Theme" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
         <item name="play_all">@drawable/play_all</item>
-        <item name="search_background">@drawable/selectable_item_bg</item>
+        <item name="search_background">@color/window_background_dark</item>
         <item name="listview_divider_color">@color/divider_color</item>
         <item name="tab_order_list_divider_color">@null</item>
         <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>
@@ -18,7 +15,7 @@
         <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_dark</item>
         <item name="textview_background_color">@android:color/black</item>
         <item name="library">@style/Library</item>
-        <item name="library_search_background">@drawable/search_background</item>
+        <item name="library_search_background">@color/window_background_dark</item>
         <item name="music_bottom_playback">@drawable/music_bottom_playback_bg</item>
         <item name="dialog">@style/Dialog</item>
         <item name="playlist_background_color">@android:color/black</item>
@@ -26,34 +23,11 @@
         <item name="actionbar_bg_color">@android:color/black</item>
         <item name="playlist_row">@layout/playlist_row</item>
         <item name="preferences_bg">@android:color/black</item>
-    </style>
-
-    <style name="AppTheme.Black" parent="AppThemeBase">
-        <item name="android:windowBackground">@color/window_background_black</item>
-        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
-        <item name="play_all">@drawable/play_all</item>
-        <item name="search_background">@drawable/search_background_black</item>
-        <item name="listview_divider_color">@color/divider_color</item>
-        <item name="tab_order_list_divider_color">@null</item>
-        <item name="tab_order_list_divider_height">@dimen/list_devider_height_0</item>
-        <item name="tab_order_row_color">@android:color/white</item>
         <item name="canvas_color">@android:color/black</item>
-        <item name="playback">@style/Playback</item>
-        <item name="full_playback_alt_table_background">@color/full_playback_alt_table_background_dark</item>
-        <item name="textview_background_color">@android:color/black</item>
-        <item name="library">@style/Library.Black</item>
-        <item name="library_search_background">@drawable/search_background_black</item>
-        <item name="music_bottom_playback">@drawable/music_bottom_playback_bg_black</item>
-        <item name="dialog">@style/Dialog</item>
-        <item name="download_dialog">@layout/download_dialog</item>
-        <item name="back_actionbar">@style/BackActionBar.Black</item>
-        <item name="playlist_background_color">@android:color/black</item>
-        <item name="actionbar_bg_color">@android:color/black</item>
-        <item name="playlist_row">@layout/playlist_row</item>
-        <item name="preferences_bg">@android:color/black</item>
     </style>
 
-    <style name="AppTheme.White" parent="AppThemeBase.White">
+    <style name="Theme.White" parent="AppTheme.White">
+        <item name="android:windowFullscreen">true</item>
         <item name="android:windowBackground">@color/window_background_light</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview_white</item>
         <item name="play_all">@drawable/play_all_dark</item>
@@ -82,37 +56,21 @@
 
     <style name="Dialog.White" parent="Dialog" />
 
-    <style name="Dialog.Black" parent="Dialog">
-        <item name="android:background">@color/window_background_black</item>
-    </style>
+    <style name="Library" parent="Theme" />
 
-    <style name="Library" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
+    <style name="Library.White" parent="Theme.White" />
 
-    <style name="Library.White" parent="AppTheme.White">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="Library.Black" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="Playback" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
+    <style name="Playback" parent="Theme">
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="Playback.White" parent="AppTheme.White">
-        <item name="android:windowNoTitle">true</item>
+    <style name="Playback.White" parent="Theme.White">
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="BackActionBar" parent="AppTheme" />
+    <style name="BackActionBar" parent="Theme" />
 
-    <style name="BackActionBar.White" parent="AppTheme.White" />
-
-    <style name="BackActionBar.Black" parent="AppTheme.Black" />
+    <style name="BackActionBar.White" parent="Theme.White" />
 
     <style name="AlertDialogItem">
         <item name="android:textColor">@android:color/primary_text_light</item>

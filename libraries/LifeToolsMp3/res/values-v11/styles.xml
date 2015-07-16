@@ -1,10 +1,14 @@
 <resources>
 
-    <style name="AlertDialog" parent="@android:style/Theme.Holo.Dialog">
+    <style name="AppBaseTheme" parent="android:Theme.Holo" />
+
+    <style name="AppThemeBase.White" parent="android:Theme.Holo.Light" />
+
+    <style name="AlertDialog" parent="android:Theme.Holo.Dialog">
     	<item name="android:windowBackground">@android:color/transparent</item>
     </style>
     
-    <style name="AlertDialog.White" parent="@android:style/Theme.Holo.Light.Dialog">
+    <style name="AlertDialog.White" parent="android:Theme.Holo.Light.Dialog">
     	<item name="android:windowBackground">@android:color/transparent</item>
     </style>
 

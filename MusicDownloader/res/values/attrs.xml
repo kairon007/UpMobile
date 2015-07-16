@@ -4,6 +4,7 @@
     <declare-styleable name="customAttrs">
         <attr name="icon_ok" format="reference" />
         <attr name="icon_cancel" format="reference" />
+        <attr name="icon_download" format="reference" />
         <attr name="tab_page_indicator_textview" format="reference" />
         <attr name="search_background" format="reference" />
     </declare-styleable>

@@ -1,63 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppThemeBase" parent="android:Theme.NoTitleBar" />
-
-    <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
-
-    <style name="AppTheme" parent="AppThemeBase">
+    <style name="Theme" parent="AppTheme">
         <item name="android:windowBackground">@color/window_background_dark</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
+        <item name="icon_ok">@drawable/icon_ok</item>
+        <item name="icon_cancel">@drawable/icon_cancel</item>
+        <item name="icon_download">@drawable/icon_download</item>
+        <item name="choise_engines_layout_bg">@color/window_background_dark</item>
         <item name="search_background">@color/window_background_dark</item>
-        <item name="icon_ok">@drawable/icon_ok</item>
-        <item name="icon_cancel">@drawable/icon_cancel</item>
-        <item name="choise_engines_layout_bg">@drawable/selectable_item_bg</item>
     </style>
 
-    <style name="AppTheme.Black" parent="AppThemeBase">
-        <item name="choise_engines_layout_bg">@drawable/selectable_item_bg</item>
-        <item name="android:windowBackground">@color/window_background_black</item>
-        <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview_white</item>
-        <item name="icon_ok">@drawable/icon_ok</item>
-        <item name="icon_cancel">@drawable/icon_cancel</item>
-    </style>
-
-    <style name="AppTheme.White" parent="AppThemeBase.White">
-        <item name="choise_engines_layout_bg">@drawable/spinner_background</item>
+    <style name="Theme.White" parent="AppTheme.White">
         <item name="android:windowBackground">@color/window_background_light</item>
         <item name="tab_page_indicator_textview">@color/tab_page_indicator_textview</item>
         <item name="icon_ok">@drawable/icon_ok_black</item>
         <item name="icon_cancel">@drawable/icon_cancel_black</item>
+        <item name="icon_download">@drawable/icon_download_black</item>
+        <item name="choise_engines_layout_bg">@drawable/spinner_background</item>
         <item name="search_background">@drawable/search_background_white</item>
     </style>
 
-    <style name="Library" parent="AppTheme">
+    <style name="Library" parent="Theme">
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Library.White" parent="AppTheme.White">
+    <style name="Library.White" parent="Theme.White">
         <item name="android:windowNoTitle">true</item>
     </style>
 
-    <style name="Library.Black" parent="AppTheme">
-        <item name="android:windowNoTitle">true</item>
-    </style>
-
-    <style name="Playback" parent="AppTheme">
+    <style name="Playback" parent="Theme">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="Playback.White" parent="AppTheme.White">
+    <style name="Playback.White" parent="Theme.White">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
-    <style name="BackActionBar" parent="AppTheme" />
+    <style name="BackActionBar" parent="Theme" />
 
-    <style name="BackActionBar.White" parent="AppTheme.White" />
-
-    <style name="BackActionBar.Black" parent="AppTheme.Black" />
+    <style name="BackActionBar.White" parent="Theme.White" />
 
     <style name="AlertDialogItem">
         <item name="android:textColor">@android:color/primary_text_light</item>

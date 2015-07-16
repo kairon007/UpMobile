@@ -16,8 +16,8 @@
         <item name="new_folder_dialog">@layout/new_folder_dialog</item>
         <item name="directory_chooser_tv_color">@android:color/white</item>
         <item name="lyrics_view">@layout/lyrics_view</item>
-        <item name="play">@drawable/play_white</item>
-        <item name="pause">@drawable/pause_white</item>
+        <item name="play">@drawable/play</item>
+        <item name="pause">@drawable/pause</item>
         <item name="editorDialog">@layout/editor_dialog</item>
     </style>
 
@@ -39,7 +39,7 @@
     <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
     <!-- </style> -->
 
-    <style name="ADTheme">
+    <style name="ADTheme" parent="AlertDialog.AppCompat">
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- <item name="android:buttonBarButtonStyle">@style/dialogButtonBar</item> -->
         <item name="android:windowContentOverlay">@null</item>

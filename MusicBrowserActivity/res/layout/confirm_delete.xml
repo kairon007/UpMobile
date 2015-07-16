@@ -5,6 +5,7 @@
     android:divider="@drawable/layout_divider"
     android:dividerPadding="8dp"
     android:orientation="vertical"
+    android:background="@android:color/black"
     android:showDividers="middle" >
 
     <FrameLayout

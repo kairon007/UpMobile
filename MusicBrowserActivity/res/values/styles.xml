@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppThemeBase.White" parent="android:Theme.Light.NoTitleBar" />
-
-    <style name="AppTheme" parent="AppBaseTheme">
+    <style name="Theme" parent="AppTheme">
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@color/window_background_black</item>
         <item name="mediaPickerActivityTop">@layout/media_picker_activity_top</item>
         <item name="mediaPickerActivity">@layout/media_picker_activity</item>
@@ -20,10 +19,19 @@
         <item name="icMpPlaylistList">@drawable/ic_mp_playlist_list</item>
         <item name="touchInterceptorBgColor">@android:color/black</item>
         <item name="albumBackground">@android:color/black</item>
-        <item name="choise_engines_layout_bg">@drawable/search_background</item>
     </style>
 
-	<style name="AppTheme.White" parent="Theme.White_action_bar">
+	<style name="Theme.White" parent="AppTheme.White">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:actionBarItemBackground">@drawable/selectable_background_white_acton_bar</item>
+        <item name="android:popupMenuStyle">@style/PopupMenu.White_acton_bar</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.White_acton_bar</item>
+        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.White_acton_bar</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.White_acton_bar</item>
+        <item name="android:actionBarStyle">@style/ActionBar.Transparent.White_acton_bar</item>
+        <item name="android:actionModeBackground">@drawable/cab_background_top_white_acton_bar</item>
+        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_white_acton_bar</item>
+        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.White_acton_bar</item>
         <item name="android:windowBackground">@color/window_background_light</item>
         <item name="mediaPickerActivityTop">@layout/media_picker_activity_top_white</item>
         <item name="mediaPickerActivity">@layout/media_picker_activity_top_white</item>
@@ -34,7 +42,6 @@
         <item name="trackListItemChild">@layout/track_list_item_child_white</item>
         <item name="editTrackListItem">@layout/edit_track_list_item_white</item>
         <item name="albumartMpUnknownList">@drawable/albumart_mp_unknown_list_white</item>
-        <item name="choise_engines_layout_bg">@drawable/spinner_background</item>
         <item name="albumartMpUnknown">@drawable/albumart_mp_unknown_white</item>
         <item name="audioPlayer">@layout/audio_player_white</item>
         <item name="icMpPlaylistRecentlyAddedList">@drawable/ic_mp_playlist_recently_added_list_white</item>
@@ -42,26 +49,14 @@
         <item name="touchInterceptorBgColor">@android:color/white</item>
     </style>
     
-	<style name="AppTheme.Dialog" parent="@android:style/Theme.Dialog">
+	<style name="Theme.Dialog" parent="AlertDialog">
         <item name="createPlaylist">@layout/create_playlist</item>	  
-        <item name="confirmDelete">@layout/confirm_delete</item>  
+        <item name="confirmDelete">@layout/confirm_delete</item>
     </style>
     
-	<style name="AppTheme.Dialog.White" parent="@android:style/Theme.Dialog">
+	<style name="Theme.Dialog.White" parent="AlertDialog.White">
         <item name="createPlaylist">@layout/create_playlist_white</item>
-        <item name="confirmDelete">@layout/confirm_delete_white</item>	    
-    </style>
-
-    <style name="Theme.White_action_bar" parent="@android:style/Theme.Holo.Light">
-        <item name="android:actionBarItemBackground">@drawable/selectable_background_white_acton_bar</item>
-        <item name="android:popupMenuStyle">@style/PopupMenu.White_acton_bar</item>
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.White_acton_bar</item>
-        <item name="android:actionBarTabStyle">@style/ActionBarTabStyle.White_acton_bar</item>
-        <item name="android:actionDropDownStyle">@style/DropDownNav.White_acton_bar</item>
-        <item name="android:actionBarStyle">@style/ActionBar.Transparent.White_acton_bar</item>
-        <item name="android:actionModeBackground">@drawable/cab_background_top_white_acton_bar</item>
-        <item name="android:actionModeSplitBackground">@drawable/cab_background_bottom_white_acton_bar</item>
-        <item name="android:actionModeCloseButtonStyle">@style/ActionButton.CloseMode.White_acton_bar</item>
+        <item name="confirmDelete">@layout/confirm_delete_white</item>
     </style>
 
     <style name="ActionBar.Solid.White_acton_bar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">

@@ -31,10 +31,6 @@ public class SearchView extends BaseSearchView {
 		StateKeeper.getInstance().activateOptions(StateKeeper.IS_PT_TEXT);
 	}
 
-	//TODO remove if it possible
-	@Override
-	protected boolean isAppPT() { return true; }
-	
 	@Override
 	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
 	
