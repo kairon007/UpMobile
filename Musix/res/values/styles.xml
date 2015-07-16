@@ -8,9 +8,17 @@
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:alertDialogTheme">@style/AlertDialog</item>
-        <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
+        <item name="alertDialogTheme">@style/ADTheme</item>
+        <item name="alertDialogStyle">@style/ADStyle</item>
+        <item name="android:dialogTheme">@color/wet_asphalt</item>
         <item name="download_dialog">@layout/download_dialog</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/white</item>
+        <item name="lyrics_view">@layout/lyrics_view</item>
+        <item name="play">@drawable/play_white</item>
+        <item name="pause">@drawable/pause_white</item>
+        <item name="editorDialog">@layout/editor_dialog</item>
     </style>
 
     <style name="MyListView" parent="android:Widget.ListView">
@@ -31,16 +39,18 @@
     <!-- <item name="android:windowBackground">@android:color/transparent</item> -->
     <!-- </style> -->
 
-    <style name="AlertDialog">
+    <style name="ADTheme">
         <item name="android:windowBackground">@android:color/transparent</item>
         <!-- <item name="android:buttonBarButtonStyle">@style/dialogButtonBar</item> -->
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
         <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
         <item name="android:windowIsFloating">true</item>
+        <item name="android:background">@color/wet_asphalt</item>
     </style>
 
-    <style name="AlertDialogStyle">
+    <style name="ADStyle">
+        <item name="android:background">@color/wet_asphalt</item>
         <item name="android:bottomDark">@color/wet_asphalt</item>
         <item name="android:bottomMedium">@color/wet_asphalt</item>
         <item name="android:topDark">@color/wet_asphalt</item>

@@ -48,36 +48,22 @@ public class SearchAdapter extends BaseSearchAdapter {
 	}
 	
 	
-	private class SearchViewHolder extends BaseSearchViewHolder implements OnClickListener  {
+	private class SearchViewHolder extends BaseSearchViewHolder  {
 		
-		private Song item;
-		
+
 		public SearchViewHolder(View view) {
 			info = (ViewGroup) view.findViewById(R.id.boxInfoItem);
 			cover = (ImageView) view.findViewById(R.id.cover);
 			title = (TextView) view.findViewById(R.id.titleLine);
 			artist = (TextView) view.findViewById(R.id.artistLine);
 			duration = (TextView) view.findViewById(R.id.chunkTime);
-			btnDownload = (ImageView) view.findViewById(R.id.btnDownload);
-			btnDownload.setOnClickListener(this);
 		}
 		
 		@Override
 		protected void hold(Song item, int position) {
-			this.item = item;
 			cover.setImageResource(R.drawable.def_player_cover);
 			super.hold(item, position);
 		}
-
-		@Override
-		public void onClick(View view) {
-			switch(view.getId()) {
-			case R.id.btnDownload:
-				download((RemoteSong) item, getPosition(item));
-				break;
-			}
-		}
-		
 	}
 
 }

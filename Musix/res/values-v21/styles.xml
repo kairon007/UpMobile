@@ -2,7 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="MyTheme.Custom" parent="Theme.AppCompat">
-         <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
+        <item name="android:dropDownListViewStyle">@style/mySpinnerStyle</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -11,13 +11,17 @@
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="android:alertDialogTheme">@style/Theme.AlertDialog</item>
+        <item name="alertDialogTheme">@style/ADTheme</item>
+        <item name="android:alertDialogStyle">@style/ADStyle</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/white</item>
+        <item name="lyrics_view">@layout/lyrics_view</item>
+        <item name="play">@drawable/play_white</item>
+        <item name="pause">@drawable/pause_white</item>
+        <item name="editorDialog">@layout/editor_dialog</item>
     </style>
 
-    <style name="Theme.AlertDialog" parent="@style/Theme.AppCompat.Light.Dialog">
-        <item name="android:background">@color/wet_asphalt</item>
-    </style>
-    
     <style name="mySpinnerStyle" parent="android:Widget.ListView.DropDown">
         <item name="android:divider">@color/blue_holo</item>
         <item name="android:dividerHeight">1dp</item>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:divider="@drawable/layout_divider"
+    android:orientation="vertical"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingTop="8dp"
+    android:showDividers="end"
+    android:background="@color/wet_asphalt">
+
+    <LinearLayout
+        android:id="@+id/download_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/layout_divider"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        android:visibility="visible" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/wet_asphalt">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/message_please_wait"
+                android:textSize="@dimen/text_title_size" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp" >
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleSmallInverse"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:maxHeight="16dp"
+                android:maxWidth="16dp"
+                android:minHeight="16dp"
+                android:minWidth="16dp" >
+            </ProgressBar>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="@string/message_loading"
+                android:textSize="@dimen/dialog_default_text_size" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:minHeight="48dp"
+        android:background="@color/wet_asphalt"
+        android:paddingBottom="16dp" >
+
+        <TextView
+            android:id="@+id/lyrics"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dialog_default_text_size" />
+    </ScrollView>
+
+</LinearLayout>

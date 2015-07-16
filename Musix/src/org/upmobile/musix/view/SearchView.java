@@ -1,5 +1,13 @@
 package org.upmobile.musix.view;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+
 import org.upmobile.musix.Nulldroid_Advertisement;
 import org.upmobile.musix.Nulldroid_Settings;
 import org.upmobile.musix.R;
@@ -11,13 +19,6 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
 
 public class SearchView extends BaseSearchView {
 
@@ -34,9 +35,6 @@ public class SearchView extends BaseSearchView {
 	@Override
 	protected BaseSettings getSettings() { return new Nulldroid_Settings(); }
 
-	@Override
-	protected boolean showFullElement() { return true; }
-	
 	@Override
 	protected Nulldroid_Advertisement getAdvertisment() {
 		try {

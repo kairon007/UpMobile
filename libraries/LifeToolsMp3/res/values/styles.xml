@@ -2,13 +2,17 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+
+
     -->
     <style name="AppBaseTheme" parent="android:Theme.Light">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
+
+
         -->
     </style>
 
@@ -104,8 +108,8 @@
         <item name="new_folder_dialog">@layout/new_folder_dialog_white</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="lyrics_view">@layout/lyrics_view_white</item>
-        <item name="play">@drawable/play</item>
-        <item name="pause">@drawable/pause</item>
+        <item name="play">@drawable/play_white</item>
+        <item name="pause">@drawable/pause_white</item>
         <item name="editorDialog">@layout/editor_dialog_white</item>
         <item name="android:alertDialogTheme">@style/AlertDialog.White</item>
         <item name="dropDownViewResource">@android:layout/simple_spinner_dropdown_item</item>

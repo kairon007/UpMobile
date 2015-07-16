@@ -459,6 +459,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			imagePause = R.drawable.play_pt;
 		}
+		Log.d("logd", "onPaused: " + imagePause);
 		button.setImageResource(imagePause);
 	}
 
@@ -469,6 +470,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		} else {
 			imagePause = R.drawable.pause_pt;
 		}
+		Log.d("logd", "onResumed: " + imagePause);
 		button.setImageResource(imagePause);
 	}
 

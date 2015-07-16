@@ -4,14 +4,16 @@
     android:layout_height="match_parent"
     android:divider="@color/blue_holo"
     android:orientation="vertical"
-    android:showDividers="middle|end" >
+    android:showDividers="middle|end"
+    android:background="@color/wet_asphalt">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="48dp"
         android:paddingRight="8dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal"
+        android:background="@color/wet_asphalt">
 
         <ImageButton
             android:id="@+id/imageButton1"

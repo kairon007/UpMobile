@@ -133,7 +133,8 @@
                                 android:layout_gravity="center"
                                 android:background="@android:color/transparent"
                                 android:clickable="false"
-                                android:src="@drawable/lyrics_icon" />
+                                android:src="@drawable/lyrics_icon"
+                                android:layout_weight="1" />
 
                             <TextView
                                 android:id="@+id/tv_show_lyrics"
