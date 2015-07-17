@@ -275,8 +275,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				download.setMode(ActionProcessButton.Mode.ENDLESS);
 				download.setProgress(50);
 			}
-		} else {
-			((RippleView) download.getParent()).setVisibility(View.GONE);
 		}
 		percent = 0;
 		setCoverToZoomView(null);
@@ -368,7 +366,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 			break;
 		case R.id.download:
-			download();
+			showDownloadMessage();
 			break;
 		case R.id.songNameBox:
 			openTitleField();
@@ -377,6 +375,31 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			openArtistField();
 			break;
 		}
+	}
+
+	private void showDownloadMessage() {
+		if (isThisSongDownloaded()) {
+			undo.clear();
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(MESSAGE_DURATION);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					download();
+				}
+			});
+			undo.show();
+		} else {
+			download();
+		}
+	}
+
+	private boolean isThisSongDownloaded() {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
 	}
 	
 	private void showInfoMessage() {
@@ -602,8 +625,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			player.pause();
 			player.shift(delta, true);
 		}
-		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
-		if (song.getClass() == MusicData.class || isDownloaded) {
+		if (song.getClass() == MusicData.class) {
 			download.setVisibility(View.GONE);
 			ciRippleView.setVisibility(View.GONE);
 		} else {
@@ -962,11 +984,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		if (checkingSong.getClass() == MusicData.class) return;
 		int status = StateKeeper.getInstance().checkSongInfo(checkingSong.getComment());
 		ViewGroup parent = (ViewGroup) download.getParent();
-		if (status == StateKeeper.DOWNLOADED) {
-			download.setVisibility(View.GONE);
-			parent.setVisibility(View.GONE);
-			return;
-		} else if (status == StateKeeper.NOT_DOWNLOAD) {
+		 if (status == StateKeeper.NOT_DOWNLOAD) {
 			download.setVisibility(View.VISIBLE);
 			parent.setVisibility(View.VISIBLE);
 			download.setProgress(0);

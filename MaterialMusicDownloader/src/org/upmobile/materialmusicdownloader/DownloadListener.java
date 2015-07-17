@@ -1,10 +1,16 @@
 package org.upmobile.materialmusicdownloader;
 
-import java.io.File;
-import java.util.ArrayList;
+import android.app.Activity;
+import android.app.DownloadManager;
+import android.content.Context;
+import android.os.Parcelable;
+import android.util.Log;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.DownloadCache;
 import ru.johnlife.lifetoolsmp3.PlaybackService;
@@ -15,14 +21,9 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoListener;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
-import android.app.Activity;
-import android.app.DownloadManager;
-import android.content.Context;
-import android.os.Parcelable;
 
 public class DownloadListener extends DownloadClickListener {
 	
@@ -43,12 +44,6 @@ public class DownloadListener extends DownloadClickListener {
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
 	}
 	
-	public DownloadListener(Context context, RemoteSong song, int id) {
-		super(context, song, id);
-		songTitle = Util.removeSpecialCharacters(song.getTitle());
-		songArtist = Util.removeSpecialCharacters(song.getArtist());
-	}
-	
 	public void setCancelCallback(OnCancelDownload cancelListener) {
 		cancelDownload = cancelListener;
 	}
@@ -61,6 +56,7 @@ public class DownloadListener extends DownloadClickListener {
 			public void run() {
 				String message = context.getString(R.string.download_finished).concat(songArtist).concat(" - ").concat(songTitle);
 				UndoBar undoBar = new UndoBar(((Activity) context));
+				undoBar.clear();
 				undoBar.message(message);
 				undoBar.duration(MESSAGE_DURATION);
 				undoBar.listener(new UndoListener() {
@@ -100,7 +96,6 @@ public class DownloadListener extends DownloadClickListener {
 	
 	@Override
 	public void showMessage(final Context context, final String message) {
-		UndoBarController.clear((MainActivity) context);
 		undoBar = new UndoBar(((Activity) context));
 		undoBar.message(message);
 		undoBar.duration(MESSAGE_DURATION);
@@ -114,17 +109,16 @@ public class DownloadListener extends DownloadClickListener {
 				if (message.startsWith(str)) {
 					((MainActivity) context).setupDownloadBtn();
 				}
-				StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
+				if(!isEarlierDownloaded) StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
-				((BaseMiniPlayerActivity) context).miniPlayerDownloadVisible(true);
 			}
 		});
 		undoBar.show(false);
 	}
-	
+
 	@Override
 	protected String getDirectory() {
 		return MaterialMusicDownloaderApp.getDirectory();

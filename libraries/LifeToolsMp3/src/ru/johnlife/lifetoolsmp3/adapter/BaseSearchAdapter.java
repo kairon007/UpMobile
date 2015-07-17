@@ -10,6 +10,7 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -17,6 +18,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -63,15 +65,16 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 		};
 		thread.start();
 	}
+
+	public boolean isThisSongDownloaded(AbstractSong song) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
+	}
 	
 	public void showMenu(final View view) {
 		PopupMenu menu = new PopupMenu(getContext(), view);
 		final int position = (int) view.getTag();
 		menu.getMenuInflater().inflate(R.menu.search_menu, menu.getMenu());
-		boolean isDownloaded = StateKeeper.NOT_DOWNLOAD != keeper.checkSongInfo(((RemoteSong) getItem(position)).getComment());
-		if (isDownloaded) {
-			menu.getMenu().getItem(1).setVisible(false);
-		}
 		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 			@Override
@@ -84,8 +87,7 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 					notifyDataSetChanged();
 				}
 				if (paramMenuItem.getItemId() == R.id.search_menu_download) {
-					((BaseMiniPlayerActivity) getContext()).hideDownloadButton(true);
-					StateKeeper.getInstance().putSongInfo(song.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
+					if (!isThisSongDownloaded(song)) StateKeeper.getInstance().putSongInfo(song.getComment(), AbstractSong.EMPTY_PATH, StateKeeper.DOWNLOADING);
 					song.getDownloadUrl(new DownloadUrlListener() {
 
 								@Override

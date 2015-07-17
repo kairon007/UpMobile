@@ -27,7 +27,8 @@
     Shown in the search box as a hint
     <string name="search_hint">Search Music</string>
     <string name="loading_song_details">Loading song details...</string>
-    <string name="please_wait">Please Wait...</string>
+    <string name="please_wait">Please Wait...</string>
+
     -->
 
     <string name="play">Play</string>
@@ -158,4 +159,6 @@
      <string name="repeat_list">Playback is started with the beginning of the list</string>
      <string name="manual_shuffle">Manual shuffle mode on</string>
      <string name="auto_shuffle">Auto shuffle mode on</string>
-	</resources>
+    <string name="download_anyway">Download anyway</string>
+    <string name="has_been_downloaded">This song has been downloaded</string>
+</resources>

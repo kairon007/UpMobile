@@ -350,6 +350,7 @@
                     </ru.johnlife.uilibrary.widget.customviews.RippleView>
                 </LinearLayout>
 
+
                 <ru.johnlife.uilibrary.widget.customviews.RippleView
                     style="@style/RippleStyleRectangle"
                     android:layout_width="match_parent"

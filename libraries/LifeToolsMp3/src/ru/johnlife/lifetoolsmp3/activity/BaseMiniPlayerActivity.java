@@ -56,14 +56,12 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	
 	private boolean isPlayerFragmentVisible = false;
 	private boolean isAnimated = false;
-	private boolean isClickOnDownload = false;
 	private boolean methodIsCalled = false;
 	private boolean isShown = false;
 	protected boolean currentFragmentIsPlayer = false;
 	
 	private int checkIdCover;
-	private DownloadPressListener downloadPressListener;
-	
+
 	private OnStatePlayerListener stateListener = new OnStatePlayerListener() {
 
 		@Override
@@ -281,11 +279,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				service.play();
 			}
 		} else if (id == R.id.mini_player_download) {
-			if (!isClickOnDownload) { // TODO this set checking for song, it was downloaded
 				downloadSong();
-				view.setVisibility(View.GONE);
-				isClickOnDownload = true;
-			}
 		} else if (id == miniPlayerClickableID) {
 			ViewGroup parent = (ViewGroup) view.getParent();
 			if (isAnimationEnabled() && (isAnimated || isPlayerFragmentVisible || (parent.getAnimation() != null && parent.getAnimation().hasStarted())))	{
@@ -325,7 +319,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		if (null == miniPlayer) return;
 		if (miniPlayer.getVisibility() == View.VISIBLE && isShift) {
 			customDownloadButton();
-			isClickOnDownload  = false;
 			startFakeAnimation();
 		}
 		if (isShow && isMiniPlayerPrepared) {
@@ -339,7 +332,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				setData(song);
 				if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 				customDownloadButton();
-				isClickOnDownload  = false;
 				return;
 			}
 			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_up);
@@ -358,7 +350,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 					isAnimated = false;
 					if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 					customDownloadButton();
-					isClickOnDownload  = false;
 				}
 			});
 			miniPlayer.setVisibility(View.VISIBLE);
@@ -405,14 +396,13 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 
 	private void customDownloadButton() {
-		boolean isDownloaded = StateKeeper.NOT_DOWNLOAD != StateKeeper.getInstance().checkSongInfo(song.getComment());
-		hideDownloadButton(song.getClass() == MusicData.class || isDownloaded);
+		hideDownloadButton(song.getClass() == MusicData.class);
 	}
-	
+
 	public void hideDownloadButton(boolean hide) {
 		download.setVisibility(hide ? View.GONE : View.VISIBLE);
 	}
-	
+
 	private void startFakeAnimation () {
 		if (!isAnimationEnabled()) {
 			setData(song);
@@ -509,9 +499,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
             public void success(String url) {
                 ((RemoteSong) song).setDownloadUrl(url);
                 download(((RemoteSong) song));
-                if (null != downloadPressListener) {
-                    downloadPressListener.downloadButtonPressed((RemoteSong) song);
-                }
             }
 
             @Override
@@ -565,15 +552,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 
 	public void showMessage(int message) {
 		showMessage(getString(message));
-	}
-	
-	public void setDownloadPressListener(DownloadPressListener downloadPressListener) {
-		this.downloadPressListener = downloadPressListener;
-	}
-	
-	public void miniPlayerDownloadVisible(boolean flag) {
-		download.setVisibility(flag ? View.VISIBLE : View.GONE);
-		isClickOnDownload = !flag;
 	}
 	
 	protected ArrayList<RemoteSong> checkDownloadingUrl(boolean expandAction) {

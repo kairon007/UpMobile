@@ -191,9 +191,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 		setMessage(getResources().getString(R.string.search_your_results_appear_here));
 		initBoxEngines();
-		if (showDownloadLabel()) {
-			((BaseMiniPlayerActivity) getContext()).setDownloadPressListener(downloadPressListener);
-		}
 	}
 	
 	OnShowListener dialogShowListener = new OnShowListener() {
@@ -209,7 +206,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 					downloadListener.setSong(keeper.getDownloadSong());
 					downloadListener.setUseAlbumCover(keeper.isUseCover());
 					downloadListener.downloadSong(false);
-					positive.setEnabled(false);
 				}
 			});
 			Button negative = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
@@ -250,25 +246,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				break;
 			}
 			super.onCallStateChanged(state, incomingNumber);
-		}
-	};
-
-	DownloadPressListener downloadPressListener = new DownloadPressListener() {
-		
-		@Override
-		public void downloadButtonPressed(final RemoteSong song) {
-			((Activity) getContext()).runOnUiThread(new Runnable() {
-				
-				@Override
-				public void run() {
-					View view = getViewByPosition(adapter.getPosition(song));
-					TextView infoView = (TextView) view.findViewById(R.id.infoView);
-					if (null == infoView) return;
-					infoView.setVisibility(View.VISIBLE);
-					infoView.setText(R.string.downloading);
-					infoView.setTextColor(Color.RED);
-				}
-			});
 		}
 	};
 
@@ -942,9 +919,9 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		int lableStatus = keeper.checkSongInfo(song.getComment());
 		if (lableStatus == StateKeeper.DOWNLOADED) {
 			song.setPath(keeper.getSongPath(song.getComment()));
-		}
-		if (lableStatus != -1) {
-			streamDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(false);	
+			streamDialog.findViewById(R.id.infoView).setVisibility(View.VISIBLE);
+		} else {
+			streamDialog.findViewById(R.id.infoView).setVisibility(View.GONE);
 		}
 	}
 

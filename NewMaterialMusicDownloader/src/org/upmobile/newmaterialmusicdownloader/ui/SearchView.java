@@ -174,4 +174,5 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	protected ListView getListView(View view) {
 		return (ListView) view.findViewById(R.id.list);
 	}
+
 }

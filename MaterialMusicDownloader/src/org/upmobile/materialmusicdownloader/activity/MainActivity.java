@@ -30,6 +30,8 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -42,6 +44,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
@@ -227,10 +230,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 			}
 		});
 		return super.onCreateOptionsMenu(menu);
-	}
-
-	protected void clickOnSearchView(String message) {
-		changeFragment(new SearchFragment(message), false);
 	}
 
 	@Override
@@ -454,13 +453,42 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 				0, 0);
 	}
 
+	public boolean isThisSongDownloaded(AbstractSong song) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
+	}
+
 	@Override
-	protected void download(RemoteSong song) {
-		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		DownloadListener downloadListener = new DownloadListener(this, song, id);
-		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+	protected void download(final RemoteSong song) {
+		if (isThisSongDownloaded(song)) {
+			UndoBarController.clear(this);
+			UndoBar undo = new UndoBar(this);
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(5000);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoBarController.UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0, true);
+							downloadListener.setDownloadPath(getDirectory());
+							downloadListener.setUseAlbumCover(true);
+							downloadListener.downloadSong(false);
+						}
+					});
+				}
+			});
+			undo.show();
+		} else {
+			DownloadListener downloadListener = new DownloadListener(this, song, 0, true);
+			downloadListener.setDownloadPath(getDirectory());
+			downloadListener.setUseAlbumCover(true);
+			downloadListener.downloadSong(false);
+		}
 	}
 
 	public boolean isPlayerFragment() {
@@ -470,7 +498,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0);
+		return new DownloadListener(this, song, 0, true);
 	}
 	
 	public void addPlayerElement(boolean flag) {

@@ -12,7 +12,11 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
+
 import android.content.Context;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,12 +41,31 @@ public class SearchAdapter extends BaseSearchAdapter {
 	}
 
 	@Override
-	protected void download(RemoteSong song, int position) {
-		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		DownloadListener downloadListener = new DownloadListener(getContext(), song, id);
-		downloadListener.setDownloadPath(MaterialMusicDownloaderApp.getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+	protected void download(final RemoteSong song, int position) {
+		if (((MainActivity) getContext()).isThisSongDownloaded(song)) {
+			UndoBarController.UndoBar undo = new UndoBarController.UndoBar(((MainActivity) getContext()));
+			undo.clear();
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(3000);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoBarController.UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
+					downloadListener.setDownloadPath(MaterialMusicDownloaderApp.getDirectory());
+					downloadListener.setUseAlbumCover(true);
+					downloadListener.downloadSong(false);
+				}
+			});
+			undo.show();
+		} else {
+			DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
+			downloadListener.setDownloadPath(MaterialMusicDownloaderApp.getDirectory());
+			downloadListener.setUseAlbumCover(true);
+			downloadListener.downloadSong(false);
+		}
 	}
 
 	@Override

@@ -273,13 +273,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		cbUseCover.setOnCheckedChangeListener(this);
 		cbShowVisualizer.setOnCheckedChangeListener(this);
 		playerProgress.setOnProgressChangeListener(new OnProgressChangeListener() {
-			
+
 			@Override
-			public void onStopTrackingTouch(DiscreteSeekBar seekBar) { }
-			
+			public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+			}
+
 			@Override
-			public void onStartTrackingTouch(DiscreteSeekBar seekBar) { }
-			
+			public void onStartTrackingTouch(DiscreteSeekBar seekBar) {
+			}
+
 			@Override
 			public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
 				if (fromUser) {
@@ -295,15 +297,15 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 		});
 		scrollView.setOnScrollChangedListener(new OnScrollChangedListener() {
-			
+
 			@Override
 			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt, int alpha) {
-				((MainActivity)getActivity()).setToolbarAlpha(alpha);
+				((MainActivity) getActivity()).setToolbarAlpha(alpha);
 				playerProgress.forceHideFloater();
 			}
 		});
 		scrollView.setOnTouchListener(new OnTouchListener() {
-	
+
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				closeEditViews();
@@ -356,7 +358,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 			break;
 		case R.id.download:
-			download();
+			showDownloadMessage();
 			break;
 		case R.id.songNameBox:
 			openTitleField();
@@ -365,6 +367,31 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			openArtistField();
 			break;
 		}
+	}
+
+	private void showDownloadMessage() {
+		if (isThisSongDownloaded()) {
+			undo.clear();
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(MESSAGE_DURATION);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					download();
+				}
+			});
+			undo.show();
+		} else {
+			download();
+		}
+	}
+
+	private boolean isThisSongDownloaded() {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
 	}
 	
 	private void showInfoMessage() {
@@ -400,7 +427,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		cbShowVisualizer.setChecked(stateVisualizer);
 		setupVisualizerFxAndUI(stateVisualizer);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state) {
+		if (song.getClass() != MusicData.class) {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
 				download.setClickable(false);
@@ -661,8 +688,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setOnClickListener(this);
 		}
 		cancelProgressTask();
-		boolean isDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
-		if (song.getClass() == MusicData.class || isDownloaded) {
+		if (song.getClass() == MusicData.class) {
 			download.setVisibility(View.GONE);
 			((ViewGroup) download.getParent()).setVisibility(View.GONE);
 		} else {
@@ -1068,11 +1094,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		if (checkingSong.getClass() == MusicData.class) return;
 		int status = StateKeeper.getInstance().checkSongInfo(checkingSong.getComment());
 		ViewGroup parent = (ViewGroup) download.getParent();
-		if (status == StateKeeper.DOWNLOADED) {
-			download.setVisibility(View.GONE);
-			parent.setVisibility(View.GONE);
-			return;
-		} else if (status == StateKeeper.NOT_DOWNLOAD) {
+		if (status == StateKeeper.NOT_DOWNLOAD) {
 			download.setVisibility(View.VISIBLE);
 			parent.setVisibility(View.VISIBLE);
 			download.setProgress(0);

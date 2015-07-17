@@ -49,12 +49,15 @@ import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.uilibrary.widget.customviews.CircleImageView;
 import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class MainActivity extends BaseMiniPlayerActivity implements Constants, FolderSelectCallback, FragmentDrawerListener, DrawerListener {
 
@@ -460,16 +463,46 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	protected void download(RemoteSong song) {
-		DownloadListener downloadListener = new DownloadListener(this, song, 0);
-		downloadListener.setDownloadPath(getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+	protected void download(final RemoteSong song) {
+		if (isThisSongDownloaded(song)) {
+			UndoBarController.clear(this);
+			UndoBar undo = new UndoBar(this);
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(5000);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoBarController.UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0, true);
+							downloadListener.setDownloadPath(getDirectory());
+							downloadListener.setUseAlbumCover(true);
+							downloadListener.downloadSong(false);
+						}
+					});
+				}
+			});
+			undo.show();
+		} else {
+			DownloadListener downloadListener = new DownloadListener(this, song, 0, true);
+			downloadListener.setDownloadPath(getDirectory());
+			downloadListener.setUseAlbumCover(true);
+			downloadListener.downloadSong(false);
+		}
+	}
+
+	public boolean isThisSongDownloaded(AbstractSong song) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
 	}
 	
 	@Override
 	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0);	
+		return new DownloadListener(this, song, 0, true);
 	}
 	
 	public void setToolbarOverlay(boolean isOverlay) {

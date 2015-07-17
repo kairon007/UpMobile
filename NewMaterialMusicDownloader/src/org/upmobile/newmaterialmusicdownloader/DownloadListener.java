@@ -23,6 +23,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class DownloadListener extends DownloadClickListener {
 
@@ -37,12 +38,6 @@ public class DownloadListener extends DownloadClickListener {
 		public void onCancel();
 	}
 
-	public DownloadListener(Context context, RemoteSong song, int id) {
-		super(context, song, id);
-		songTitle = Util.removeSpecialCharacters(song.getTitle());
-		songArtist = Util.removeSpecialCharacters(song.getArtist());
-	}
-	
 	public DownloadListener(Context context, RemoteSong song, int id, boolean b) {
 		super(context, song, id, b);
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
@@ -101,8 +96,7 @@ public class DownloadListener extends DownloadClickListener {
 	
 	@Override
 	public void showMessage(final Context context, final String message) {
-		UndoBarController.clear((MainActivity) context);
-		undoBar = new UndoBar(((Activity) context));
+		undoBar = new UndoBar(((MainActivity) context));
 		undoBar.message(message);
 		undoBar.duration(MESSAGE_DURATION);
 		undoBar.listener(new UndoListener() {
@@ -111,21 +105,21 @@ public class DownloadListener extends DownloadClickListener {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
-				String str =  context.getResources().getString(R.string.download_started);
+				String str = context.getResources().getString(R.string.download_started);
 				if (message.startsWith(str)) {
 					((MainActivity) context).setupDownloadBtn();
 				}
-				StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
+				Log.d("logd", "onUndo: " + isEarlierDownloaded);
+				if (!isEarlierDownloaded) StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
-				((BaseMiniPlayerActivity) context).miniPlayerDownloadVisible(true);
 			}
 		});
-		undoBar.show(false);
+		undoBar.show();
 	}
-	
+
 	@Override
 	protected String getDirectory() {
 		return NewMaterialApp.getDirectory();

@@ -83,7 +83,7 @@
                         android:layout_height="37dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_file_download_grey"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
                 </ru.johnlife.uilibrary.widget.customviews.RippleView>
             </FrameLayout>
 

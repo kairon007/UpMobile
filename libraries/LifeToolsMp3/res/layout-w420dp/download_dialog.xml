@@ -32,6 +32,15 @@
 	            android:scrollHorizontally="true"
 	            android:singleLine="true"
 	            android:textSize="@dimen/text_title_size" />
+
+			<TextView
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:id="@+id/infoView"
+				android:paddingLeft="8dp"
+				android:text="@string/has_been_downloaded"
+				android:visibility="gone" />
 	
 	
 	        <LinearLayout
