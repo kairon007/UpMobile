@@ -1,18 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.views;
 
-import java.io.File;
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
@@ -37,6 +24,20 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
@@ -229,7 +230,16 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		listView = getListView(view);
 		emptyMessage = getMessageView(view);
 		adapter = getAdapter();
-		service = PlaybackService.get(view.getContext());
+		if (service.hasInstance()) {
+			service = PlaybackService.get(view.getContext());
+		} else {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					service = PlaybackService.get(view.getContext());
+				}
+			});
+		}
 		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
