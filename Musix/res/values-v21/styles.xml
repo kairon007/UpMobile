@@ -11,8 +11,7 @@
         <item name="colorPrimary">@color/wet_asphalt</item>
         <item name="colorPrimaryDark">@color/blue_light</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="alertDialogTheme">@style/ADTheme</item>
-        <item name="android:alertDialogStyle">@style/ADStyle</item>
+        <item name="android:alertDialogTheme">@style/ADTheme</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
         <item name="new_folder_dialog">@layout/new_folder_dialog</item>
         <item name="directory_chooser_tv_color">@android:color/white</item>
