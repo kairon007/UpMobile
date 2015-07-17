@@ -6,6 +6,11 @@
         <item name="android:alertDialogStyle">@style/AlertDialogStyle</item>
         <item name="android:spinnerStyle">@style/SpinnerAppTheme</item>
         <item name="download_dialog">@layout/download_dialog</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/white</item>
+        <item name="lyrics_view">@layout/lyrics_view</item>
+        <item name="editorDialog">@layout/editor_dialog</item>
     </style>
 
     <style name="Text.Menu">
