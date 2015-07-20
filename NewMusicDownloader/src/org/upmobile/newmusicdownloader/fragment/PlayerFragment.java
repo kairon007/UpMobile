@@ -692,6 +692,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void error(final String error) {
+		if (null == getActivity()) return;
 		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
 			
 			@Override
