@@ -55,6 +55,9 @@
         <item name="navigationSettings">@drawable/navigation_settings</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat</item>
         <item name="actionBarTitleBg">@android:color/black</item>
+        <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
+        <item name="directory_chooser_tv_color">@android:color/white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
     </style>
 
     <style name="AppThemeWhite" parent="AppBaseTheme.Light">
@@ -89,6 +92,7 @@
         <item name="listview_divider">@drawable/layout_divider</item>
         <item name="listview_divider_height">@dimen/list_devider_height_1</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog_white</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="icKeyboardArrowUp">@drawable/ic_keyboard_arrow_up_white_18dp</item>
         <item name="icKeyboardArrowDown">@drawable/ic_keyboard_arrow_down_white_18dp</item>
@@ -134,6 +138,7 @@
         <item name="listview_divider">@drawable/layout_divider</item>
         <item name="listview_divider_height">@dimen/list_devider_height_1</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog_white</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="icKeyboardArrowUp">@drawable/ic_keyboard_arrow_up_white_18dp</item>
         <item name="icKeyboardArrowDown">@drawable/ic_keyboard_arrow_down_white_18dp</item>
@@ -178,6 +183,7 @@
         <item name="listview_divider">@drawable/layout_divider</item>
         <item name="listview_divider_height">@dimen/list_devider_height_1</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="icKeyboardArrowUp">@drawable/ic_keyboard_arrow_up_white_18dp</item>
         <item name="icKeyboardArrowDown">@drawable/ic_keyboard_arrow_down_white_18dp</item>
@@ -223,6 +229,7 @@
         <item name="listview_divider">@drawable/layout_divider</item>
         <item name="listview_divider_height">@dimen/list_devider_height_1</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog_white</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="icKeyboardArrowUp">@drawable/ic_keyboard_arrow_up_white_18dp</item>
         <item name="icKeyboardArrowDown">@drawable/ic_keyboard_arrow_down_white_18dp</item>
@@ -268,6 +275,7 @@
         <item name="listview_divider">@drawable/layout_divider</item>
         <item name="listview_divider_height">@dimen/list_devider_height_1</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog_white</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog_white</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
         <item name="icKeyboardArrowUp">@drawable/ic_keyboard_arrow_up_white_18dp</item>
         <item name="icKeyboardArrowDown">@drawable/ic_keyboard_arrow_down_white_18dp</item>

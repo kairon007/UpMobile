@@ -13,6 +13,7 @@
         <item name="coverScale">@dimen/size_cover</item>
         <item name="dir_chooser_dialog">@layout/dir_chooser_dialog</item>
         <item name="directory_chooser_tv_color">@android:color/black</item>
+        <item name="new_folder_dialog">@layout/new_folder_dialog</item>
     </style>
 
     <style name="AppThemeTrans" parent="@style/AppTheme">
