@@ -24,7 +24,7 @@ import ru.johnlife.lifetoolsmp3.engines.Engine;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.Player;
+import ru.johnlife.lifetoolsmp3.ui.DialogPlayerView;
 import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
 
 public class StateKeeper {
@@ -41,7 +41,7 @@ public class StateKeeper {
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
 	private ArrayList<MusicData> librarysAdapter;
-	private Player playerInstance;
+	private DialogPlayerView dialogPlayerViewInstance;
 	private RemoteSong downloadSong;
 	private View viewItem;
 	private String[] titleArtistLyrics;
@@ -146,7 +146,7 @@ public class StateKeeper {
 		generalFlags &= ~flag;
 		tag = null;
 		if (flag == STREAM_DIALOG) {
-			playerInstance = null;
+			dialogPlayerViewInstance = null;
 			directoryChooserPath = null;
 			newDirName = null;
 			downloadSong = null;
@@ -218,7 +218,7 @@ public class StateKeeper {
 		if (viewItem == null) viewItem = view.getViewItem();
 		if (checkState(STREAM_DIALOG)) {
 			if (downloadSong == null) downloadSong = view.getDownloadSong();
-			playerInstance = view.getPlayer();
+			dialogPlayerViewInstance = view.getDialogPlayerView();
 		} else if (checkState(PROGRESS_DIALOG)) setClickPosition(view.getClickPosition());
 	}
 
@@ -243,24 +243,24 @@ public class StateKeeper {
 		} else {
 			if (checkState(STREAM_DIALOG)) {
 				view.setDownloadSong(downloadSong);
-				playerInstance.setDownloadSong(downloadSong);
-				view.setPlayer(playerInstance);
+				dialogPlayerViewInstance.setDownloadSong(downloadSong);
+				view.setDialogPlayerView(dialogPlayerViewInstance);
 				view.prepareSong(downloadSong, true, null);
 			}
 			if (checkState(EDITTAG_DIALOG)) {
 				if (null == tempID3Fields) {
-					playerInstance.createId3dialog(new String[] { downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album });
+					dialogPlayerViewInstance.createId3dialog(new String[] { downloadSong.getArtist(), downloadSong.getTitle(), downloadSong.album });
 				} else {
-					playerInstance.createId3dialog(tempID3Fields);
+					dialogPlayerViewInstance.createId3dialog(tempID3Fields);
 				}
 			} else if (checkState(LYRICS_DIALOG)) {
-				playerInstance.createLyricsDialog();
+				dialogPlayerViewInstance.createLyricsDialog();
 			} else {
 				if (checkState(DIRCHOOSE_DIALOG)) {
-					playerInstance.createDirectoryChooserDialog();
+					dialogPlayerViewInstance.createDirectoryChooserDialog();
 				}
 				if (checkState(NEWDIR_DIALOG)) {
-					playerInstance.createNewDirDialog(newDirName);
+					dialogPlayerViewInstance.createNewDirDialog(newDirName);
 				}
 			}
 		}

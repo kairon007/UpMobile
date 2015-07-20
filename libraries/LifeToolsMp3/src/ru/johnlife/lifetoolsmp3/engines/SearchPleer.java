@@ -1,12 +1,13 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.net.URLEncoder;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import ru.johnlife.lifetoolsmp3.song.SongPleer;
-import android.util.Log;
+import java.net.URLEncoder;
+
+import ru.johnlife.lifetoolsmp3.song.PleerSong;
 
 public class SearchPleer extends SearchWithPages {
 	
@@ -42,7 +43,7 @@ public class SearchPleer extends SearchWithPages {
 						/*
 						 * end
 						 */
-						SongPleer song = new SongPleer(id);
+						PleerSong song = new PleerSong(id);
 						String songTitle = jsonSong.getString("track");
 						song.setSongTitle(songTitle);
 						song.setArtistName(jsonSong.getString("artist"));

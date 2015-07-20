@@ -99,7 +99,7 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
-import ru.johnlife.lifetoolsmp3.ui.Player;
+import ru.johnlife.lifetoolsmp3.ui.DialogPlayerView;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
@@ -132,7 +132,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	private Iterator<Engine> taskIterator;
 	private SharedPreferences sPref;
 	private StateKeeper keeper;
-	private Player player;
+	private DialogPlayerView dialogPlayerView;
 	private RemoteSong downloadSong;
 	private TelephonyManager telephonyManager;
 	private HeadsetIntentReceiver headsetReceiver;
@@ -222,7 +222,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (action.compareTo(AudioManager.ACTION_AUDIO_BECOMING_NOISY) == 0) {
-				player.pause();
+				dialogPlayerView.pause();
 			}
 		}
 	};
@@ -233,11 +233,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		public void onCallStateChanged(int state, String incomingNumber) {
 			switch (state) {
 			case TelephonyManager.CALL_STATE_RINGING:
-				player.pause();
+				dialogPlayerView.pause();
 				keeper.activateOptions(StateKeeper.IS_PLAYING_OPTION);
 				break;
 			case TelephonyManager.CALL_STATE_IDLE:
-				if(keeper.checkState(StateKeeper.IS_PLAYING_OPTION)) player.play();
+				if(keeper.checkState(StateKeeper.IS_PLAYING_OPTION)) dialogPlayerView.play();
 				break;
 			default:
 				break;
@@ -872,33 +872,33 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		RemoteSong song = remoteSong.cloneSong();
 		keeper.setDownloadSong(song);
 		AlertDialog streamDialog = null;
-		if (null == player) {
+		if (null == dialogPlayerView) {
 			LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			int layoutId = Util.getResIdFromAttribute(((Activity)getContext()), R.attr.download_dialog);
 			View v = inflater.inflate(layoutId > 0 ? layoutId : R.layout.download_dialog, null);
-			player = new Player(v, song);
-			player.setTitle(song.getArtist() + " - " + song.getTitle());
-			player.execute(song.getUrl());
+			dialogPlayerView = new DialogPlayerView(v, song);
+			dialogPlayerView.setTitle(song.getArtist() + " - " + song.getTitle());
+			dialogPlayerView.execute(song.getUrl());
 			if (song instanceof GrooveSong) {
-				player.setSongId(((GrooveSong) song).getSongId());
+				dialogPlayerView.setSongId(((GrooveSong) song).getSongId());
 			}
 			streamDialog = (AlertDialog) createStreamDialog(song);
 			streamDialog.show();
 			
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				if (null != listViewImage) {
-					player.setCover(getResizedBitmap(listViewImage, 200, 200));
+					dialogPlayerView.setCover(getResizedBitmap(listViewImage, 200, 200));
 					listViewImage = null;
 				} else {
-					player.setCoverFromSong(song);
+					dialogPlayerView.setCoverFromSong(song);
 				}
 			} else {
-				player.hideCoverProgress();
+				dialogPlayerView.hideCoverProgress();
 			}
 		} else if (keeper.checkState(StateKeeper.STREAM_DIALOG)) {
 			streamDialog = (AlertDialog) createStreamDialog(song);
 			streamDialog.show();
-			player.setTitle(song.getArtist() + " - " + song.getTitle());
+			dialogPlayerView.setTitle(song.getArtist() + " - " + song.getTitle());
 		}
 		downloadListener = new BaseDownloadSongTask(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
@@ -908,8 +908,8 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				public void onBitmapReady(Bitmap bmp) {}
 			});
 			if (!hasCover) {
-				player.hideCoverProgress();
-				player.setCover(null);
+				dialogPlayerView.hideCoverProgress();
+				dialogPlayerView.setCover(null);
 			}
 		}
 		
@@ -946,7 +946,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
 		}
 		stopSystemPlayer(getContext());
-		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(player.getView());
+		AlertDialog.Builder b = new AlertDialog.Builder(getContext()).setView(dialogPlayerView.getView());
 		b.setNegativeButton(R.string.download_dialog_cancel, null);
 		b.setPositiveButton(R.string.download_dialog_download, null);
 		alertDialog = b.create();
@@ -959,9 +959,9 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				if (telephonyManager != null) {
 					telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
 				}
-				if (player != null) {
-					player.cancel();
-					player = null;
+				if (dialogPlayerView != null) {
+					dialogPlayerView.cancel();
+					dialogPlayerView = null;
 				}
 				dialog.dismiss();
 			}
@@ -1012,12 +1012,12 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		return DOWNLOAD_DIR;
 	}
 
-	public Player getPlayer() {
-		return player;
+	public DialogPlayerView getDialogPlayerView() {
+		return dialogPlayerView;
 	}
 	
-	public void setPlayer(Player player) {
-		this.player = player;
+	public void setDialogPlayerView(DialogPlayerView dialogPlayerView) {
+		this.dialogPlayerView = dialogPlayerView;
 	}
 
 	public View getViewItem() {

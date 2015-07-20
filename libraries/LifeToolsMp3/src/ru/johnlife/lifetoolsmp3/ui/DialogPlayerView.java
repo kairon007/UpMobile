@@ -48,7 +48,7 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
-public class Player extends AsyncTask<String, Void, Boolean> {
+public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 
 	private Runnable action;
 	private ViewGroup rowLirycs;
@@ -110,7 +110,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 		this.downloadSong = downloadSong;
 	}
 
-	public Player(final View view, RemoteSong song) {
+	public DialogPlayerView(final View view, RemoteSong song) {
 		super();
 		keeper = StateKeeper.getInstance();
 		this.downloadSong = song;
@@ -511,7 +511,7 @@ public class Player extends AsyncTask<String, Void, Boolean> {
 
 							public void run() {
 								if (null != mediaPlayer) {
-									Player.this.onPrepared();
+									DialogPlayerView.this.onPrepared();
 								}
 							}
 						}, 1000);

@@ -1,17 +1,12 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.jsoup.Connection.Response;
-import org.jsoup.Jsoup;
-
 import ru.johnlife.lifetoolsmp3.song.HulkShareSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 
 
 public class SearchHulkShare extends SearchWithPages {
@@ -68,8 +63,6 @@ public class SearchHulkShare extends SearchWithPages {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e1) {
-			e1.printStackTrace();
-		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
 

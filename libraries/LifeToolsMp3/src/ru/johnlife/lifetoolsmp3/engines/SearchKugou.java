@@ -1,13 +1,13 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.net.URLEncoder;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.song.SongKugou;
+import java.net.URLEncoder;
+
+import ru.johnlife.lifetoolsmp3.song.KugouSong;
 
 
 public class SearchKugou extends SearchWithPages {
@@ -40,7 +40,7 @@ public class SearchKugou extends SearchWithPages {
 				String title = getTitle(song.getString("filename"));
 				long duration = song.getLong("timelength") * 1000;
 				String hash = song.getString("hash");
-				addSong(new SongKugou(hash).setArtistName(artist).setSongTitle(title).setDuration(duration));
+				addSong(new KugouSong(hash).setArtistName(artist).setSongTitle(title).setDuration(duration));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

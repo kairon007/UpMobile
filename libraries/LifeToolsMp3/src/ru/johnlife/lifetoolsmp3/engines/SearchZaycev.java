@@ -1,15 +1,16 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import android.content.SharedPreferences;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.SongZaycev;
-import android.content.SharedPreferences;
+import ru.johnlife.lifetoolsmp3.song.ZaycevSong;
 
 public class SearchZaycev extends SearchWithPages {
 
@@ -52,7 +53,7 @@ public class SearchZaycev extends SearchWithPages {
 				String songArtist = songObject.getString("artistName");
 				String songDuration = songObject.getString("duration");
 				int songId = songObject.getInt("id");
-				addSong(new SongZaycev(songId + "").setSongTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
+				addSong(new ZaycevSong(songId + "").setSongTitle(songTitle).setArtistName(songArtist).setDuration(formatTime(songDuration)));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
