@@ -67,12 +67,10 @@
 
             <TextView
                 android:id="@+id/chunkTime"
-                android:layout_width="match_parent"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:gravity="right"
-                android:paddingEnd="4dp"
-                android:paddingRight="4dp"
+                android:gravity="end"
                 android:singleLine="true"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/font_size_title"
@@ -80,12 +78,10 @@
 
             <TextView
                 android:id="@+id/infoView"
+                android:layout_gravity="end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:gravity="right"
-                android:paddingEnd="4dp"
-                android:paddingRight="4dp"
+                android:gravity="end"
                 android:singleLine="true"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="@dimen/font_size_normal"

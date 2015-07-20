@@ -68,24 +68,22 @@
 
             <TextView
                 android:id="@+id/chunkTime"
-                android:layout_width="match_parent"
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
                 android:gravity="end"
                 android:maxLines="1"
-                android:paddingRight="4dp"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textSize="@dimen/font_size_title"
                 android:visibility="visible" />
 
             <TextView
                 android:id="@+id/infoView"
+                android:layout_gravity="end"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:gravity="end"
                 android:maxLines="1"
-                android:paddingRight="4dp"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="@dimen/font_size_normal"
                 android:visibility="gone" />
