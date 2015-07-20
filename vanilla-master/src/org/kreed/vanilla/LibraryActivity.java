@@ -348,6 +348,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 			mArtist.setTextSize(14);
 			controls.setOnClickListener(this);
 			mActionControls = controls;
+            mActionControls.setVisibility(View.GONE);
 		} else {
 			if (null != state && state.containsKey(IS_FIRST_RUN)) {
 				isFirstRun = state.getBoolean(IS_FIRST_RUN);
@@ -1288,6 +1289,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 	}
 
 	private void updatePlayer(long id, final String artistName, final String albumTitle, final String songTitle, final String newFileName) {
+        mActionControls.setVisibility(View.VISIBLE);
 		PlaybackService service = PlaybackService.get(this);
 		Song currentSong = service.getSong(0);
 		if (id == currentSong.getId()) {
@@ -1440,7 +1442,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 		case MSG_SAVE_PAGE: {
 			SharedPreferences.Editor editor = PlaybackService.getSettings(this).edit();
 			editor.putInt("library_page", message.arg1);
-			editor.commit();
+			editor.apply();
 			break;
 		}
 		default:
@@ -1481,6 +1483,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 			Bitmap cover = null;
 
 			if (song == null) {
+                mActionControls.setVisibility(View.GONE);
 				if (mActionControls == null) {
 					mTitle.setText(R.string.none);
 					mArtist.setText(null);
@@ -1493,6 +1496,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 					return;
 				}
 			} else {
+                mActionControls.setVisibility(View.VISIBLE);
 				Resources res = getResources();
 				String title = song.title == null ? res.getString(R.string.unknown) : song.title;
 				String artist = song.artist == null ? res.getString(R.string.unknown) : song.artist;
