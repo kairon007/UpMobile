@@ -1,30 +1,30 @@
 package org.upmobile.newmaterialmusicdownloader.adapter;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.Util;
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
 	

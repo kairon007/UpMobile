@@ -22,19 +22,10 @@
 
 package org.kreed.vanilla;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaScannerConnection;
 import android.net.ConnectivityManager;
@@ -69,6 +60,15 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * The primary playback screen with playback controls and large cover display.

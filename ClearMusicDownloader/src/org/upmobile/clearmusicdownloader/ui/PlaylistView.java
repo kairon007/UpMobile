@@ -26,7 +26,7 @@ import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
 
 public class PlaylistView extends BasePlaylistView {
 

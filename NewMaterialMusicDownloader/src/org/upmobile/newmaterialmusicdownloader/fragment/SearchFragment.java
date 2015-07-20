@@ -1,19 +1,19 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
 
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.ui.SearchView;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 
 public class SearchFragment extends Fragment implements Constants{
 	

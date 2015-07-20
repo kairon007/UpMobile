@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui;
+package ru.johnlife.lifetoolsmp3.tasks;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -52,21 +52,20 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.DownloadCache.DownloadCacheCallback;
-import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache.DownloadCacheCallback;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache.Item;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
-public class DownloadClickListener implements View.OnClickListener {
+public class BaseDownloadSongTask implements View.OnClickListener {
 
     private ArrayList<String[]> headers = new ArrayList<String[]>();
 
@@ -115,10 +114,10 @@ public class DownloadClickListener implements View.OnClickListener {
         public void erorr(String str);
     }
 
-    private DownloadClickListener() {
+    private BaseDownloadSongTask() {
     }
 
-    public DownloadClickListener(final Context context, RemoteSong song, int id) {
+    public BaseDownloadSongTask(final Context context, RemoteSong song, int id) {
         this.context = context;
         downloadingSong = song;
         isEarlierDownloaded = StateKeeper.DOWNLOADED == StateKeeper.getInstance().checkSongInfo(downloadingSong.getComment());
@@ -127,7 +126,7 @@ public class DownloadClickListener implements View.OnClickListener {
         headers = downloadingSong.getHeaders();
     }
 
-    public DownloadClickListener(final Context context, RemoteSong song, int id, boolean earlierMessage) {
+    public BaseDownloadSongTask(final Context context, RemoteSong song, int id, boolean earlierMessage) {
         this.context = context;
         downloadingSong = song;
         this.id = id;
@@ -150,7 +149,7 @@ public class DownloadClickListener implements View.OnClickListener {
     }
 
     public static void writeDownloadSong(RemoteSong song, Context context) {
-        DownloadClickListener listener = new DownloadClickListener();
+        BaseDownloadSongTask listener = new BaseDownloadSongTask();
         String path = song.getPath();
         listener.context = context;
         File src = new File(path);

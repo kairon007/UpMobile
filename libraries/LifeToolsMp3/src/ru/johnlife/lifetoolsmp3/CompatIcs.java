@@ -1,17 +1,18 @@
 package ru.johnlife.lifetoolsmp3;
 
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.annotation.TargetApi;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaMetadataRetriever;
 import android.media.RemoteControlClient;
+
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 /**
  * Framework methods only in ICS or above go here.

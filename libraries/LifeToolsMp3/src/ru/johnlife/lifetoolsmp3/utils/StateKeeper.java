@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3;
+package ru.johnlife.lifetoolsmp3.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -25,7 +25,7 @@ import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.ui.Player;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
 
 public class StateKeeper {
 	

@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -28,6 +27,8 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class VideoBrowserActivity extends ListActivity implements MusicUtils.Defs
 {

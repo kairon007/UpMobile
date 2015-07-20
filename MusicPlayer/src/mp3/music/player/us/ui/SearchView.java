@@ -1,5 +1,12 @@
 package mp3.music.player.us.ui;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+
 import mp3.music.player.us.Nulldroid_Advertisement;
 import mp3.music.player.us.Nulldroid_Settings;
 import mp3.music.player.us.R;
@@ -8,13 +15,7 @@ import mp3.music.player.us.utils.MusicUtils;
 import mp3.music.player.us.utils.PreferenceUtils;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
 
 public class SearchView extends BaseSearchView {
 	

@@ -1,15 +1,16 @@
 package ru.johnlife.lifetoolsmp3.engines.lyric;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import android.os.AsyncTask;
 
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.Util;
-import android.os.AsyncTask;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseLyricsSearchTask  extends AsyncTask<String, Void, String>{
 	

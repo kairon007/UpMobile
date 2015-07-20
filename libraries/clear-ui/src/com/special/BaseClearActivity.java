@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
@@ -18,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements Constants {
 	

@@ -1,16 +1,17 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Scanner;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import android.util.Log;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class SearchSoArdIyyin extends SearchWithPages {
 	

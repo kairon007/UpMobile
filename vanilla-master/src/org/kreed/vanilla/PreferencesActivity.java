@@ -1,11 +1,7 @@
 package org.kreed.vanilla;
 
-import java.util.List;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewFragment;
+
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * The preferences activity in which one can change application preferences.

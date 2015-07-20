@@ -22,7 +22,6 @@
 
 package org.kreed.vanilla;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -41,6 +40,8 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * CursorAdapter backed by MediaStore playlists.

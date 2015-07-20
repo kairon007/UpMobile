@@ -23,8 +23,8 @@ import com.special.BaseClearActivity;
 import com.special.menu.ResideMenu;
 import com.special.menu.ResideMenuItem;
 
+import org.upmobile.clearmusicdownloader.BaseDownloadListener;
 import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.DownloadListener;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
@@ -36,14 +36,14 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
@@ -198,7 +198,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0);
+							BaseDownloadListener downloadListener = new BaseDownloadListener(MainActivity.this, song, 0);
 							downloadListener.setDownloadPath(getDirectory());
 							downloadListener.setUseAlbumCover(true);
 							downloadListener.downloadSong(false);
@@ -209,7 +209,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			undo.show();
 		} else {
 			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-			DownloadListener downloadListener = new DownloadListener(this, song, id);
+			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, id);
 			downloadListener.setDownloadPath(ClearMusicDownloaderApp.getDirectory());
 			downloadListener.setUseAlbumCover(useCover);
 			downloadListener.downloadSong(false);
@@ -359,8 +359,8 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	}
 	
 	@Override
-	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0);
+	protected BaseDownloadSongTask createDownloadListener(RemoteSong song) {
+		return new BaseDownloadListener(this, song, 0);
 	}
 	
 }

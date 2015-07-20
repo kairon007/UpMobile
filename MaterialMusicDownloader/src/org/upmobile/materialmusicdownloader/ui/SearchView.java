@@ -1,6 +1,12 @@
 package org.upmobile.materialmusicdownloader.ui;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+
+import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
+import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
 
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.Nulldroid_Advertisement;
@@ -9,21 +15,16 @@ import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.SearchAdapter;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
-
-import com.nhaarman.listviewanimations.appearance.AnimationAdapter;
-import com.nhaarman.listviewanimations.appearance.simple.AlphaInAnimationAdapter;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchView extends BaseSearchView implements Constants, PlaybackService.OnErrorListener{
 	

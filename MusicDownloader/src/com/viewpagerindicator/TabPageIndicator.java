@@ -15,11 +15,8 @@
  * limitations under the License.
  */
 
-package com.viewpagerindicator; 
+package com.viewpagerindicator;
 
-import org.kreed.musicdownloader.R;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -34,6 +31,10 @@ import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.kreed.musicdownloader.R;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * This widget implements the dynamic action bar tab behavior that can change

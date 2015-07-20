@@ -1,14 +1,5 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-import java.io.File;
-
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -19,6 +10,16 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.MediaColumns;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MusicData implements Comparable<MusicData>, AbstractSong {
 

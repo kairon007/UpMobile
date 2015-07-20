@@ -1,10 +1,5 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import org.upmobile.clearmusicdownloader.R;
-
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -15,6 +10,12 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
 import com.special.utils.UICircularImage;
+
+import org.upmobile.clearmusicdownloader.R;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
 
 public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapter {
 

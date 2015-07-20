@@ -22,15 +22,6 @@
 
 package org.kreed.vanilla;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -75,6 +66,16 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * Handles music playback and pretty much all the other work.

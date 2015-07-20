@@ -1,8 +1,5 @@
 package mp3.music.player.us.ui.fragments;
 
-import mp3.music.player.us.Constants;
-import mp3.music.player.us.ui.SearchView;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
+
+import mp3.music.player.us.Constants;
+import mp3.music.player.us.ui.SearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class OnlineSearchFragment extends SherlockFragment {
 	

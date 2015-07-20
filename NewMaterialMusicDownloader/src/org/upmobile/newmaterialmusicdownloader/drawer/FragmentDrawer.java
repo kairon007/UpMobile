@@ -1,20 +1,9 @@
 package org.upmobile.newmaterialmusicdownloader.drawer;
 
-import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.adapter.NavigationDrawerAdapter;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -30,7 +19,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import org.upmobile.newmaterialmusicdownloader.Constants;
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.adapter.NavigationDrawerAdapter;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
+
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class FragmentDrawer extends Fragment implements Constants {
 	

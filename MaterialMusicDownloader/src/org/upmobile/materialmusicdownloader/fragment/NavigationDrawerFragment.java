@@ -1,17 +1,6 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.adapter.DrawerAdapter;
-import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
-import org.upmobile.materialmusicdownloader.models.DrawerItem;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -32,6 +21,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.adapter.DrawerAdapter;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
+import org.upmobile.materialmusicdownloader.models.DrawerItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class NavigationDrawerFragment extends Fragment implements Constants {
 	

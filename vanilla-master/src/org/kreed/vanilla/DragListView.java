@@ -16,7 +16,6 @@
 
 package org.kreed.vanilla;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -31,6 +30,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * A ListView that supports dragging to reorder its elements.

@@ -18,10 +18,10 @@ import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 

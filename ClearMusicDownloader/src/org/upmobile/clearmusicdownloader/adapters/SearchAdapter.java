@@ -12,11 +12,11 @@ import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchAdapter extends BaseSearchAdapter {
 

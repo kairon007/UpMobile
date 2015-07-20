@@ -1,16 +1,5 @@
-package ru.johnlife.lifetoolsmp3.ui.views;
+package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.DownloadCache.Item;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
@@ -22,6 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache.Item;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public abstract class BaseDownloadsView extends View{
 

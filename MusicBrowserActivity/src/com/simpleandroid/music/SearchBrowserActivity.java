@@ -10,8 +10,6 @@
  */
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,6 +19,9 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * This class is used to display the {@link ViewPager} used to swipe between the

@@ -1,11 +1,5 @@
 package ru.johnlife.lifetoolsmp3.engines.task;
 
-import java.io.File;
-import java.io.FileOutputStream;
-
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.InfoListener;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -13,6 +7,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.scilor.grooveshark.API.Base.GroovesharkAudioStream;
+
+import java.io.File;
+import java.io.FileOutputStream;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.engines.SearchGrooveshark;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask.InfoListener;
 
 public class DownloadGrooveshark extends AsyncTask<Void, Void, Integer> {
 	private Integer songId;

@@ -10,6 +10,8 @@ import android.os.SystemClock;
 import android.telephony.TelephonyManager;
 import android.view.KeyEvent;
 
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+
 /**
  * Receives media button events and calls to PlaybackService to respond
  * appropriately.

@@ -1,11 +1,5 @@
 package com.csform.android.uiapptemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -24,6 +18,13 @@ import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
 import com.csform.android.uiapptemplate.fragment.NavigationDrawerFragment.OnNavigationDrawerState;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class UIMainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 	

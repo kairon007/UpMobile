@@ -1,5 +1,11 @@
 package org.upmobile.musicpro.widget;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+
 import org.upmobile.musicpro.Nulldroid_Advertisement;
 import org.upmobile.musicpro.Nulldroid_Settings;
 import org.upmobile.musicpro.R;
@@ -7,16 +13,11 @@ import org.upmobile.musicpro.activity.MainActivity;
 import org.upmobile.musicpro.adapter.SearchAdapter;
 import org.upmobile.musicpro.service.MusicService;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchView extends BaseSearchView {
 	

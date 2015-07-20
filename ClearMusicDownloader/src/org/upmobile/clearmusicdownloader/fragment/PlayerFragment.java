@@ -57,19 +57,19 @@ import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import java.io.File;
 import java.text.MessageFormat;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
+import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.tasks.RenameTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 

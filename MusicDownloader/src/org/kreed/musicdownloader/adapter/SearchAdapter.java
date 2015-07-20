@@ -1,20 +1,5 @@
 package org.kreed.musicdownloader.adapter;
 
-import org.kreed.musicdownloader.Nulldroid_Settings;
-import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.listeners.DownloadListener;
-import org.kreed.musicdownloader.ui.activity.MainActivity;
-
-import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
@@ -22,14 +7,27 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.kreed.musicdownloader.Nulldroid_Settings;
+import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.listeners.BaseDownloadListener;
+
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+
 public class SearchAdapter extends BaseSearchAdapter {
 
-	private DownloadListener downloadListener;
+	private BaseDownloadListener downloadListener;
 
 	public SearchAdapter(Context context, int resource) {
 		super(context, resource);
@@ -56,7 +54,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 		if (exist != 0 && !isCached) {
 			Toast.makeText(getContext(), R.string.track_exist, Toast.LENGTH_SHORT).show();
 		} else if (exist == 0 && !isCached) {
-			downloadListener = new DownloadListener(getContext(), song, id);
+			downloadListener = new BaseDownloadListener(getContext(), song, id);
 			if (downloadListener.isBadInet()) return;
 			song.setDownloaderListener(downloadListener.notifyStartDownload(id));
 			song.getDownloadUrl(new DownloadUrlListener() {

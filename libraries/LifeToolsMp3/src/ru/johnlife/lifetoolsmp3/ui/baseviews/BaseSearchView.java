@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui.views;
+package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -17,7 +17,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -63,12 +62,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity.DownloadPressListener;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSpinnerAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
@@ -99,12 +93,15 @@ import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
 import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
 import ru.johnlife.lifetoolsmp3.engines.SearchZvukoff;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
 import ru.johnlife.lifetoolsmp3.ui.Player;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener, FinishedParsingSongs {
 
@@ -119,7 +116,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	protected AlertDialog.Builder progressDialog;
 	protected AlertDialog alertProgressDialog;
 
-	protected DownloadClickListener downloadListener;
+	protected BaseDownloadSongTask downloadListener;
 	protected PlaybackService service;// init in subclasses
 	
 	/*!!! ADAPTERS !!!*/
@@ -903,7 +900,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			streamDialog.show();
 			player.setTitle(song.getArtist() + " - " + song.getTitle());
 		}
-		downloadListener = new DownloadClickListener(getContext(), song, 0);
+		downloadListener = new BaseDownloadSongTask(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
 			boolean hasCover = ((RemoteSong) song).getCover(new OnBitmapReadyListener() {
 				

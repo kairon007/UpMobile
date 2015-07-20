@@ -16,10 +16,6 @@
 
 package com.simpleandroid.music;
 
-import java.text.Collator;
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
@@ -57,6 +53,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
+
+import java.text.Collator;
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class PlaylistBrowserActivity extends ListActivity
     implements View.OnCreateContextMenuListener, MusicUtils.Defs

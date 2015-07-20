@@ -1,13 +1,5 @@
 package org.upmobile.newmusicdownloader.ui;
 
-import org.upmobile.newmusicdownloader.activity.MainActivity;
-import org.upmobile.newmusicdownloader.adapter.PlaylistAdapter;
-import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,6 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.adapter.PlaylistAdapter;
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
 
 public class PlaylistView extends BasePlaylistView {
 

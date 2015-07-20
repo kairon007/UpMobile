@@ -22,18 +22,16 @@
 
 package org.kreed.vanilla.adapter;
 
-import org.kreed.vanilla.DragListView.DragAdapter;
-import org.kreed.vanilla.DragTextView;
-import org.kreed.vanilla.R;
-import org.kreed.vanilla.TabOrderActivity;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import org.kreed.vanilla.DragListView.DragAdapter;
+import org.kreed.vanilla.DragTextView;
+import org.kreed.vanilla.R;
+import org.kreed.vanilla.TabOrderActivity;
 
 /**
  * CursorAdapter backed by MediaStore playlists.

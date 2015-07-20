@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.KeyguardManager;
@@ -63,6 +62,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 
 public class MediaPlaybackActivity extends Activity implements MusicUtils.Defs,

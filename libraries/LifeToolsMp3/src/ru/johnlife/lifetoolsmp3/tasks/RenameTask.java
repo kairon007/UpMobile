@@ -1,13 +1,5 @@
-package ru.johnlife.lifetoolsmp3;
+package ru.johnlife.lifetoolsmp3.tasks;
 
-import java.io.File;
-import java.text.MessageFormat;
-
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -18,6 +10,17 @@ import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import java.io.File;
+import java.text.MessageFormat;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 
 public class RenameTask {
 	private File file;

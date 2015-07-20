@@ -57,7 +57,7 @@
         </activity>
         
         <service
-            android:name="ru.johnlife.lifetoolsmp3.PlaybackService"
+            android:name="ru.johnlife.lifetoolsmp3.services.PlaybackService"
             android:exported="false"
             android:enabled="true" >
             <intent-filter>
@@ -74,7 +74,7 @@
             </intent-filter>
         </receiver>
 
-	<service android:name="ru.johnlife.lifetoolsmp3.HelperService"/>
+	<service android:name="ru.johnlife.lifetoolsmp3.services.HelperService"/>
         
 		<!-- MOBILECORE -->
 

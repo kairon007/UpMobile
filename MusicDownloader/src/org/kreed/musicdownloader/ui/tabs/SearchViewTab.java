@@ -1,6 +1,12 @@
 package org.kreed.musicdownloader.ui.tabs;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
 
 import org.kreed.musicdownloader.Nulldroid_Advertisement;
 import org.kreed.musicdownloader.Nulldroid_Settings;
@@ -11,20 +17,15 @@ import org.kreed.musicdownloader.data.MusicData;
 import org.kreed.musicdownloader.ui.activity.MainActivity;
 import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
 
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class SearchViewTab  extends BaseSearchView {
 	

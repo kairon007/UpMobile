@@ -13,12 +13,12 @@ import org.upmobile.musix.Nulldroid_Settings;
 import org.upmobile.musix.R;
 import org.upmobile.musix.listadapters.SearchAdapter;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchView extends BaseSearchView {
 

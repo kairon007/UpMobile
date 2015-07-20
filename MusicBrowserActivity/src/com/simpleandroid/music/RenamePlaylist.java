@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -34,6 +33,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class RenamePlaylist extends Activity {
     private EditText mPlaylist;

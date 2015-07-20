@@ -1,16 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
-import java.util.ArrayList;
-
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.adapter.DownloadsAdapter;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseDownloadsView;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +9,18 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.adapter.DownloadsAdapter;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter.CanNotifyListener;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseDownloadsView;
 
 public class DownloadsView extends BaseDownloadsView {
 

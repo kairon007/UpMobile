@@ -1,18 +1,5 @@
-package ru.johnlife.lifetoolsmp3.ui.views;
+package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -42,6 +29,20 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BasePlaylistView extends View {
 

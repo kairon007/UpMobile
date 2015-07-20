@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -25,6 +24,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class DeleteItems extends Activity {
     private TextView mPrompt;

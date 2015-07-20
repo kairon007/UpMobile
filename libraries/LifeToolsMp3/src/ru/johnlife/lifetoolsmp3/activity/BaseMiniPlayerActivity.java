@@ -24,19 +24,19 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.HelperService;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnErrorListener;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.services.HelperService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnErrorListener;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseMiniPlayerActivity extends AppCompatActivity implements OnClickListener {
 
@@ -513,7 +513,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 	
 	protected void download(RemoteSong song) {
-        DownloadClickListener downloadListener = new DownloadClickListener(BaseMiniPlayerActivity.this, song, 0);
+        BaseDownloadSongTask downloadListener = new BaseDownloadSongTask(BaseMiniPlayerActivity.this, song, 0);
 		downloadListener.setDownloadPath(getDirectory());
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);
@@ -600,7 +600,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 					checkSong.setPath(path);
 					checkSong.setComment(strComment);
 					checkSong.id = id;
-					DownloadClickListener listener = createDownloadListener(checkSong);
+					BaseDownloadSongTask listener = createDownloadListener(checkSong);
 					listener.createUpdater(manager, id);
 					if (!result.contains(checkSong)) {
 						result.add(checkSong);
@@ -611,8 +611,8 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		c.close();
 	}
 	
-	protected DownloadClickListener createDownloadListener (RemoteSong song) {
-		return new DownloadClickListener(this, song, 0);
+	protected BaseDownloadSongTask createDownloadListener (RemoteSong song) {
+		return new BaseDownloadSongTask(this, song, 0);
 	}
 	
 	@Override

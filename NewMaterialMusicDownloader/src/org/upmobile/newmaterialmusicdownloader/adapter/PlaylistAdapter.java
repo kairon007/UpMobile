@@ -1,13 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.adapter;
 
-import java.util.ArrayList;
-
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-
-import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,14 +9,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 

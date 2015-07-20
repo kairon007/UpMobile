@@ -1,22 +1,22 @@
 package org.upmobile.musix.activities;
 
 
-import org.upmobile.musix.R;
-import org.upmobile.musix.fragments.NavigationDrawerFragment;
-import org.upmobile.musix.fragments.SearchFragment;
-import org.upmobile.musix.fragments.SongsListFragment;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.widget.Toast;
+
+import org.upmobile.musix.R;
+import org.upmobile.musix.fragments.NavigationDrawerFragment;
+import org.upmobile.musix.fragments.SearchFragment;
+import org.upmobile.musix.fragments.SongsListFragment;
+
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 

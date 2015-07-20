@@ -1,13 +1,5 @@
 package org.upmobile.musicpro.fragment;
 
-import java.io.File;
-
-import org.upmobile.musicpro.BaseFragment;
-import org.upmobile.musicpro.R;
-import org.upmobile.musicpro.config.GlobalValue;
-import org.upmobile.musicpro.object.Song;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+
+import org.upmobile.musicpro.BaseFragment;
+import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.config.GlobalValue;
+import org.upmobile.musicpro.object.Song;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class PlayerThumbFragment extends BaseFragment {
 	// private ImageView imgSong;

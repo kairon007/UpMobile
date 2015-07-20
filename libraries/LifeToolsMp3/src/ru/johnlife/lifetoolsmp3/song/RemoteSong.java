@@ -1,19 +1,20 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
-import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CoverReadyListener;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask.CoverReadyListener;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class RemoteSong extends Song {
 	private boolean hasCoverFromSearch = false;

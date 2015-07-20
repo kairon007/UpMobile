@@ -1,17 +1,5 @@
 package org.kreed.musicdownloader.ui.tabs;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
-import org.kreed.musicdownloader.DBHelper;
-import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
-import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
-
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener.CanceledCallback;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
@@ -31,6 +19,19 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.kreed.musicdownloader.DBHelper;
+import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.interfaces.LoadPercentageInterface;
+import org.kreed.musicdownloader.interfaces.TaskSuccessListener;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask.CanceledCallback;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class DownloadsTab implements LoadPercentageInterface {
 

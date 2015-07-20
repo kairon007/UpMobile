@@ -1,15 +1,15 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.net.URLEncoder;
-
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import ru.johnlife.lifetoolsmp3.Util;
+import java.net.URLEncoder;
+
 import ru.johnlife.lifetoolsmp3.song.GoearV2Song;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class SearchGoearV2 extends SearchWithPages {
 

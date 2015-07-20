@@ -1,20 +1,12 @@
 package com.csform.android.uiapptemplate.fragment;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jaudiotagger.tag.mp4.field.Mp4TagReverseDnsField;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
@@ -35,6 +27,12 @@ import com.csform.android.uiapptemplate.UIMainActivity;
 import com.csform.android.uiapptemplate.adapter.DrawerAdapter;
 import com.csform.android.uiapptemplate.model.BaseMaterialFragment;
 import com.csform.android.uiapptemplate.model.DrawerItem;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class NavigationDrawerFragment extends Fragment implements Constants {
 	

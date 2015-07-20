@@ -1,19 +1,5 @@
 package org.upmobile.materialmusicdownloader.ui;
 
-import java.util.ArrayList;
-
-import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +9,21 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+
+import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class LibraryView extends BaseLibraryView implements Constants {
 

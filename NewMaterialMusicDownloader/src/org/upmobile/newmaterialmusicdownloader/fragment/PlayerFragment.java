@@ -47,9 +47,9 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import org.upmobile.newmaterialmusicdownloader.BaseDownloadListener;
+import org.upmobile.newmaterialmusicdownloader.BaseDownloadListener.OnCancelDownload;
 import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener.OnCancelDownload;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
@@ -57,23 +57,23 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.DownloadCache;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask;
-import ru.johnlife.lifetoolsmp3.ProgressUpdaterTask.ProgressUpdaterListener;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
+import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.tasks.ProgressUpdaterTask;
+import ru.johnlife.lifetoolsmp3.tasks.ProgressUpdaterTask.ProgressUpdaterListener;
+import ru.johnlife.lifetoolsmp3.tasks.RenameTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.buttons.CheckBox;
 import ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton;
 import ru.johnlife.uilibrary.widget.customviews.RippleView;
@@ -98,7 +98,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private AsyncTask<Bitmap, Void, Palette> paletteGenerator;
 	private RenameTask renameTask;
 	private PlaybackService player;
-	private DownloadListener downloadListener;
+	private BaseDownloadListener downloadListener;
 	private ProgressUpdaterListener progressListener;
 	private Bitmap bigDefaultCover;
 
@@ -1069,7 +1069,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 	private void download() {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id, true);
+		downloadListener = new BaseDownloadListener(getActivity(), (RemoteSong) song, id, true);
 		if (downloadListener.isBadInet()) {
 			((MainActivity) getActivity()).showMessage(R.string.search_message_no_internet);
 			return;

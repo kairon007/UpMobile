@@ -1,22 +1,23 @@
-package org.upmobile.clearmusicdownloader;
+package org.upmobile.newmusicdownloader;
 
-import java.io.File;
-
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.app.Activity;
 import android.content.Context;
 import android.widget.Toast;
 
-public class DownloadListener extends DownloadClickListener {
+import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+
+public class BaseDownloadListener extends BaseDownloadSongTask {
 
 	private String songArtist;
 	private String songTitle;
 
-	public DownloadListener(Context context, RemoteSong song, int id) {
+	public BaseDownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, id);
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());
@@ -39,6 +40,7 @@ public class DownloadListener extends DownloadClickListener {
 
 	@Override
 	protected String getDirectory() {
-		return ClearMusicDownloaderApp.getDirectory();
+		return NewMusicDownloaderApp.getDirectory();
 	}
+
 }

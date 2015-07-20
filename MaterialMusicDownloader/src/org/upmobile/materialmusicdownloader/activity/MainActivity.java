@@ -25,8 +25,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
+import org.upmobile.materialmusicdownloader.BaseDownloadListener;
 import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.DownloadListener;
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
@@ -45,14 +45,14 @@ import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.Folde
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
@@ -474,7 +474,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0, true);
+							BaseDownloadListener downloadListener = new BaseDownloadListener(MainActivity.this, song, 0, true);
 							downloadListener.setDownloadPath(getDirectory());
 							downloadListener.setUseAlbumCover(true);
 							downloadListener.downloadSong(false);
@@ -484,7 +484,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 			});
 			undo.show();
 		} else {
-			DownloadListener downloadListener = new DownloadListener(this, song, 0, true);
+			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, 0, true);
 			downloadListener.setDownloadPath(getDirectory());
 			downloadListener.setUseAlbumCover(true);
 			downloadListener.downloadSong(false);
@@ -497,8 +497,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	}
 
 	@Override
-	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0, true);
+	protected BaseDownloadSongTask createDownloadListener(RemoteSong song) {
+		return new BaseDownloadListener(this, song, 0, true);
 	}
 	
 	public void addPlayerElement(boolean flag) {

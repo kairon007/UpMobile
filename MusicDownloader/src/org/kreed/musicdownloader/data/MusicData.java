@@ -1,8 +1,9 @@
 package org.kreed.musicdownloader.data;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import org.cmc.music.common.ID3v1Genre;
 import org.cmc.music.metadata.MusicMetadata;
@@ -11,12 +12,12 @@ import org.cmc.music.myid3.MyID3;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.kreed.musicdownloader.DBHelper;
 
-import ru.johnlife.lifetoolsmp3.Util;
+import java.io.File;
+import java.io.IOException;
+import java.util.Locale;
+
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.provider.MediaStore;
-import android.util.Log;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MusicData {
 

@@ -1,31 +1,5 @@
 package org.kreed.musicdownloader.ui.activity;
 
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Locale;
-
-import org.kreed.musicdownloader.CompatHoneycomb;
-import org.kreed.musicdownloader.Constants;
-import org.kreed.musicdownloader.CustomEqualizer;
-import org.kreed.musicdownloader.Nulldroid_Advertisement;
-import org.kreed.musicdownloader.Nulldroid_Settings;
-import org.kreed.musicdownloader.PrefKeys;
-import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.app.MusicDownloaderApp;
-import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.services.PlayerService;
-import org.kreed.musicdownloader.ui.Player;
-import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
-import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
-
-import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -74,6 +48,32 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.viewpagerindicator.TabPageIndicator;
+
+import org.kreed.musicdownloader.CompatHoneycomb;
+import org.kreed.musicdownloader.Constants;
+import org.kreed.musicdownloader.CustomEqualizer;
+import org.kreed.musicdownloader.Nulldroid_Advertisement;
+import org.kreed.musicdownloader.Nulldroid_Settings;
+import org.kreed.musicdownloader.PrefKeys;
+import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.app.MusicDownloaderApp;
+import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.services.PlayerService;
+import org.kreed.musicdownloader.ui.Player;
+import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
+import org.kreed.musicdownloader.ui.viewpager.ViewPagerAdapter;
+
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Locale;
+
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.tasks.RenameTask;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class MainActivity extends Activity {
 

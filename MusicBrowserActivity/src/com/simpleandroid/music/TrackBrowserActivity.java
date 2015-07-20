@@ -16,9 +16,6 @@
 
 package com.simpleandroid.music;
 
-import java.util.Arrays;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -64,6 +61,10 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
+
+import java.util.Arrays;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class TrackBrowserActivity extends ListActivity
         implements View.OnCreateContextMenuListener, MusicUtils.Defs, ServiceConnection

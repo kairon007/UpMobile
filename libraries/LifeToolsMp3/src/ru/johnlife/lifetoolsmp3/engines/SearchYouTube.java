@@ -1,14 +1,15 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.net.URLEncoder;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.StateKeeper;
+import java.net.URLEncoder;
+
 import ru.johnlife.lifetoolsmp3.song.YouTubeSong;
-import android.util.Log;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchYouTube extends SearchWithPages {
 

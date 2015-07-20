@@ -22,28 +22,6 @@
 
 package org.kreed.vanilla;
 
-import java.io.File;
-import java.util.UnknownFormatConversionException;
-
-import junit.framework.Assert;
-
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-import org.kreed.vanilla.adapter.FileSystemAdapter;
-import org.kreed.vanilla.adapter.LibraryAdapter;
-import org.kreed.vanilla.adapter.LibraryPagerAdapter;
-import org.kreed.vanilla.adapter.MediaAdapter;
-import org.kreed.vanilla.adapter.SortAdapter;
-import org.kreed.vanilla.app.VanillaApp;
-
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor.OnActionEndListener;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -95,6 +73,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.viewpagerindicator.TabPageIndicator;
+
+import junit.framework.Assert;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+import org.kreed.vanilla.adapter.FileSystemAdapter;
+import org.kreed.vanilla.adapter.LibraryAdapter;
+import org.kreed.vanilla.adapter.LibraryPagerAdapter;
+import org.kreed.vanilla.adapter.MediaAdapter;
+import org.kreed.vanilla.adapter.SortAdapter;
+import org.kreed.vanilla.app.VanillaApp;
+
+import java.io.File;
+import java.util.UnknownFormatConversionException;
+
+import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.tasks.RenameTask;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor.OnActionEndListener;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * The library activity where songs to play can be selected from the library.
@@ -1507,7 +1508,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 					MusicMetadataSet src_set = new MyID3().read(file);
 					MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
 					// mAlbum.setText(album);
-					cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata, song.path);
+					cover = Util.getArtworkImage(2, metadata, song.path);
 				} catch (Exception exception) {
 					cover = song.getCover();
 				}

@@ -1,18 +1,4 @@
-package ru.johnlife.lifetoolsmp3;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Locale;
-import java.util.Vector;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
+package ru.johnlife.lifetoolsmp3.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -28,6 +14,20 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
+import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class Util {
 	
@@ -104,7 +104,7 @@ public final class Util {
 			File f = fileArray[i];
 			String fName = f.getName().split(".mp3")[0];
 			if(fName.contains("-[")){
-				fName = fName.split("-[")[0];
+				fName = fName.split("-\\[")[0];
 			}
 			if (fileName.equals(fName)){
 				result++;
@@ -149,8 +149,6 @@ public final class Util {
 				bitmap = BitmapFactory.decodeByteArray(imageData.imageData, 0,
 						imageData.imageData.length, opts);
 			} catch (OutOfMemoryError e) {
-				Log.d("log", "ru.johnlife.lifetoolsmp3.Util.getArtworkImage :"
-						+ e.getMessage());
 				bitmap.recycle();
 				bitmap = null;
 			}

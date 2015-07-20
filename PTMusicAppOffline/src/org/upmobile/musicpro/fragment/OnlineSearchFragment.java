@@ -1,12 +1,5 @@
 package org.upmobile.musicpro.fragment;
 
-import org.upmobile.musicpro.BaseFragment;
-import org.upmobile.musicpro.R;
-import org.upmobile.musicpro.slidingmenu.SlidingMenu;
-import org.upmobile.musicpro.widget.SearchView;
-
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +7,14 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+
+import org.upmobile.musicpro.BaseFragment;
+import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.slidingmenu.SlidingMenu;
+import org.upmobile.musicpro.widget.SearchView;
+
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class OnlineSearchFragment extends BaseFragment{
 	

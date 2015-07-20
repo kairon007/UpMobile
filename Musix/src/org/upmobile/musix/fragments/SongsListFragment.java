@@ -1,20 +1,5 @@
 package org.upmobile.musix.fragments;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.TimeUnit;
-
-import org.upmobile.musix.R;
-import org.upmobile.musix.activities.MainActivity;
-import org.upmobile.musix.activities.SongDetailsActivity;
-import org.upmobile.musix.listadapters.SongListAdapter;
-import org.upmobile.musix.utils.TypefaceHelper;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnPlaybackServiceDestroyListener;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -42,6 +27,21 @@ import android.widget.ListView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import org.upmobile.musix.R;
+import org.upmobile.musix.activities.MainActivity;
+import org.upmobile.musix.activities.SongDetailsActivity;
+import org.upmobile.musix.listadapters.SongListAdapter;
+import org.upmobile.musix.utils.TypefaceHelper;
+
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnPlaybackServiceDestroyListener;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 
 public class SongsListFragment extends Fragment implements MediaController.MediaPlayerControl, OnStatePlayerListener, OnPlaybackServiceDestroyListener {
 

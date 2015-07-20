@@ -1,16 +1,5 @@
 package org.upmobile.musicpro.adapter;
 
-import java.util.ArrayList;
-
-import org.upmobile.musicpro.R;
-import org.upmobile.musicpro.activity.MainActivity;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +11,18 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
+
+import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.activity.MainActivity;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class LibraryAdapter extends BaseAbstractAdapter<MusicData> {
 

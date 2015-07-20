@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService">
+        <service android:name="ru.johnlife.lifetoolsmp3.services.PlaybackService">
             <intent-filter>
                 <action android:name="playbackservice.action.main" />
                 <action android:name="playbackservice.action.prev" />
@@ -59,7 +59,7 @@
             </intent-filter>
         </receiver>
 
-        <service android:name="ru.johnlife.lifetoolsmp3.HelperService" />
+        <service android:name="ru.johnlife.lifetoolsmp3.services.HelperService" />
 
         <!-- MOBILECORE -->
 

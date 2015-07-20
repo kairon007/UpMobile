@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ExpandableListActivity;
 import android.app.SearchManager;
 import android.content.AsyncQueryHandler;
@@ -57,6 +56,8 @@ import android.widget.SimpleCursorTreeAdapter;
 import android.widget.TextView;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 
 public class ArtistAlbumBrowserActivity extends ExpandableListActivity

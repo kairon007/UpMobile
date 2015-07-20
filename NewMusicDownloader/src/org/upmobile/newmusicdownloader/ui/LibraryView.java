@@ -1,5 +1,10 @@
 package org.upmobile.newmusicdownloader.ui;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.TextView;
+
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.adapter.LibraryAdapter;
@@ -7,11 +12,7 @@ import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseLibraryView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.TextView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView;
 
 public class LibraryView extends BaseLibraryView implements Constants {
 

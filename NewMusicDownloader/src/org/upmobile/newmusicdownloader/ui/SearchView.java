@@ -1,6 +1,10 @@
 package org.upmobile.newmusicdownloader.ui;
 
-import java.util.ArrayList;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
@@ -8,18 +12,15 @@ import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.SearchAdapter;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
+import java.util.ArrayList;
+
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class SearchView extends BaseSearchView implements PlaybackService.OnErrorListener {
 

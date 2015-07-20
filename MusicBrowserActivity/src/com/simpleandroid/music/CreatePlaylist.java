@@ -16,7 +16,6 @@
 
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -35,6 +34,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class CreatePlaylist extends Activity
 {

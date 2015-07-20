@@ -24,13 +24,13 @@ import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.ArrayList;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;

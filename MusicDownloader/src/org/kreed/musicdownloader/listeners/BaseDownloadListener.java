@@ -1,30 +1,31 @@
 package org.kreed.musicdownloader.listeners;
 
-import java.io.File;
-
-import org.kreed.musicdownloader.DBHelper;
-import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.data.MusicData;
-import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
-
-import ru.johnlife.lifetoolsmp3.BaseConstants;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
 
-public class DownloadListener extends DownloadClickListener {
+import org.kreed.musicdownloader.DBHelper;
+import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.data.MusicData;
+import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.BaseConstants;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+
+public class BaseDownloadListener extends BaseDownloadSongTask {
 
 	private DownloadsTab downloadsTab;
 	private String songArtist;
 	private String songTitle;
 	private String duration;
 
-	public DownloadListener(Context context, RemoteSong song, int id) {
+	public BaseDownloadListener(Context context, RemoteSong song, int id) {
 		super(context, song, id);
 		songTitle = Util.removeSpecialCharacters(song.getTitle());
 		songArtist = Util.removeSpecialCharacters(song.getArtist());

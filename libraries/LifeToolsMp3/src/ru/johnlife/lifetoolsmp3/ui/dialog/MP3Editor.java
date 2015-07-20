@@ -1,8 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui.dialog;
 
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.Context;
 import android.text.Editable;
@@ -17,6 +14,10 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MP3Editor implements OnEditorActionListener {
 

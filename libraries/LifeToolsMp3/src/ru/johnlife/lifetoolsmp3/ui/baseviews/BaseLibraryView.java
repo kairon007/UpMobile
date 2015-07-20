@@ -1,4 +1,4 @@
-package ru.johnlife.lifetoolsmp3.ui.views;
+package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -28,16 +28,16 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
 import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {

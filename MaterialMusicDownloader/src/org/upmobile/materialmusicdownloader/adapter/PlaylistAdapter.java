@@ -1,18 +1,5 @@
 package org.upmobile.materialmusicdownloader.adapter;
 
-import java.util.ArrayList;
-
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -21,6 +8,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 

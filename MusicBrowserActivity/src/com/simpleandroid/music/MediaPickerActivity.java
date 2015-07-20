@@ -16,9 +16,6 @@
 
 package com.simpleandroid.music;
 
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.ListActivity;
 import android.content.ContentUris;
 import android.content.Context;
@@ -36,6 +33,10 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
 import com.simpleandroid.music.MusicUtils.ServiceToken;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MediaPickerActivity extends ListActivity implements MusicUtils.Defs
 {

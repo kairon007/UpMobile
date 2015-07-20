@@ -22,14 +22,6 @@
 
 package ru.johnlife.lifetoolsmp3.song;
 
-import java.io.File;
-import java.util.Locale;
-
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Parcel;
@@ -37,6 +29,16 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.MediaColumns;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import java.io.File;
+import java.util.Locale;
+
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * Represents a Song backed by the MediaStore. Includes basic metadata and
@@ -227,7 +229,7 @@ public class Song implements Comparable<Song>, AbstractSong {
 				flags |= FLAG_NO_COVER;
 				return cover;
 			}
-			cover = ru.johnlife.lifetoolsmp3.Util.getArtworkImage(2, metadata, path);
+			cover = Util.getArtworkImage(2, metadata, path);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

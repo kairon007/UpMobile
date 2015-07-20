@@ -22,7 +22,6 @@
 
 package org.kreed.vanilla;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -34,6 +33,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * Simple dialog to prompt to user to enter a playlist name. Has an EditText to

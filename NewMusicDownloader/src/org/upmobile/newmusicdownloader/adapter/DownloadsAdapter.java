@@ -1,10 +1,5 @@
 package org.upmobile.newmusicdownloader.adapter;
 
-import org.upmobile.newmusicdownloader.R;
-
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.view.View;
@@ -12,6 +7,11 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.upmobile.newmusicdownloader.R;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 
 public class DownloadsAdapter extends BaseDownloadsAdapter {
 

@@ -39,8 +39,8 @@ import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class DirectoryChooserDialog {
 

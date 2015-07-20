@@ -26,8 +26,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 
+import org.upmobile.newmusicdownloader.BaseDownloadListener;
 import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.DownloadListener;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
@@ -41,15 +41,15 @@ import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, OnQueryTextListener, Constants {
 
@@ -332,7 +332,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					manager.removeView(v);
 					v.setVisibility(View.GONE);
 					int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-					DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, id);
+					BaseDownloadListener downloadListener = new BaseDownloadListener(MainActivity.this, song, id);
 					downloadListener.setDownloadPath(NewMusicDownloaderApp.getDirectory());
 					downloadListener.setUseAlbumCover(useCover);
 					downloadListener.downloadSong(false);
@@ -349,7 +349,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			manager.addView(v,layoutParams);
 		} else {
 			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-			DownloadListener downloadListener = new DownloadListener(this, song, id);
+			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, id);
 			downloadListener.setDownloadPath(NewMusicDownloaderApp.getDirectory());
 			downloadListener.setUseAlbumCover(useCover);
 			downloadListener.downloadSong(false);
@@ -408,8 +408,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	}
 	
 	@Override
-	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0);
+	protected BaseDownloadSongTask createDownloadListener(RemoteSong song) {
+		return new BaseDownloadListener(this, song, 0);
 	}
 	
 	public SearchView getSearchView() {

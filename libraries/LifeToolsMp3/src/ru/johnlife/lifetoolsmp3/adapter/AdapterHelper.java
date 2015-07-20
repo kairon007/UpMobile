@@ -1,16 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import java.io.File;
-import java.util.Vector;
-
-import org.cmc.music.metadata.ImageData;
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,6 +14,18 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
+
+import org.cmc.music.metadata.ImageData;
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import java.io.File;
+import java.util.Vector;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class AdapterHelper {
 

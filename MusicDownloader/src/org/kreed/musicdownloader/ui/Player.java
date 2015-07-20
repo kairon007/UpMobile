@@ -34,10 +34,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
 import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener, OnPreparedListener, OnCompletionListener {
 

@@ -1,13 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.adapter;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.uilibrary.widget.customviews.RippleView;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
+
+import java.util.Collections;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
+import ru.johnlife.uilibrary.widget.customviews.RippleView;
 
 public class NavigationDrawerAdapter extends RecyclerView.Adapter<NavigationDrawerAdapter.ViewHolder> {
 

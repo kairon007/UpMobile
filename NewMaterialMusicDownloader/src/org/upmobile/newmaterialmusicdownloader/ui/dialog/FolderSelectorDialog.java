@@ -1,19 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.ui.dialog;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-
-import ru.johnlife.lifetoolsmp3.Constants;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
@@ -22,6 +8,21 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.widget.EditText;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Constants;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
 
 public class FolderSelectorDialog extends DialogFragment implements	MaterialDialog.ListCallback {
 

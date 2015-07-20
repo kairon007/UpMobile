@@ -1,5 +1,13 @@
 package org.upmobile.musix.listadapters;
 
+import android.content.Context;
+import android.os.Environment;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import org.upmobile.musix.Nulldroid_Settings;
 import org.upmobile.musix.R;
 
@@ -7,15 +15,7 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import android.content.Context;
-import android.os.Environment;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
 
 public class SearchAdapter extends BaseSearchAdapter {
 
@@ -36,7 +36,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 	@Override
 	protected void download(RemoteSong song, int position) {
 		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		DownloadClickListener downloadListener = new DownloadClickListener(getContext(), song, id);
+		BaseDownloadSongTask downloadListener = new BaseDownloadSongTask(getContext(), song, id);
 		downloadListener.setDownloadPath(Environment.DIRECTORY_MUSIC);
 		downloadListener.setUseAlbumCover(true);
 		downloadListener.downloadSong(false);

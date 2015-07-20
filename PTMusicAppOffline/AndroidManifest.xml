@@ -41,7 +41,7 @@
         </activity>
 
         <service android:name=".service.MusicService" />
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" />
+        <service android:name="ru.johnlife.lifetoolsmp3.services.PlaybackService" />
 
 
 

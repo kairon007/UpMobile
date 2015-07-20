@@ -1,17 +1,5 @@
 package ru.johnlife.lifetoolsmp3.ui;
 
-import java.util.HashMap;
-
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -46,6 +34,19 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.HashMap;
+
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
+import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class Player extends AsyncTask<String, Void, Boolean> {
 

@@ -16,18 +16,6 @@
 
 package com.simpleandroid.music;
 
-import java.io.File;
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Formatter;
-import java.util.HashMap;
-import java.util.Locale;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -69,6 +57,19 @@ import android.view.Window;
 import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Formatter;
+import java.util.HashMap;
+import java.util.Locale;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MusicUtils {
 

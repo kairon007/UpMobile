@@ -22,19 +22,6 @@
 
 package org.kreed.vanilla.adapter;
 
-import java.util.Arrays;
-
-import org.kreed.vanilla.LibraryActivity;
-import org.kreed.vanilla.Limiter;
-import org.kreed.vanilla.MediaUtils;
-import org.kreed.vanilla.Nulldroid_Settings;
-import org.kreed.vanilla.PlaybackService;
-import org.kreed.vanilla.PrefKeys;
-import org.kreed.vanilla.R;
-import org.kreed.vanilla.SearchView;
-import org.kreed.vanilla.app.VanillaApp;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -64,6 +51,20 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.kreed.vanilla.LibraryActivity;
+import org.kreed.vanilla.Limiter;
+import org.kreed.vanilla.MediaUtils;
+import org.kreed.vanilla.Nulldroid_Settings;
+import org.kreed.vanilla.PlaybackService;
+import org.kreed.vanilla.PrefKeys;
+import org.kreed.vanilla.R;
+import org.kreed.vanilla.SearchView;
+import org.kreed.vanilla.app.VanillaApp;
+
+import java.util.Arrays;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
  * PagerAdapter that manages the library media ListViews.

@@ -24,8 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import org.upmobile.newmaterialmusicdownloader.BaseDownloadListener;
 import org.upmobile.newmaterialmusicdownloader.Constants;
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
 import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
 import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmaterialmusicdownloader.R;
@@ -45,14 +45,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.customviews.CircleImageView;
 import ru.johnlife.uilibrary.widget.customviews.playpause.PlayPauseView;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
@@ -478,7 +478,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0, true);
+							BaseDownloadListener downloadListener = new BaseDownloadListener(MainActivity.this, song, 0, true);
 							downloadListener.setDownloadPath(getDirectory());
 							downloadListener.setUseAlbumCover(true);
 							downloadListener.downloadSong(false);
@@ -488,7 +488,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			});
 			undo.show();
 		} else {
-			DownloadListener downloadListener = new DownloadListener(this, song, 0, true);
+			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, 0, true);
 			downloadListener.setDownloadPath(getDirectory());
 			downloadListener.setUseAlbumCover(true);
 			downloadListener.downloadSong(false);
@@ -501,8 +501,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	protected DownloadClickListener createDownloadListener(RemoteSong song) {
-		return new DownloadListener(this, song, 0, true);
+	protected BaseDownloadSongTask createDownloadListener(RemoteSong song) {
+		return new BaseDownloadListener(this, song, 0, true);
 	}
 	
 	public void setToolbarOverlay(boolean isOverlay) {

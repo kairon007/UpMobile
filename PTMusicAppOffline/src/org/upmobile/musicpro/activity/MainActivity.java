@@ -1,27 +1,5 @@
 package org.upmobile.musicpro.activity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.upmobile.musicpro.R;
-import org.upmobile.musicpro.config.GlobalValue;
-import org.upmobile.musicpro.database.DatabaseUtility;
-import org.upmobile.musicpro.fragment.PlayerFragment;
-import org.upmobile.musicpro.modelmanager.ModelManager;
-import org.upmobile.musicpro.modelmanager.ModelManagerListener;
-import org.upmobile.musicpro.object.CategoryMusic;
-import org.upmobile.musicpro.object.Playlist;
-import org.upmobile.musicpro.object.Song;
-import org.upmobile.musicpro.service.MusicService;
-import org.upmobile.musicpro.service.MusicService.ServiceBinder;
-import org.upmobile.musicpro.service.PlayerListener;
-import org.upmobile.musicpro.slidingmenu.SlidingMenu;
-import org.upmobile.musicpro.util.Logger;
-import org.upmobile.musicpro.widget.AutoBgButton;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -47,6 +25,29 @@ import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.upmobile.musicpro.R;
+import org.upmobile.musicpro.config.GlobalValue;
+import org.upmobile.musicpro.database.DatabaseUtility;
+import org.upmobile.musicpro.fragment.PlayerFragment;
+import org.upmobile.musicpro.modelmanager.ModelManager;
+import org.upmobile.musicpro.modelmanager.ModelManagerListener;
+import org.upmobile.musicpro.object.CategoryMusic;
+import org.upmobile.musicpro.object.Playlist;
+import org.upmobile.musicpro.object.Song;
+import org.upmobile.musicpro.service.MusicService;
+import org.upmobile.musicpro.service.MusicService.ServiceBinder;
+import org.upmobile.musicpro.service.PlayerListener;
+import org.upmobile.musicpro.slidingmenu.SlidingMenu;
+import org.upmobile.musicpro.util.Logger;
+import org.upmobile.musicpro.widget.AutoBgButton;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 public class MainActivity extends FragmentActivity implements OnClickListener {
 	private static final String EXTRA_IS_PLAYING_BEFORE = "EXTRA_IS_PLAYING_BEFORE";

@@ -1,9 +1,5 @@
 package com.simpleandroid.music;
 
-import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
-import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -14,6 +10,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
+
+import ru.johnlife.lifetoolsmp3.Nulldroid_Advertisment;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseSearchView;
 
 public class SearchView extends BaseSearchView {
 

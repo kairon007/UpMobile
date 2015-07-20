@@ -1,25 +1,5 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
-import java.util.ArrayList;
-
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.adapter.PlaylistAdapter;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
-import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
-import ru.johnlife.lifetoolsmp3.ui.views.BasePlaylistView;
-import ru.johnlife.uilibrary.widget.buttons.fab.FloatingActionButton;
-import ru.johnlife.uilibrary.widget.buttons.fab.ScrollDirectionListener;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
-import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
-import ru.johnlife.uilibrary.widget.textviews.FloatingEditText;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -38,6 +18,27 @@ import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
+
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.adapter.PlaylistAdapter;
+import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
+import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+import ru.johnlife.uilibrary.widget.buttons.fab.FloatingActionButton;
+import ru.johnlife.uilibrary.widget.buttons.fab.ScrollDirectionListener;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
+import ru.johnlife.uilibrary.widget.textviews.FloatingEditText;
 
 public class PlaylistView extends BasePlaylistView {
 

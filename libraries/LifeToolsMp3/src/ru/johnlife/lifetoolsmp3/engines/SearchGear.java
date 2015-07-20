@@ -1,15 +1,15 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
+import android.util.Log;
+
+import org.json.JSONArray;
+import org.jsoup.Jsoup;
+
 import java.net.URLEncoder;
 import java.util.Random;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.jsoup.Jsoup;
-
-import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import android.util.Log;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 
 public class SearchGear extends SearchWithPages {
