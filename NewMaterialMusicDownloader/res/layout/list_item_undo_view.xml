@@ -12,6 +12,6 @@
         android:minHeight="?android:attr/listPreferredItemHeight"
         android:text="@string/undo_deletion"
         android:textColor="?attr/colorAccent"
-        android:textSize="18dp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

@@ -1,19 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
@@ -36,6 +22,21 @@ import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 
 public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> {
 	
@@ -60,12 +61,8 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	private final HashMap<Integer, Bitmap> hardBitmapCache = 
 			new LinkedHashMap<Integer, Bitmap>(CACHE_CAPACITY, 0.75f, true) {
 		@Override
-		protected boolean removeEldestEntry(LinkedHashMap.Entry<Integer, Bitmap> eldest) {			
-			if (size() > CACHE_CAPACITY) {
-				return true;
-			} else {
-				return false;
-			}
+		protected boolean removeEldestEntry(LinkedHashMap.Entry<Integer, Bitmap> eldest) {
+            return size() > CACHE_CAPACITY;
 		}
 	};
 	
@@ -114,8 +111,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
-		View view = super.getView(position, convertView, p);
-		return view;
+        return super.getView(position, convertView, p);
 	}
 
 	public MusicData get(AbstractSong data) {
@@ -256,11 +252,8 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 			@Override
 			public boolean isEnabled(int position) {
-				if (contains(playlistDatas.get(position), ((MusicData) v.getTag()))) {
-					return false;
-				}
-				return true;
-			}
+                return !contains(playlistDatas.get(position), ((MusicData) v.getTag()));
+            }
 
 		};
 		listView.setAdapter(adapter);

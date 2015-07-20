@@ -124,6 +124,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			String fragmentName = getPreviousFragmentName(1);
 			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
 			if (null == fragment) {
+                return false;
 			} else if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
 				((LibraryFragment) fragment).clearFilter();
 			} else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
@@ -186,7 +187,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT){
-			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
+			showMiniPlayer(null != service && service.isEnqueueToStream());
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
@@ -220,7 +221,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					Editor editor = sp.edit();
 					editor.putString(PREF_DIRECTORY, chDir);
 					editor.putString(PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
-					editor.commit();
+					editor.apply();
 					if (null != navigationDrawerFragment && null != service) {
 						navigationDrawerFragment.setAdapter(service.isPlaying());
 					}
@@ -266,8 +267,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	private String getPreviousFragmentName(int position) {
 		if (getFragmentManager().getBackStackEntryCount() < position) return SearchFragment.class.getSimpleName();
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
-		String previousFragmentName = backEntry.getName();
-		return previousFragmentName;
+        return backEntry.getName();
 	}
 	
 	@Override

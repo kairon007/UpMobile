@@ -1,18 +1,5 @@
 package org.kreed.musicdownloader.ui;
 
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.kreed.musicdownloader.Constants;
-import org.kreed.musicdownloader.R;
-import org.kreed.musicdownloader.data.MusicData;
-
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
-import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
-import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -37,6 +24,20 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.kreed.musicdownloader.Constants;
+import org.kreed.musicdownloader.R;
+import org.kreed.musicdownloader.data.MusicData;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressClass;
+import ru.johnlife.lifetoolsmp3.equalizer.ProgressDataSource;
+import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 
 public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener, OnPreparedListener, OnCompletionListener {
 
@@ -342,9 +343,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	
 	public BassBoost getBassBoost() {
 		try {
-			if (null == mediaPlayer) {
-				return new BassBoost(2, customAudioSessionId);
-			} else return new BassBoost(2, mediaPlayer.getAudioSessionId());
+            return new BassBoost(2, null == mediaPlayer ? customAudioSessionId : mediaPlayer.getAudioSessionId());
 		} catch (Exception e) {
 		}
 		return null;
@@ -352,9 +351,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 	 	
 	public Virtualizer getVirtualizer() {
 		try {
-			if (null == mediaPlayer) {
-				return new Virtualizer(3, customAudioSessionId);
-			} else return new Virtualizer(3, mediaPlayer.getAudioSessionId());
+			return new Virtualizer(3, null == mediaPlayer ? customAudioSessionId : mediaPlayer.getAudioSessionId());
 		} catch (Exception e) {
 		}
 		return null;

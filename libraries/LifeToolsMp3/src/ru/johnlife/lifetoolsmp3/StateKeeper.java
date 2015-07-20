@@ -229,7 +229,7 @@ public class StateKeeper {
 			view.setSearchField(songField);
 		}
 		if (results == null || results.isEmpty()) {
-			view.setMessage(message);
+			if (null != message) view.setMessage(message);
 			if (generalFlags == 0) return;
 		} else {
 			view.restoreAdapter(results, listViewPosition);
