@@ -1,10 +1,16 @@
 package org.upmobile.materialmusicdownloader.adapter;
 
-import org.upmobile.materialmusicdownloader.DownloadListener;
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.font.MusicTextView;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
@@ -12,17 +18,6 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
-
-import android.content.Context;
-import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class SearchAdapter extends BaseSearchAdapter {
 
@@ -42,30 +37,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 
 	@Override
 	protected void download(final RemoteSong song, int position) {
-		if (((MainActivity) getContext()).isThisSongDownloaded(song)) {
-			UndoBarController.UndoBar undo = new UndoBarController.UndoBar(((MainActivity) getContext()));
-			undo.clear();
-			undo.message(R.string.has_been_downloaded);
-			undo.duration(3000);
-			undo.noicon(true);
-			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
-			undo.listener(new UndoBarController.UndoListener() {
-
-				@Override
-				public void onUndo(Parcelable token) {
-					DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
-					downloadListener.setDownloadPath(MaterialMusicDownloaderApp.getDirectory());
-					downloadListener.setUseAlbumCover(true);
-					downloadListener.downloadSong(false);
-				}
-			});
-			undo.show();
-		} else {
-			DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
-			downloadListener.setDownloadPath(MaterialMusicDownloaderApp.getDirectory());
-			downloadListener.setUseAlbumCover(true);
-			downloadListener.downloadSong(false);
-		}
+		((MainActivity) getContext()).download(song);
 	}
 
 	@Override

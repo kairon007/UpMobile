@@ -1,8 +1,6 @@
 package org.upmobile.newmaterialmusicdownloader.adapter;
 
 import android.content.Context;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.upmobile.newmaterialmusicdownloader.DownloadListener;
 import org.upmobile.newmaterialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
@@ -22,8 +18,6 @@ import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class SearchAdapter extends BaseSearchAdapter {
 
@@ -48,30 +42,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 
     @Override
     protected void download(final RemoteSong song, int position) {
-        if (((MainActivity) getContext()).isThisSongDownloaded(song)) {
-            UndoBarController.UndoBar undo = new UndoBarController.UndoBar(((MainActivity) getContext()));
-            undo.clear();
-            undo.message(R.string.has_been_downloaded);
-            undo.duration(3000);
-            undo.noicon(true);
-            undo.style(new UndoBarStyle(-1, R.string.download_anyway));
-            undo.listener(new UndoBarController.UndoListener() {
-
-                @Override
-                public void onUndo(Parcelable token) {
-                    DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
-                    downloadListener.setDownloadPath(NewMaterialApp.getDirectory());
-                    downloadListener.setUseAlbumCover(true);
-                    downloadListener.downloadSong(false);
-                }
-            });
-            undo.show();
-        } else {
-            DownloadListener downloadListener = new DownloadListener(getContext(), song, 0, true);
-            downloadListener.setDownloadPath(NewMaterialApp.getDirectory());
-            downloadListener.setUseAlbumCover(true);
-            downloadListener.downloadSong(false);
-        }
+        ((MainActivity) getContext()).download(song);
     }
 
     private class SearchViewHolder extends BaseSearchViewHolder implements OnClickListener {

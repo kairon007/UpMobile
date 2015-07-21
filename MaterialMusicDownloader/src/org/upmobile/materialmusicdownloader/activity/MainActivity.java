@@ -1,37 +1,5 @@
 package org.upmobile.materialmusicdownloader.activity;
 
-import java.io.File;
-
-import org.upmobile.materialmusicdownloader.Constants;
-import org.upmobile.materialmusicdownloader.DownloadListener;
-import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
-import org.upmobile.materialmusicdownloader.font.MusicTextView;
-import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
-import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
-import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment;
-import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
-import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.OnNavigationDrawerState;
-import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
-import org.upmobile.materialmusicdownloader.fragment.PlaylistFragment;
-import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
-import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
-import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog;
-import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -56,6 +24,38 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+
+import org.upmobile.materialmusicdownloader.Constants;
+import org.upmobile.materialmusicdownloader.DownloadListener;
+import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
+import org.upmobile.materialmusicdownloader.font.MusicTextView;
+import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
+import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks;
+import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment.OnNavigationDrawerState;
+import org.upmobile.materialmusicdownloader.fragment.PlayerFragment;
+import org.upmobile.materialmusicdownloader.fragment.PlaylistFragment;
+import org.upmobile.materialmusicdownloader.fragment.SearchFragment;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
+import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog;
+import org.upmobile.materialmusicdownloader.ui.dialog.FolderSelectorDialog.FolderSelectCallback;
+
+import java.io.File;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class MainActivity extends BaseMiniPlayerActivity implements FolderSelectCallback, NavigationDrawerCallbacks, Constants {
 
@@ -459,7 +459,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	}
 
 	@Override
-	protected void download(final RemoteSong song) {
+	public void download(final RemoteSong song) {
 		if (isThisSongDownloaded(song)) {
 			UndoBarController.clear(this);
 			UndoBar undo = new UndoBar(this);

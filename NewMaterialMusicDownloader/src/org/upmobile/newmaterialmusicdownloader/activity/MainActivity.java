@@ -463,7 +463,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 	
 	@Override
-	protected void download(final RemoteSong song) {
+	public void download(final RemoteSong song) {
 		if (isThisSongDownloaded(song)) {
 			UndoBarController.clear(this);
 			UndoBar undo = new UndoBar(this);
