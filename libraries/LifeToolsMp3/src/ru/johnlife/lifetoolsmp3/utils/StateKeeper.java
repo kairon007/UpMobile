@@ -325,7 +325,7 @@ public class StateKeeper {
 				songHolder.put(comment, info);
 			}
 		} catch (Exception e) {
-			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
+			Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e.getMessage());
 		}
 	}
 	

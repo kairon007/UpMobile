@@ -1,9 +1,9 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URLEncoder;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -14,11 +14,10 @@ import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import android.os.AsyncTask;
-import android.util.Log;
-
-import com.nostra13.universalimageloader.core.ImageLoader;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URLEncoder;
 
 public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 
@@ -75,6 +74,11 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 					ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
 				}
 			} catch (Throwable e) {
+				for (OnBitmapReadyListener listener : listeners) {
+					if (null != listener) {
+						listener.onBitmapReady(null);
+					}
+				}
 				Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 			}
 		}

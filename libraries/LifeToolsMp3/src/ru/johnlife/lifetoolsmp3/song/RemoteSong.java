@@ -28,9 +28,10 @@ public class RemoteSong extends Song {
 			} else {
 				if (coverLoaderIndex > 1) {
 					setCover(null);
-				} else
+				} else {
 					useNextCoverLoader();
-				getCover((OnBitmapReadyListener) null);
+					getCover(null);
+				}
 			}
 		}
 
@@ -143,6 +144,11 @@ public class RemoteSong extends Song {
 	protected void clearCoverLoaderQueue() {
 		coverLoaderIndex = 0;
 	}
+
+	public boolean getCover (OnBitmapReadyListener listener, boolean clearIndex) {
+		if (clearIndex) clearCoverLoaderQueue();
+		return getCover(listener);
+	}
 	
 	public boolean getCover(OnBitmapReadyListener listener) {
 		if (null != listener && null != cover && null != cover.get()) {
@@ -157,10 +163,25 @@ public class RemoteSong extends Song {
 			loader.addListener(coverListener);
 			loader.execute();
 			return true;
+		} else {
+			notifyListeners(null);
 		}
 		return false;
 	}
-	
+
+	private void notifyListeners (Bitmap bmp) {
+		synchronized (coverListener.listeners) {
+			for (OnBitmapReadyListener listener : coverListener.listeners) {
+				if (downloaderListener != null) downloaderListener.onCoverReady(bmp);
+				listener.onBitmapReady(bmp);
+				cover = new WeakReference<Bitmap>(bmp);
+				smallCover = new WeakReference<Bitmap>(bmp == null ? null : Util.resizeToSmall(bmp));
+			}
+			coverListener.listeners.clear();
+			clearCoverLoaderQueue();
+		}
+	}
+
 	public boolean getSmallCover(boolean callFromPlayer,final OnBitmapReadyListener listener) {
 		if (null != smallCover && null != smallCover.get()) {
 			listener.onBitmapReady(smallCover.get());

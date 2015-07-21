@@ -1,8 +1,5 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +7,9 @@ import android.view.View;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CoverLoaderTask implements ImageLoadingListener {
 
@@ -43,6 +43,11 @@ public class CoverLoaderTask implements ImageLoadingListener {
 			}
 		    ImageLoader.getInstance().loadImage(coverUrl, this);			
 		} catch (Throwable e) {
+			for (OnBitmapReadyListener listener : listeners) {
+				if (null != listener) {
+					listener.onBitmapReady(null);
+				}
+			}
 			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 		}
 		return;

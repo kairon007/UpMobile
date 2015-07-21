@@ -399,8 +399,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
     }
 
     private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
-        if (!isEarlierDownloaded)
-            StateKeeper.getInstance().putSongInfo(song.getComment(), pathToFile, StateKeeper.DOWNLOADED);
+        StateKeeper.getInstance().putSongInfo(song.getComment(), pathToFile, StateKeeper.DOWNLOADED);
         ContentResolver resolver = context.getContentResolver();
         int seconds = 0;
         long ms = 0;
@@ -447,7 +446,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
                 public void onBitmapReady(Bitmap bmp) {
                     write(src, bmp, downloadingSong, src_set);
                 }
-            });
+            }, true);
         } else {
             write(src, null, downloadingSong, src_set);
         }
@@ -473,6 +472,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
             new MyID3().write(src, dst, src_set, metadata);
             isRename = dst.renameTo(src);
         } catch (Exception e) {
+            insertToMediaStore(song, src.getPath());
             Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
         } finally {
             if (!isRename) {
@@ -757,7 +757,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
                     input.close();
                     buffer.close();
                 } catch (Exception e) {
-                    android.util.Log.d("log", "Appear problem: " + e);
+                    Log.d("log", "Appear problem: " + e);
                 }
             }
             sendNotification(100, true);
