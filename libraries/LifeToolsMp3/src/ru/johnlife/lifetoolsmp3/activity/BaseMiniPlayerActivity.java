@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -217,6 +219,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			setData(curr);
 		}
 		service.addStatePlayerListener(stateListener);
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
 	}
 	
 	@Override
@@ -412,32 +415,32 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		}
 		fakeMiniPlayer.findViewById(R.id.mini_player_progress).setVisibility(View.GONE);
 		final Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
-		slideOutLeft.setAnimationListener(new AnimationListener() {
+        slideOutLeft.setAnimationListener(new AnimationListener() {
 
-			@Override
-			public void onAnimationStart(Animation animation) {
-			}
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
 
-			@Override
-			public void onAnimationRepeat(Animation animation) {
-			}
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
 
-			@Override
-			public void onAnimationEnd(Animation animation) {
+            @Override
+            public void onAnimationEnd(Animation animation) {
 				fakeMiniPlayer.setVisibility(View.GONE);
 			}
 		});
 		final Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
 		fakeMiniPlayer.setVisibility(View.VISIBLE);
-		long startTime = System.currentTimeMillis();
-		slideOutLeft.setStartTime(startTime);
-		fakeMiniPlayer.setAnimation(slideOutLeft);
+        long startTime = System.currentTimeMillis();
+        slideOutLeft.setStartTime(startTime);
+        fakeMiniPlayer.setAnimation(slideOutLeft);
 		slideInRight.setStartTime(startTime);
-		miniPlayer.setAnimation(slideInRight);
-		miniPlayer.post(new Runnable() {
-			@Override
-			public void run() {
-				miniPlayer.startAnimation(slideInRight);
+        miniPlayer.setAnimation(slideInRight);
+        miniPlayer.post(new Runnable() {
+            @Override
+            public void run() {
+                miniPlayer.startAnimation(slideInRight);
 				fakeMiniPlayer.startAnimation(slideOutLeft);
 			}
 		});
