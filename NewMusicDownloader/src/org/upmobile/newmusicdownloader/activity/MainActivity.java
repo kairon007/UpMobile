@@ -384,7 +384,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		Fragment fragment = new PlayerFragment();
     	changeFragment(fragment, true, currentTag);
 	}
-	
+
+	@Override
+	public void showMiniPlayer(boolean isShow) {
+		if (currentFragmentIsPlayer) {
+			super.showMiniPlayer(false);
+			return;
+		}
+		super.showMiniPlayer(isShow);
+	}
+
 	@Override
 	protected boolean isAnimationEnabled() {
 		return Nulldroid_Settings.ENABLE_ANIMATIONS;
