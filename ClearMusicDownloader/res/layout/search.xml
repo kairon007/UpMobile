@@ -123,6 +123,9 @@
                     android:id="@+id/choise_engines"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
+                    android:spinnerMode="dropdown"
+                    android:dropDownWidth="wrap_content"
+                    android:gravity="start|center_vertical"
                     android:popupBackground="@drawable/bg_spinner_item" />
             </LinearLayout>
         </LinearLayout>
