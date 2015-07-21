@@ -23,7 +23,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
@@ -41,7 +40,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 //	public static final String CMDPAUSE = "pause";
 //	public static final String CMDPREVIOUS = "previous";
 //	public static final String CMDNEXT = "next";
-	private final int DEF = 15;
 
 	private VerticalSeekBar sb1, sb2, sb3, sb4, sb5;
 	private TextView sbP1, sbP2, sbP3, sbP4, sbP5;
@@ -50,11 +48,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	private Button dontTouch;
 	private int sk1pgs, sk2pgs;
 
-	private ArrayList<SeekBar> sbList;
-	private ArrayList<TextView> sbPList;
-
 	private Equalizer equalizer;
-	private AudioManager manager;
 	private BassBoost bassBoost;
 	private Virtualizer virtualizer;
 //	private AssetFileDescriptor descriptor;
@@ -221,13 +215,24 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	}
 
 	public void setSavedPreset(){
-		final int sbOne = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, 0);
-		final int sbTwo = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, 0);
-		final int sbThree = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, 0);
-		final int sbFour = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, 0);
-		final int sbFive = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, 0);
-		final int skOne = prefs.getInt(EQUALIZER_SEEKBAR_ONE, 0);
-		final int skTwo = prefs.getInt(EQUALIZER_SEEKBAR_TWO, 0);
+		final int sbOne, sbTwo, sbThree, sbFour, sbFive, skOne, skTwo;
+		if ("Custom".equals(presetsSpinner.getSelectedItem())) {
+			sbOne = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_ONE, 0);
+			sbTwo = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_TWO, 0);
+			sbThree = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_THREE, 0);
+			sbFour = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_FOUR, 0);
+			sbFive = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_FIVE, 0);
+			skOne = prefs.getInt(EQUALIZER_SEEKBAR_CUSTOM_ONE, 0);
+			skTwo = prefs.getInt(EQUALIZER_SEEKBAR_CUSTOM_TWO, 0);
+		} else {
+			sbOne = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, 0);
+			sbTwo = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, 0);
+			sbThree = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, 0);
+			sbFour = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, 0);
+			sbFive = prefs.getInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, 0);
+			skOne = prefs.getInt(EQUALIZER_SEEKBAR_ONE, 0);
+			skTwo = prefs.getInt(EQUALIZER_SEEKBAR_TWO, 0);
+		}
 		sb1.setProgressAndThumb(sbOne);
 		sb2.setProgressAndThumb(sbTwo);
 		sb3.setProgressAndThumb(sbThree);
@@ -257,13 +262,23 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		Editor editor = prefs.edit();
 		editor.putBoolean(EQUALIZER_SAVE, true);
 		editor.putString(EQUALIZER_PRESET, preset);
-		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, sbOne);
-		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, sbTwo);
-		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, sbThree);
-		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, sbFour);
-		editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, sbFive);
-		editor.putInt(EQUALIZER_SEEKBAR_ONE, skOne);
-		editor.putInt(EQUALIZER_SEEKBAR_TWO, skTwo);
+		if ("Custom".equals(preset)) {
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_ONE, sbOne);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_TWO, sbTwo);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_THREE, sbThree);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_FOUR, sbFour);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_CUSTOM_FIVE, sbFive);
+			editor.putInt(EQUALIZER_SEEKBAR_CUSTOM_ONE, skOne);
+			editor.putInt(EQUALIZER_SEEKBAR_CUSTOM_TWO, skTwo);
+		} else {
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_ONE, sbOne);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_TWO, sbTwo);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_THREE, sbThree);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FOUR, sbFour);
+			editor.putInt(EQUALIZER_VERTICAL_SEEKBAR_FIVE, sbFive);
+			editor.putInt(EQUALIZER_SEEKBAR_ONE, skOne);
+			editor.putInt(EQUALIZER_SEEKBAR_TWO, skTwo);
+		}
 		editor.apply();
 	}
 
@@ -322,7 +337,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 	private void testMethod() {
 		try {
-			manager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 			equalizer = getEqualizer();
 			if (null != equalizer) {
 				int val = equalizer.setEnabled(true);
@@ -344,6 +358,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 	private void initDB() {
 
+		final int DEF = 15;
 		myProgressDataSource = new ProgressDataSource(this);
 		myProgressDataSource.open();
 
@@ -400,26 +415,11 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 	public void initEqualizer() {
 
-		sbList = new ArrayList<>();
-		sbPList = new ArrayList<>();
-
-		sbList.add(sb1);
-		sbList.add(sb2);
-		sbList.add(sb3);
-		sbList.add(sb4);
-		sbList.add(sb5);
-
 		sbP1 = (TextView) findViewById(R.id.textViewSB1);
 		sbP2 = (TextView) findViewById(R.id.textViewSB2);
 		sbP3 = (TextView) findViewById(R.id.textViewSB3);
 		sbP4 = (TextView) findViewById(R.id.textViewSB4);
 		sbP5 = (TextView) findViewById(R.id.textViewSB5);
-
-		sbPList.add(sbP1);
-		sbPList.add(sbP2);
-		sbPList.add(sbP3);
-		sbPList.add(sbP4);
-		sbPList.add(sbP5);
 
 		sb1.setOnSeekBarChangeListener(this);
 		sb2.setOnSeekBarChangeListener(this);
@@ -435,7 +435,9 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		presetsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-				setPreset(((TextView) view).getText().toString());
+				if (null != view) {
+					setPreset(((TextView) view).getText().toString());
+				}
 			}
 
 			@Override
@@ -447,6 +449,10 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 	private void setPreset(String preset) {
 		switch (preset) {
+			case "Custom":
+				setSavedPreset();
+				presetsSpinner.setSelection(0);
+				break;
 			case "Normal":
 				setEqualizerPreset((short) (0), 6, 2, 0, 2, 6);
 				Toast.makeText(getApplicationContext(),
@@ -454,6 +460,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(1);
 				dbChangePg(6, 2, 0, 2, 6, 1, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Classical":
 				setEqualizerPreset((short) (1), 10, 6, -4, 8, 8);
@@ -462,6 +470,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(2);
 				dbChangePg(10, 6, -4, 8, 8, 2, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Dance":
 				setEqualizerPreset((short) (2), 12, 0, 4, 8, 2);
@@ -470,6 +480,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(3);
 				dbChangePg(12, 0, 4, 8, 2, 3, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Flat":
 				setEqualizerPreset((short) (3), 0, 0, 0, 0, 0);
@@ -478,6 +490,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(4);
 				dbChangePg(0, 0, 0, 0, 0, 4, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Folk":
 				setEqualizerPreset((short) (4), 6, 0, 0, 4, -2);
@@ -486,6 +500,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(5);
 				dbChangePg(6, 0, 0, 4, -2, 5, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Metal":
 				setEqualizerPreset((short) (5), 8, 2, 15, 6, 0);
@@ -494,6 +510,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(6);
 				dbChangePg(8, 2, 15, 6, 0, 6, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "HipHop":
 				setEqualizerPreset((short) (6), 10, 6, 0, 2, 6);
@@ -502,6 +520,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(7);
 				dbChangePg(10, 6, 0, 2, 6, 7, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Jazz":
 				setEqualizerPreset((short) (7), 8, 4, -4, 4, 10);
@@ -510,6 +530,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(8);
 				dbChangePg(8, 4, -4, 4, 10, 8, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Pop":
 				setEqualizerPreset((short) (8), -2, 4, 10, 2, -4);
@@ -518,6 +540,8 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(9);
 				dbChangePg(-2, 4, 10, 2, -4, 9, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 			case "Rock":
 				setEqualizerPreset((short) (9), 10, 6, -2, 6, 10);
@@ -526,10 +550,10 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 						Toast.LENGTH_SHORT).show();
 				presetsSpinner.setSelection(10);
 				dbChangePg(10, 6, -2, 6, 10, 10, 0, 0);
+				sk1.setProgress(0);
+				sk2.setProgress(0);
 				break;
 		}
-		sk1.setProgress(0);
-		sk2.setProgress(0);
 	}
 
 	private void disableAll() {
@@ -544,7 +568,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sk2.setEnabled(false);
 
 		presetsSpinner.setEnabled(false);
-
 	}
 
 	private void enableAll() {
@@ -559,7 +582,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sk2.setEnabled(true);
 
 		presetsSpinner.setEnabled(true);
-
 	}
 
 	@Override
@@ -634,12 +656,11 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-
 		if (presetsSpinner.getSelectedItem().equals("Custom")) {
+			savePreset();
 			dbChangePg(sb1.getProgress(), sb2.getProgress(), sb3.getProgress(),
 					sb4.getProgress(), sb5.getProgress(), presetsSpinner.getSelectedItemPosition(), sk1pgs, sk2pgs);
 		}
-
 	}
 
 	@Override

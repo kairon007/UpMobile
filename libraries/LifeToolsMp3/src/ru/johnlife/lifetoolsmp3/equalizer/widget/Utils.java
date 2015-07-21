@@ -15,7 +15,7 @@ public class Utils {
 		SharedPreferences prefs = context.getSharedPreferences(EQ_PREFERENCES, Context.MODE_PRIVATE);
 		SharedPreferences.Editor ed = prefs.edit();
 		ed.putBoolean(EQ_SETTINGS, value);
-		ed.commit();
+		ed.apply();
 	}
 	
 	public static boolean getEqPrefs(Context context) {
@@ -24,7 +24,7 @@ public class Utils {
 	}
 	
 	public static void changeAtBand(Equalizer equalizer, final short band, int progress) {
-		short level = 0;
+		short level;
 		try {
 			if (progress >= 0) {
 				level = (short) (progress * 100); // + maxEQLevel);
