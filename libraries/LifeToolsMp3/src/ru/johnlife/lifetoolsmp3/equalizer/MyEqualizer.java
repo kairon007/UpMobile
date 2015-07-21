@@ -1,39 +1,25 @@
 package ru.johnlife.lifetoolsmp3.equalizer;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.res.AssetFileDescriptor;
-import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.AudioTrack;
 import android.media.audiofx.BassBoost;
 import android.media.audiofx.Equalizer;
 import android.media.audiofx.Virtualizer;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,20 +32,20 @@ import ru.johnlife.lifetoolsmp3.equalizer.widget.Utils;
 import ru.johnlife.lifetoolsmp3.equalizer.widget.VerticalSeekBar;
 
 
-public abstract class MyEqualizer extends Activity implements OnSeekBarChangeListener, BaseConstants {// , OnSeekArcChangeListener {
+public abstract class MyEqualizer extends Activity implements OnSeekBarChangeListener, BaseConstants {
 
-	public static final String SERVICECMD = "com.android.music.musicservicecommand";
-	public static final String CMDNAME = "command";
-	public static final String CMDSTOP = "stop";
-	public static final String CMDTOGGLEPAUSE = "togglepause";
-	public static final String CMDPAUSE = "pause";
-	public static final String CMDPREVIOUS = "previous";
-	public static final String CMDNEXT = "next";
+//	public static final String SERVICECMD = "com.android.music.musicservicecommand";
+//	public static final String CMDNAME = "command";
+//	public static final String CMDSTOP = "stop";
+//	public static final String CMDTOGGLEPAUSE = "togglepause";
+//	public static final String CMDPAUSE = "pause";
+//	public static final String CMDPREVIOUS = "previous";
+//	public static final String CMDNEXT = "next";
 	private final int DEF = 15;
 
 	private VerticalSeekBar sb1, sb2, sb3, sb4, sb5;
 	private TextView sbP1, sbP2, sbP3, sbP4, sbP5;
-	// private SeekArc sk1, sk2;
+//	private SeekArc sk1, sk2;
 	private SeekBar sk1, sk2;
 	private Button dontTouch;
 	private int sk1pgs, sk2pgs;
@@ -67,36 +53,34 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 	private ArrayList<SeekBar> sbList;
 	private ArrayList<TextView> sbPList;
 
-	private PopupWindow popup;
 	private Equalizer equalizer;
 	private AudioManager manager;
 	private BassBoost bassBoost;
 	private Virtualizer virtualizer;
-	private AssetFileDescriptor descriptor;
-	private AudioTrack audioTrack;
+//	private AssetFileDescriptor descriptor;
+//	private AudioTrack audioTrack;
 	private SharedPreferences prefs;
 
-	private Button presetsButton;
+	private Spinner presetsSpinner;
+	private ArrayAdapter<String> presetsAdapter;
 	private ImageView onOffBtn;
 
-    short bands, minEQLevel, maxEQLevel, nrOfPresets;
+	short bands, minEQLevel, maxEQLevel, nrOfPresets;
 	final short band1 = 0;
 	final short band2 = 1;
 	final short band3 = 2;
 	final short band4 = 3;
 	final short band5 = 4;
 
-	private boolean ok;
-
 	private ProgressDataSource myProgressDataSource;
 	private List<ProgressClass> values;
 
 	protected abstract BassBoost getBassBoost();
-	
+
 	protected abstract Virtualizer getVirtualizer();
-	
+
 	protected abstract Equalizer getEqualizer();
-	
+
 	public static void setEqualizer(Context context, int audioSessionId) {
 		if (Utils.getEqPrefs(context)) {
 			Equalizer equalizer = new Equalizer(1, audioSessionId);
@@ -109,7 +93,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 			myProgressDataSource.open();
 			List<ProgressClass> values = myProgressDataSource.getAllPgs();
 			if (values.size() == 0) {
-				myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+				myProgressDataSource.createProgress(0, 0, 0, 0, 0, 0, 0, 0);
 			} else {
 				//Set equalizer
 				Utils.changeAtBand(equalizer, (short)0, values.get(0).getProgress(1) - 15);
@@ -124,7 +108,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 			}
 		}
 	}
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		setContentView(R.layout.equalizer_main);
@@ -147,7 +131,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 			Log.e("eqActive", Boolean.toString(equalizer.getEnabled()));
 			dontTouch.setVisibility(View.VISIBLE);
 			equalizer.setEnabled(false);
-			
+
 			equalizer.release();
 			bassBoost.release();
 			virtualizer.release();
@@ -167,7 +151,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sk1 = (SeekBar) findViewById(R.id.seekArc1);
 		sk2 = (SeekBar) findViewById(R.id.seekArc2);
 
-		presetsButton = (Button) findViewById(R.id.presets);
+		presetsSpinner = (Spinner) findViewById(R.id.presets);
 
 		onOffBtn = (ImageView) findViewById(R.id.on_off);
 
@@ -181,52 +165,52 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 
 		onOffBtn.setOnTouchListener(new View.OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (!Utils.isOn) {
-                            onOffBtn.setImageResource(R.drawable.off_btn_pressed);
-                        } else {
-                            onOffBtn.setImageResource(R.drawable.on_btn_pressed);
-                        }
-                        return true;
-                    case MotionEvent.ACTION_MOVE:
-                        return true;
-                    case MotionEvent.ACTION_UP:
-                        if (!Utils.isOn) {
-                            onOffBtn.setImageResource(R.drawable.on_btn);
-                            Utils.isOn = true;
-                            dontTouch.setVisibility(View.GONE);
-                            initEqualizer();
-                            enableAll();
-                            Utils.setEqPrefs(MyEqualizer.this, true);
-                            if (prefs.getBoolean(EQUALIZER_SAVE, false)) {
-                                String preset = prefs.getString(EQUALIZER_PRESET, "Flat");
-                                if (preset.equals("Custom")) {
-                                    setSavedPreset();
-                                } else {
-                                    setPreset(preset);
-                                }
-                            }
-                        } else {
-                            savePreset();
-                            setPreset("Flat");
-                            onOffBtn.setImageResource(R.drawable.off_btn);
-                            Utils.isOn = false;
-                            Log.e("eqActive", Boolean.toString(equalizer.getEnabled()));
-                            dontTouch.setVisibility(View.VISIBLE);
-                            equalizer.release();
-                            bassBoost.release();
-                            virtualizer.release();
-                            disableAll();
-                            Utils.setEqPrefs(MyEqualizer.this, false);
-                        }
-                        return true;
-                }
-                return false;
-            }
-        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				switch (event.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						if (!Utils.isOn) {
+							onOffBtn.setImageResource(R.drawable.off_btn_pressed);
+						} else {
+							onOffBtn.setImageResource(R.drawable.on_btn_pressed);
+						}
+						return true;
+					case MotionEvent.ACTION_MOVE:
+						return true;
+					case MotionEvent.ACTION_UP:
+						if (!Utils.isOn) {
+							onOffBtn.setImageResource(R.drawable.on_btn);
+							Utils.isOn = true;
+							dontTouch.setVisibility(View.GONE);
+							initEqualizer();
+							enableAll();
+							Utils.setEqPrefs(MyEqualizer.this, true);
+							if (prefs.getBoolean(EQUALIZER_SAVE, false)) {
+								String preset = prefs.getString(EQUALIZER_PRESET, "Flat");
+								if ("Custom".equals(preset)) {
+									setSavedPreset();
+								} else {
+									setPreset(preset);
+								}
+							}
+						} else {
+							savePreset();
+							setPreset("Flat");
+							onOffBtn.setImageResource(R.drawable.off_btn);
+							Utils.isOn = false;
+							Log.e("eqActive", Boolean.toString(equalizer.getEnabled()));
+							dontTouch.setVisibility(View.VISIBLE);
+							equalizer.release();
+							bassBoost.release();
+							virtualizer.release();
+							disableAll();
+							Utils.setEqPrefs(MyEqualizer.this, false);
+						}
+						return true;
+				}
+				return false;
+			}
+		});
 
 		dontTouch = (Button) findViewById(R.id.not_touch);
 		if (!Utils.isOn) {
@@ -254,13 +238,13 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		Utils.changeAtBand(equalizer, band2, sbThree - 15);
 		Utils.changeAtBand(equalizer, band3, sbFour - 15);
 		Utils.changeAtBand(equalizer, band4, sbFive - 15);
-		presetsButton.setText(R.string.user);
+		presetsSpinner.setSelection(0);
 		Toast.makeText(getApplicationContext(), R.string.user, Toast.LENGTH_SHORT).show();
 		sk1.setProgress(skOne);
 		sk2.setProgress(skTwo);
-		dbChangePg(sbOne, sbTwo, sbThree, sbFour, sbFive, getResources().getString(R.string.user), skOne, skTwo);
+		dbChangePg(sbOne, sbTwo, sbThree, sbFour, sbFive, 0, skOne, skTwo);
 	}
-	
+
 	public void savePreset() {
 		final int sbOne = sb1.getProgress();
 		final int sbTwo = sb2.getProgress();
@@ -269,7 +253,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		final int sbFive = sb5.getProgress();
 		final int skOne = sk1.getProgress();
 		final int skTwo = sk2.getProgress();
-		final String preset = presetsButton.getText().toString().trim();
+		final String preset = presetsSpinner.getSelectedItem().toString().trim();
 		Editor editor = prefs.edit();
 		editor.putBoolean(EQUALIZER_SAVE, true);
 		editor.putString(EQUALIZER_PRESET, preset);
@@ -293,7 +277,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 				bassBoostSetting.strength = 0;
 				bassBoost.setProperties(bassBoostSetting);
 				Log.e("bbSetTemp", bassBoost.getProperties().toString());
-				ok = true;
 			}
 		} catch (Exception localException) {
 			localException.printStackTrace();
@@ -329,7 +312,7 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		equalizer.setEnabled(true);
 		nrOfPresets = equalizer.getNumberOfPresets();
 
-        String[] musicStyles = new String[nrOfPresets];
+		String[] musicStyles = new String[nrOfPresets];
 
 		for (int k = 0; k < nrOfPresets; k++) {
 			musicStyles[k] = equalizer.getPresetName((short) k);
@@ -355,7 +338,6 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 				showEqLevels();
 			}
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -370,18 +352,18 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		Log.e("valSize", Integer.toString(values.size()));
 
 		if (values.size() == 0) {
-			myProgressDataSource.createProgress(DEF, DEF, DEF, DEF, DEF, "Custom", 0, 0);
+			myProgressDataSource.createProgress(DEF, DEF, DEF, DEF, DEF, 0, 0, 0);
 		} else {
 			Log.e("valuesPgs", Integer.toString(values.get(0).getProgress(1)));
 			int progress;
-			presetsButton.setText(values.get(0).getUser());
+			presetsSpinner.setSelection(values.get(0).getUser());
 
-            ProgressClass value = values.get(0);
-            setValues(sbP1, sb1, band1, value.getProgress(1));
-            setValues(sbP2, sb2, band2, value.getProgress(2));
-            setValues(sbP3, sb3, band3, value.getProgress(3));
-            setValues(sbP4, sb4, band4, value.getProgress(4));
-            setValues(sbP5, sb5, band5, value.getProgress(5));
+			ProgressClass value = values.get(0);
+			setValues(sbP1, sb1, band1, value.getProgress(1));
+			setValues(sbP2, sb2, band2, value.getProgress(2));
+			setValues(sbP3, sb3, band3, value.getProgress(3));
+			setValues(sbP4, sb4, band4, value.getProgress(4));
+			setValues(sbP5, sb5, band5, value.getProgress(5));
 			progress = values.get(0).getArc(1);
 			Log.e("dbSK1", Integer.toString(progress));
 			sk1.setProgress(progress);
@@ -396,23 +378,23 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		myProgressDataSource.close();
 	}
 
-    private void setValues(TextView sbP, VerticalSeekBar sb, short band, int progress) {
-        if (presetsButton.getText().equals("Custom")) {
-            sbP.setText(Integer.toString(progress - 15));
-            sb.setProgress(progress);
-            Utils.changeAtBand(equalizer, band, progress - 15);
-        } else {
-            sbP.setText(Integer.toString(progress));
-            sb.setProgress(progress + 15);
-            Utils.changeAtBand(equalizer, band, progress);
-        }
-    }
+	private void setValues(TextView sbP, VerticalSeekBar sb, short band, int progress) {
+		if ("Custom".equals(presetsSpinner.getSelectedItem())) {
+			sbP.setText(Integer.toString(progress - 15));
+			sb.setProgress(progress);
+			Utils.changeAtBand(equalizer, band, progress - 15);
+		} else {
+			sbP.setText(Integer.toString(progress));
+			sb.setProgress(progress + 15);
+			Utils.changeAtBand(equalizer, band, progress);
+		}
+	}
 
-    private void dbChangePg(int p1, int p2, int p3, int p4, int p5, String user, int arc1, int arc2) {
+	private void dbChangePg(int p1, int p2, int p3, int p4, int p5, int presetPosInArray, int arc1, int arc2) {
 		myProgressDataSource.open();
 		values = myProgressDataSource.getAllPgs();
 		myProgressDataSource.deleteComment(values.get(0));
-		myProgressDataSource.createProgress(p1, p2, p3, p4, p5, user, arc1, arc2);
+		myProgressDataSource.createProgress(p1, p2, p3, p4, p5, presetPosInArray, arc1, arc2);
 		myProgressDataSource.close();
 	}
 
@@ -445,171 +427,111 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sb4.setOnSeekBarChangeListener(this);
 		sb5.setOnSeekBarChangeListener(this);
 
-		// sk1.setOnSeekArcChangeListener(this);
-		// sk2.setOnSeekArcChangeListener(this);
-
 		sk1.setOnSeekBarChangeListener(this);
 		sk2.setOnSeekBarChangeListener(this);
 		if (getEqualizer() == null || getBassBoost() == null || getVirtualizer() == null) return;
+		presetsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.presets));
+		presetsSpinner.setAdapter(presetsAdapter);
+		presetsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				setPreset(((TextView) view).getText().toString());
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {}
+		});
 		testMethod();
 		setPresets();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			presetsButton.setOnClickListener(new View.OnClickListener() {
-	
-				@SuppressLint("NewApi") @Override
-				public void onClick(View v) {
-					PopupMenu popup = new PopupMenu(MyEqualizer.this, presetsButton);
-					popup.getMenuInflater().inflate(R.menu.popup_menu,
-							popup.getMenu());
-					popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-						public boolean onMenuItemClick(MenuItem item) {
-							setPreset(item.getTitle().toString());
-							return true;
-						}
-					});
-					popup.show();// showing popup menu
-				}
-			});
-		} else {
-			popup = new PopupWindow(this);
-			popup.setFocusable(true);
-			popup.setWidth(250);
-			popup.setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-			String[] presets = getResources().getStringArray(R.array.presets);
-			final ListView listViewPresets = new ListView(this);
-			listViewPresets.setAdapter(oldAndroidPopupAdapter(presets));
-			listViewPresets.setOnItemClickListener(new DropDownOnClickListener());
-			popup.setContentView(listViewPresets);
-			presetsButton.setText("Presets");
-			presetsButton.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					popup.showAsDropDown(v, -5, 0);
-				}
-			});
-		}
 	}
-	
+
 	private void setPreset(String preset) {
-        switch (preset) {
-            case "Normal":
-                setEqualizerPreset((short) (0), 6, 2, 0, 2, 6);
-                presetsButton.setText(R.string.normal);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (0)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(6, 2, 0, 2, 6, "Normal", 0, 0);
-                break;
-            case "Classical":
-                setEqualizerPreset((short) (1), 10, 6, -4, 8, 8);
-                presetsButton.setText(R.string.classical);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (1)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(10, 6, -4, 8, 8, "Classical", 0, 0);
-                break;
-            case "Dance":
-                setEqualizerPreset((short) (2), 12, 0, 4, 8, 2);
-                presetsButton.setText(R.string.dance);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (2)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(12, 0, 4, 8, 2, "Dance", 0, 0);
-                break;
-            case "Flat":
-                setEqualizerPreset((short) (3), 0, 0, 0, 0, 0);
-                presetsButton.setText(R.string.flat);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (3)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(0, 0, 0, 0, 0, "Flat", 0, 0);
-                break;
-            case "Folk":
-                setEqualizerPreset((short) (4), 6, 0, 0, 4, -2);
-                presetsButton.setText(R.string.folk);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (4)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(6, 0, 0, 4, -2, "Folk", 0, 0);
-                break;
-            case "Metal":
-                setEqualizerPreset((short) (5), 8, 2, 15, 6, 0);
-                presetsButton.setText(R.string.metal);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (5)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(8, 2, 15, 6, 0, "Metal", 0, 0);
-                break;
-            case "HipHop":
-                setEqualizerPreset((short) (6), 10, 6, 0, 2, 6);
-                presetsButton.setText(R.string.hiphop);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (6)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(10, 6, 0, 2, 6, "HipHop", 0, 0);
-                break;
-            case "Jazz":
-                setEqualizerPreset((short) (7), 8, 4, -4, 4, 10);
-                presetsButton.setText(R.string.jazz);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (7)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(8, 4, -4, 4, 10, "Jazz", 0, 0);
-                break;
-            case "Pop":
-                setEqualizerPreset((short) (8), -2, 4, 10, 2, -4);
-                presetsButton.setText(R.string.pop);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (8)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(-2, 4, 10, 2, -4, "Pop", 0, 0);
-                break;
-            case "Rock":
-                setEqualizerPreset((short) (9), 10, 6, -2, 6, 10);
-                presetsButton.setText(R.string.rock);
-                Toast.makeText(getApplicationContext(),
-                        equalizer.getPresetName((short) (9)),
-                        Toast.LENGTH_SHORT).show();
-                dbChangePg(10, 6, -2, 6, 10, "Rock", 0, 0);
-                break;
-        }
+		switch (preset) {
+			case "Normal":
+				setEqualizerPreset((short) (0), 6, 2, 0, 2, 6);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (0)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(1);
+				dbChangePg(6, 2, 0, 2, 6, 1, 0, 0);
+				break;
+			case "Classical":
+				setEqualizerPreset((short) (1), 10, 6, -4, 8, 8);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (1)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(2);
+				dbChangePg(10, 6, -4, 8, 8, 2, 0, 0);
+				break;
+			case "Dance":
+				setEqualizerPreset((short) (2), 12, 0, 4, 8, 2);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (2)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(3);
+				dbChangePg(12, 0, 4, 8, 2, 3, 0, 0);
+				break;
+			case "Flat":
+				setEqualizerPreset((short) (3), 0, 0, 0, 0, 0);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (3)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(4);
+				dbChangePg(0, 0, 0, 0, 0, 4, 0, 0);
+				break;
+			case "Folk":
+				setEqualizerPreset((short) (4), 6, 0, 0, 4, -2);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (4)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(5);
+				dbChangePg(6, 0, 0, 4, -2, 5, 0, 0);
+				break;
+			case "Metal":
+				setEqualizerPreset((short) (5), 8, 2, 15, 6, 0);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (5)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(6);
+				dbChangePg(8, 2, 15, 6, 0, 6, 0, 0);
+				break;
+			case "HipHop":
+				setEqualizerPreset((short) (6), 10, 6, 0, 2, 6);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (6)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(7);
+				dbChangePg(10, 6, 0, 2, 6, 7, 0, 0);
+				break;
+			case "Jazz":
+				setEqualizerPreset((short) (7), 8, 4, -4, 4, 10);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (7)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(8);
+				dbChangePg(8, 4, -4, 4, 10, 8, 0, 0);
+				break;
+			case "Pop":
+				setEqualizerPreset((short) (8), -2, 4, 10, 2, -4);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (8)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(9);
+				dbChangePg(-2, 4, 10, 2, -4, 9, 0, 0);
+				break;
+			case "Rock":
+				setEqualizerPreset((short) (9), 10, 6, -2, 6, 10);
+				Toast.makeText(getApplicationContext(),
+						equalizer.getPresetName((short) (9)),
+						Toast.LENGTH_SHORT).show();
+				presetsSpinner.setSelection(10);
+				dbChangePg(10, 6, -2, 6, 10, 10, 0, 0);
+				break;
+		}
 		sk1.setProgress(0);
 		sk2.setProgress(0);
 	}
-	
-	private ArrayAdapter<String> oldAndroidPopupAdapter(String[] items) {
-		return new ArrayAdapter<String> (this, android.R.layout.simple_list_item_1, items) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                String text = getItem(position);
-                TextView listItem = new TextView(MyEqualizer.this);
-                listItem.setText(text);
-                listItem.setTag(text);
-                listItem.setTextSize(22);
-                listItem.setPadding(10, 10, 10, 10);
-                listItem.setTextColor(Color.WHITE);
-                return listItem;
-            }
-        };
-	}
 
-	private class DropDownOnClickListener implements OnItemClickListener {
-
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			try {
-				Animation fadeInAnimation = AnimationUtils.loadAnimation(view.getContext(), android.R.anim.fade_in);
-		        fadeInAnimation.setDuration(10);
-		        view.startAnimation(fadeInAnimation);
-		        popup.dismiss();
-		        setPreset(view.getTag().toString());
-			} catch(Exception e) {
-				Log.e(getClass().getSimpleName(), e.getMessage());
-			}
-		}
-		
-	}
-	
 	private void disableAll() {
 
 		sb1.setEnabled(false);
@@ -618,12 +540,10 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sb4.setEnabled(false);
 		sb5.setEnabled(false);
 
-//		sk1.setVisibility(View.GONE);
-//		sk2.setVisibility(View.GONE);
 		sk1.setEnabled(false);
 		sk2.setEnabled(false);
 
-		presetsButton.setEnabled(false);
+		presetsSpinner.setEnabled(false);
 
 	}
 
@@ -635,19 +555,16 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		sb4.setEnabled(true);
 		sb5.setEnabled(true);
 
-//		sk1.setVisibility(View.VISIBLE);
-//		sk2.setVisibility(View.VISIBLE);
 		sk1.setEnabled(true);
 		sk2.setEnabled(true);
 
-		presetsButton.setEnabled(true);
+		presetsSpinner.setEnabled(true);
 
 	}
-	
+
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
-		// TODO Auto-generated method stub
+								  boolean fromUser) {
 
 		seekBar.setProgress(progress);
 
@@ -657,15 +574,17 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 			BassBoost.Settings settings = bassBoost.getProperties();
 			settings.strength = ((short)(progress * 10));
 			bassBoost.setProperties(settings);
-			if (progress != 0)
-				presetsButton.setText(R.string.user);
+			if (progress != 0) {
+				presetsSpinner.setSelection(0);
+			}
 			sk1pgs = progress;
 
 		} else if (seekBar == sk2) {
 
 			virtualizer.setStrength((short) (progress * 10));
-			if (progress != 0)
-				presetsButton.setText(R.string.user);
+			if (progress != 0) {
+				presetsSpinner.setSelection(0);
+			}
 			sk2pgs = progress;
 
 		}
@@ -680,50 +599,45 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		if (seekBar == sb1) {
 
 			sbP1.setText(Integer.toString(progress));
-			presetsButton.setText(R.string.user);
+			presetsSpinner.setSelection(0);
 			Utils.changeAtBand(equalizer, band1, progress);
 
 		} else if (seekBar == sb2) {
 
 			sbP2.setText(Integer.toString(progress));
-			presetsButton.setText(R.string.user);
+			presetsSpinner.setSelection(0);
 			Utils.changeAtBand(equalizer, band2, progress);
 
 		} else if (seekBar == sb3) {
 
 			sbP3.setText(Integer.toString(progress));
-			presetsButton.setText(R.string.user);
+			presetsSpinner.setSelection(0);
 			Utils.changeAtBand(equalizer, band3, progress);
 
 		} else if (seekBar == sb4) {
 
 			sbP4.setText(Integer.toString(progress));
-			presetsButton.setText(R.string.user);
+			presetsSpinner.setSelection(0);
 			Utils.changeAtBand(equalizer, band4, progress);
 
 		} else if (seekBar == sb5) {
 
 			sbP5.setText(Integer.toString(progress));
-			presetsButton.setText(R.string.user);
+			presetsSpinner.setSelection(0);
 			Utils.changeAtBand(equalizer, band5, progress);
 		}
 		Utils.setEqPrefs(MyEqualizer.this, true);
 	}
 
 	@Override
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-
-	}
+	public void onStartTrackingTouch(SeekBar seekBar) {}
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
 
-		if (presetsButton.getText().equals("Custom")) {
+		if (presetsSpinner.getSelectedItem().equals("Custom")) {
 			dbChangePg(sb1.getProgress(), sb2.getProgress(), sb3.getProgress(),
-					sb4.getProgress(), sb5.getProgress(), presetsButton
-							.getText().toString(), sk1pgs, sk2pgs);
+					sb4.getProgress(), sb5.getProgress(), presetsSpinner.getSelectedItemPosition(), sk1pgs, sk2pgs);
 		}
 
 	}
@@ -742,50 +656,9 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 		if (Utils.isOn)
 			if (null != myProgressDataSource) {
 				myProgressDataSource.open();
-		}
+			}
 		super.onResume();
 	}
-
-	// @Override
-	// public void onProgressChanged(SeekArc seekArc, int progress,
-	// boolean fromUser) {
-	// // TODO Auto-generated method stub
-	//
-	// if (seekArc == sk1) {
-	//
-	// bassBoost.setStrength((short) (progress * 10));
-	// if (progress != 0)
-	// presetsButton.setText(R.string.user);
-	// sk1pgs = progress;
-	//
-	// } else if (seekArc == sk2) {
-	//
-	// virtualizer.setStrength((short) (progress * 10));
-	// if (progress != 0)
-	// presetsButton.setText(R.string.user);
-	// sk2pgs = progress;
-	//
-	// }
-	//
-	// }
-	//
-	// @Override
-	// public void onStartTrackingTouch(SeekArc seekArc) {
-	// // TODO Auto-generated method stub
-	//
-	// }
-	//
-	// @Override
-	// public void onStopTrackingTouch(SeekArc seekArc) {
-	// // TODO Auto-generated method stub
-	// Log.e("arc", "flag");
-	// Log.e("arcPgS",
-	// "flag " + Integer.toString(sk1pgs) + " & "
-	// + Integer.toString(sk2pgs));
-	// dbChangePg(sb1.getProgress(), sb2.getProgress(), sb3.getProgress(),
-	// sb4.getProgress(), sb5.getProgress(), presetsButton.getText()
-	// .toString(), sk1pgs, sk2pgs);
-	// }
 
 	public void showEqLevels() {
 
@@ -794,5 +667,4 @@ public abstract class MyEqualizer extends Activity implements OnSeekBarChangeLis
 					Short.toString(equalizer.getBandLevel(i)));
 
 	}
-
 }

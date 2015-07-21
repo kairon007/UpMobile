@@ -67,6 +67,7 @@
     <string name="virtualizer">Virtualizer</string>
 
     <string-array name="presets">
+        <item>Custom</item>
         <item>Normal</item>
         <item>Classical</item>
         <item>Dance</item>

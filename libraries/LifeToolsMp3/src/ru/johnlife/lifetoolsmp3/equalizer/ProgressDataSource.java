@@ -31,14 +31,14 @@ public class ProgressDataSource {
 	}
 
 	public ProgressClass createProgress(int pgs1, int pgs2, int pgs3, int pgs4,
-			int pgs5, String user, int sk1, int sk2) {
+			int pgs5, int presetPosInArray, int sk1, int sk2) {
 		ContentValues values = new ContentValues();
 		values.put(MyDB.COLUMN_PG1, pgs1);
 		values.put(MyDB.COLUMN_PG2, pgs2);
 		values.put(MyDB.COLUMN_PG3, pgs3);
 		values.put(MyDB.COLUMN_PG4, pgs4);
 		values.put(MyDB.COLUMN_PG5, pgs5);
-		values.put(MyDB.COLUMN_USER, user);
+		values.put(MyDB.COLUMN_USER, presetPosInArray);
 		values.put(MyDB.COLUMN_SK1, sk1);
 		Log.e("sk1ToDb", "flag " + Integer.toString(sk1));
 		values.put(MyDB.COLUMN_SK2, sk2);
@@ -84,7 +84,7 @@ public class ProgressDataSource {
 		progressClass.setProgress(3, cursor.getInt(3));
 		progressClass.setProgress(4, cursor.getInt(4));
 		progressClass.setProgress(5, cursor.getInt(5));
-		progressClass.setUser(cursor.getString(6));
+		progressClass.setUser(cursor.getInt(6));
 		Log.e("cursor6", cursor.getString(6).toString());
 		progressClass.setSeekArk(1, cursor.getInt(7));
 		Log.e("cursor7", Integer.toString(cursor.getInt(7)).toString());

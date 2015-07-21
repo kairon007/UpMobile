@@ -368,7 +368,7 @@ public class Player implements SeekBar.OnSeekBarChangeListener, OnClickListener,
 			ProgressDataSource myProgressDataSource = new ProgressDataSource(context);
 			myProgressDataSource.open();
 			List<ProgressClass> values = myProgressDataSource.getAllPgs();
-			if (values.size() == 0) myProgressDataSource.createProgress(0, 0, 0, 0, 0, "Custom", 0, 0);
+			if (values.size() == 0) myProgressDataSource.createProgress(0, 0, 0, 0, 0, 0, 0, 0);
 			else {
 				if (null != equalizer) {
 					//Set equalizer

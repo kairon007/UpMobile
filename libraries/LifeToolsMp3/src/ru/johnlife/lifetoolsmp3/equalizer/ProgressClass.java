@@ -5,18 +5,18 @@ public class ProgressClass {
 	private long id;
 	private int p1, p2, p3, p4, p5;
 	private int sk1, sk2;
-	private String user;
+	private int presetPosInArray;
 
 	public long getId() {
 		return id;
 	}
 
-	public String getUser() {
-		return user;
+	public int getUser() {
+		return presetPosInArray;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setUser(int presetPosInArray) {
+		this.presetPosInArray = presetPosInArray;
 	}
 
 	public void setId(long id) {
