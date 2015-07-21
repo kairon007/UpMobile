@@ -18,6 +18,7 @@ import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	protected boolean isEnabledFilter = false;
 	protected boolean hadClosedDraver = false;
 	private int currentPosition = -1;
+	private Bitmap defaultCover;
 
 	private FileObserver fileObserver = new FileObserver(MaterialMusicDownloaderApp.getDirectory()) {
 
@@ -342,9 +344,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	public void setCover(Bitmap bmp) {
-		if (null == bmp) {
+		Log.d("logd", "setCover : " + bmp);
+		if (null == defaultCover) {
 			String cover = getString(R.string.font_musics);
-			bmp = getDefaultBitmapCover(64, 62, 60, cover);
+			defaultCover = getDefaultBitmapCover(64, 62, 60, cover);
+		}
+		if (null ==  bmp) {
+			bmp = defaultCover;
 		}
 		service.updatePictureNotification(bmp);
 		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
@@ -441,16 +447,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	protected void showPlayerFragment() {
 		setDrawerEnabled(false);
 		onNavigationDrawerItemSelected(PLAYER_FRAGMENT);
-	}
-
-	protected Bitmap getSearchActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 24), Util.dpToPx(this, 24), Util.dpToPx(this, 22), getResources().getString(R.string.font_search_online),
-				R.color.main_color_for_search_fragment_text, 0, 0);
-	}
-
-	protected Bitmap getCloseActinBarIcon() {
-		return getDefaultBitmapCover(Util.dpToPx(this, 16), Util.dpToPx(this, 16), Util.dpToPx(this, 14), getResources().getString(R.string.font_cancel), R.color.main_color_for_search_fragment_text,
-				0, 0);
 	}
 
 	public boolean isThisSongDownloaded(AbstractSong song) {

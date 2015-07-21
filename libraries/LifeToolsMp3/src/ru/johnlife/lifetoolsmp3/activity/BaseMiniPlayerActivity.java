@@ -136,10 +136,6 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	protected void lockListViewAnimation() {}
 	protected void setImageDownloadButton() {}
 	
-	public interface DownloadPressListener {
-		void downloadButtonPressed(RemoteSong song);
-	}
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -373,8 +369,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				
 				@Override
 				public void onAnimationStart(Animation animation) {
-					if (null != fakeView)
-						fakeView.setVisibility(View.GONE);
+					if (null != fakeView) fakeView.setVisibility(View.GONE);
 					((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				}
 				
@@ -416,27 +411,37 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			((ImageView) fakeMiniPlayer.findViewById(R.id.mini_player_play_pause)).setImageDrawable(((ImageButton)playPause).getDrawable());
 		}
 		fakeMiniPlayer.findViewById(R.id.mini_player_progress).setVisibility(View.GONE);
-		Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
+		final Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
 		slideOutLeft.setAnimationListener(new AnimationListener() {
-			
+
 			@Override
-			public void onAnimationStart(Animation animation) {}
-			
+			public void onAnimationStart(Animation animation) {
+			}
+
 			@Override
-			public void onAnimationRepeat(Animation animation) {}
-			
+			public void onAnimationRepeat(Animation animation) {
+			}
+
 			@Override
 			public void onAnimationEnd(Animation animation) {
 				fakeMiniPlayer.setVisibility(View.GONE);
 			}
 		});
-		Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
+		final Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
 		fakeMiniPlayer.setVisibility(View.VISIBLE);
-		setData(song);
+		long startTime = System.currentTimeMillis();
+		slideOutLeft.setStartTime(startTime);
 		fakeMiniPlayer.setAnimation(slideOutLeft);
+		slideInRight.setStartTime(startTime);
 		miniPlayer.setAnimation(slideInRight);
-		fakeMiniPlayer.startAnimation(slideOutLeft);
-		miniPlayer.startAnimation(slideInRight);
+		miniPlayer.post(new Runnable() {
+			@Override
+			public void run() {
+				miniPlayer.startAnimation(slideInRight);
+				fakeMiniPlayer.startAnimation(slideOutLeft);
+			}
+		});
+		setData(song);
 	}
 	
 	public void startSong(AbstractSong song) {

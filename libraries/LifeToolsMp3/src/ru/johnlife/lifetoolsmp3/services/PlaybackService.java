@@ -216,8 +216,7 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public static PlaybackService get(final Context context) {
 		if (instance == null) {
-			Log.d("logd", "get: " + Thread.currentThread().getName() );
-			context.startService(new Intent(context, PlaybackService.class));					
+			context.startService(new Intent(context, PlaybackService.class));
 			try {
 				synchronized (WAIT) {
 					WAIT.wait();
