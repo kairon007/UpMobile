@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -477,6 +478,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
 			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+			final int [] location = new int[2];
+			playerLyricsView.getLocationOnScreen(location);
+			parentView.post(new Runnable() {
+				@Override
+				public void run() {
+					((ScrollView) parentView.findViewById(R.id.scrollView2)).smoothScrollTo(location[0] * 2, location[1]);
+				}
+			});
 			lyricsFetcher = new SearchLyrics(new OnLyricsFetchedListener() {
 
 				@Override
