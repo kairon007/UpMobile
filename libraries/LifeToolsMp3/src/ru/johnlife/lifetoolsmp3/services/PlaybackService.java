@@ -352,8 +352,9 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 					mode |= SMODE_START_PREPARE;
 					player.prepareAsync();
 				} catch (Exception e) {
-					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + e.toString());
-					if (e.toString().contains("setDataSourceFD failed") && null != errorListener) {
+                    String error = e.toString();
+					android.util.Log.e(getClass().getName(), "in method \"hanleMessage\" appear problem: " + error);
+					if (error.contains("setDataSource") && error.contains("failed") && null != errorListener) {
 						errorListener.error(getString(R.string.does_not_support_type));
 					}
 				}

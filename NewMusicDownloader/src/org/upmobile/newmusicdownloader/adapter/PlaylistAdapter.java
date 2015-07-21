@@ -77,13 +77,14 @@ public class PlaylistAdapter extends BasePlaylistsAdapter {
         protected void hold(AbstractSong data, int position) {
             super.hold(data, position);
             if (data.getClass() == PlaylistData.class) {
+                int attr;
                 if (((PlaylistData) data).isExpanded()) {
-                    ((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
-                            Util.getResIdFromAttribute((Activity) getContext(), R.attr.icKeyboardArrowUp)));
+                    attr = R.attr.icKeyboardArrowUp;
                 } else {
-                    ((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
-                            Util.getResIdFromAttribute((Activity) getContext(), R.attr.icKeyboardArrowDown)));
+                    attr = R.attr.icKeyboardArrowDown;
                 }
+                ((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
+                        Util.getResIdFromAttribute((Activity) getContext(), attr)));
             }
         }
     }

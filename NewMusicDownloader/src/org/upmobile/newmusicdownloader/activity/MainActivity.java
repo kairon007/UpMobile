@@ -123,13 +123,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (query.isEmpty()) {
 			String fragmentName = getPreviousFragmentName(1);
 			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-			if (null == fragment) {
-                return false;
-			} else if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
-				((LibraryFragment) fragment).clearFilter();
-			} else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
-				((PlaylistFragment) fragment).clearFilter();
-			}
+			if (null != fragment) {
+                if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
+                    ((LibraryFragment) fragment).clearFilter();
+                } else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
+                    ((PlaylistFragment) fragment).clearFilter();
+                }
+            }
 		}
 		return false;
 	}
@@ -206,8 +206,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
-		    	Fragment fragment = new PlayerFragment();
-		    	changeFragment(fragment, true, currentTag);
+		    	changeFragment(new PlayerFragment(), true, currentTag);
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
@@ -242,7 +241,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	public void changeFragment(Fragment targetFragment, boolean isAnimate, String currentTag) {
 		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
-		currentTag = targetFragment.getClass().getSimpleName();
 		this.currentTag = this.currentTag == null ? SearchFragment.class.getSimpleName() : this.currentTag;
 		currentFragmentIsPlayer = this.currentTag.equals(PlayerFragment.class.getSimpleName());
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
