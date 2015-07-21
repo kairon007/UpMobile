@@ -91,6 +91,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 		msg.what = MSG_FILL_ADAPTER;
 		msg.obj = list;
 		uiHandler.sendMessage(msg);
+		StateKeeper.getInstance().setLibrarysAdapter(list);
 	};
 	
 	private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
@@ -160,6 +161,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 	}
 	
 	private void updateAdapter() {
+		if (null != StateKeeper.getInstance().getLibrarysAdapter()) fillAdapter(StateKeeper.getInstance().getLibrarysAdapter());
 		new Thread(new Runnable() {
 			
 			private ArrayList<MusicData> querySong;

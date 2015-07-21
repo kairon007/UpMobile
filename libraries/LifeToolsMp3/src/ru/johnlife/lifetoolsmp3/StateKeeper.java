@@ -1,20 +1,5 @@
 package ru.johnlife.lifetoolsmp3;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.TreeMap;
-
-import org.cmc.music.metadata.MusicMetadata;
-import org.cmc.music.metadata.MusicMetadataSet;
-import org.cmc.music.myid3.MyID3;
-
-import ru.johnlife.lifetoolsmp3.engines.Engine;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.Song;
-import ru.johnlife.lifetoolsmp3.ui.Player;
-import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -24,6 +9,23 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+
+import org.cmc.music.metadata.MusicMetadata;
+import org.cmc.music.metadata.MusicMetadataSet;
+import org.cmc.music.myid3.MyID3;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.TreeMap;
+
+import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
+import ru.johnlife.lifetoolsmp3.ui.Player;
+import ru.johnlife.lifetoolsmp3.ui.views.BaseSearchView;
 
 public class StateKeeper {
 	
@@ -38,6 +40,7 @@ public class StateKeeper {
 	private BaseSearchView searchView;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
+	private ArrayList<MusicData> librarysAdapter;
 	private Player playerInstance;
 	private RemoteSong downloadSong;
 	private View viewItem;
@@ -372,6 +375,14 @@ public class StateKeeper {
 		if (tempUseCover > 0) instance.tempID3UseCover = 1;
 		else if (tempUseCover < 0) instance.tempID3UseCover = -1;
 		else this.tempID3UseCover = 0;
+	}
+
+	public ArrayList<MusicData> getLibrarysAdapter() {
+		return librarysAdapter;
+	}
+
+	public void setLibrarysAdapter(ArrayList<MusicData> librarysAdapter) {
+		this.librarysAdapter = librarysAdapter;
 	}
 
 	public void setTempID3Fields(String[] strings) {
