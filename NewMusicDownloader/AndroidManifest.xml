@@ -2,18 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.upmobile.newmusicdownloader"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
         android:targetSdkVersion="21" />
 
     <!-- PERMISSIONS -->
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -22,43 +19,32 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-	    
-	<uses-permission android:name="android.permission.INTERNET"/>
-	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-	<uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    
-    
-  <!-- AD NETWORK PERMISSIONS -->
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
-	<uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
-    
-    
-    <application android:icon="@drawable/icon" android:label="@string/app_name"
+    <application
         android:name="org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp"
         android:allowBackup="true"
         android:backupAgent="PreferencesBackupAgent"
+        android:icon="@drawable/icon"
+        android:label="@string/app_name"
         android:theme="@style/AppTheme">
         <activity
             android:name="org.upmobile.newmusicdownloader.activity.MainActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/app_name"
-            android:windowSoftInputMode="stateHidden"
-            android:launchMode="singleInstance" >
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        
-        <service android:name="ru.johnlife.lifetoolsmp3.PlaybackService" 
+
+        <service
+            android:name="ru.johnlife.lifetoolsmp3.PlaybackService"
             android:exported="false">
             <intent-filter>
                 <action android:name="playbackservice.action.main" />
@@ -67,15 +53,15 @@
                 <action android:name="playbackservice.action.next" />
             </intent-filter>
         </service>
-        
-        <receiver android:name="ru.johnlife.lifetoolsmp3.MediaButtonReceiver" >
-            <intent-filter android:priority="998" >
+
+        <receiver android:name="ru.johnlife.lifetoolsmp3.MediaButtonReceiver">
+            <intent-filter android:priority="998">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
-        
-        <service android:name="ru.johnlife.lifetoolsmp3.HelperService"/>
-        
+
+        <service android:name="ru.johnlife.lifetoolsmp3.HelperService" />
+
         <!-- MOBILECORE -->
 
         <service
@@ -103,17 +89,19 @@
             android:name="com.startapp.android.publish.AppWallActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@android:style/Theme.Translucent" />
-        
-        
+
+
         <!-- REVMOB -->
-        
-		<meta-data android:name="com.revmob.app.id" android:value="_NULLDROID_REVMOB_ID_"/>
-		<activity android:name="com.revmob.ads.fullscreen.FullscreenActivity"
-			android:configChanges="keyboardHidden|orientation|screenSize"
-			android:theme="@android:style/Theme.Translucent">
-		</activity>
-    
-        
+
+        <meta-data
+            android:name="com.revmob.app.id"
+            android:value="_NULLDROID_REVMOB_ID_" />
+        <activity
+            android:name="com.revmob.ads.fullscreen.FullscreenActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Translucent"></activity>
+
+
     </application>
 
 </manifest>

@@ -1,15 +1,5 @@
 package org.upmobile.newmusicdownloader.adapter;
 
-import org.upmobile.newmusicdownloader.DownloadListener;
-import org.upmobile.newmusicdownloader.Nulldroid_Settings;
-import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
-import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.Song;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,6 +7,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.upmobile.newmusicdownloader.Nulldroid_Settings;
+import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
+
+import ru.johnlife.lifetoolsmp3.StateKeeper;
+import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
+import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.Song;
 
 public class SearchAdapter extends BaseSearchAdapter {
 
@@ -32,11 +32,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 
 	@Override
 	protected void download(RemoteSong song, int position) {
-		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		DownloadListener downloadListener = new DownloadListener(getContext(), song, id);
-		downloadListener.setDownloadPath(NewMusicDownloaderApp.getDirectory());
-		downloadListener.setUseAlbumCover(true);
-		downloadListener.downloadSong(false);
+		((MainActivity) getContext()).download(song);
 	}
 
 	@Override

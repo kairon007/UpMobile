@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v7.widget.SearchView;
@@ -36,10 +37,15 @@ import org.upmobile.clearmusicdownloader.fragment.SearchFragment;
 import java.io.File;
 
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class MainActivity extends BaseClearActivity implements Constants {
 
@@ -133,7 +139,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 			@Override
 			public boolean onQueryTextChange(String newText) {
 				if ("".equals(newText)) {
-					String fragmentName =  getLastFragmentName();
+					String fragmentName = getLastFragmentName();
 					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
 					if (LibraryFragment.class == fragment.getClass()) {
 						if (fragment.isVisible()) {
@@ -147,7 +153,7 @@ public class MainActivity extends BaseClearActivity implements Constants {
 				}
 				return false;
 			}
-			
+
 		});
 	}
 	
@@ -170,6 +176,49 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		} else {
 			searchView.setVisibility(View.INVISIBLE);
 		}
+	}
+
+	@Override
+	public void download(RemoteSong song) {
+		download(song, true);
+	}
+
+	public void download (final RemoteSong song, boolean useCover) {
+		if (isThisSongDownloaded(song)) {
+			UndoBarController.clear(this);
+			UndoBarController.UndoBar undo = new UndoBarController.UndoBar(this);
+			undo.message(R.string.has_been_downloaded);
+			undo.duration(5000);
+			undo.noicon(true);
+			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
+			undo.listener(new UndoBarController.UndoListener() {
+
+				@Override
+				public void onUndo(Parcelable token) {
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, 0);
+							downloadListener.setDownloadPath(getDirectory());
+							downloadListener.setUseAlbumCover(true);
+							downloadListener.downloadSong(false);
+						}
+					});
+				}
+			});
+			undo.show();
+		} else {
+			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+			DownloadListener downloadListener = new DownloadListener(this, song, id);
+			downloadListener.setDownloadPath(ClearMusicDownloaderApp.getDirectory());
+			downloadListener.setUseAlbumCover(useCover);
+			downloadListener.downloadSong(false);
+		}
+	}
+
+	public boolean isThisSongDownloaded(AbstractSong song) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
 	}
 
 	@Override

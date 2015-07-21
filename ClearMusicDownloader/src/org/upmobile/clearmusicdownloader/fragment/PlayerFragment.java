@@ -1,32 +1,5 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
-import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
-
-import java.io.File;
-import java.text.MessageFormat;
-
-import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.DownloadListener;
-import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.PlaybackService;
-import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
-import ru.johnlife.lifetoolsmp3.RenameTask;
-import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
-import ru.johnlife.lifetoolsmp3.StateKeeper;
-import ru.johnlife.lifetoolsmp3.Util;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
-import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
-import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
-import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -76,6 +49,32 @@ import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 import com.special.utils.UIParallaxScroll.OnScrollChangedListener;
 
+import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
+
+import java.io.File;
+import java.text.MessageFormat;
+
+import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.PlaybackService.OnStatePlayerListener;
+import ru.johnlife.lifetoolsmp3.RenameTask;
+import ru.johnlife.lifetoolsmp3.RenameTaskSuccessListener;
+import ru.johnlife.lifetoolsmp3.Util;
+import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
+import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong;
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
+import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
+
+import static com.nineoldandroids.view.ViewPropertyAnimator.animate;
+
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnCheckedChangeListener, 
 	PlaybackService.OnErrorListener, OnEditorActionListener, Constants {
 
@@ -84,7 +83,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private AbstractSong song;
 	private RenameTask renameTask;
 	private PlaybackService player;
-	private DownloadListener downloadListener;
 	private SearchLyrics lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
@@ -255,10 +253,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		playerProgress.setEnabled(prepared);
 		downloadButtonState(!player.isGettingURl());
-		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (StateKeeper.DOWNLOADED == state || StateKeeper.DOWNLOADING == state) {
-			download.setVisibility(View.GONE);
-		} 
 	}
 
 	private void setKeyListener() {
@@ -754,8 +748,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.pause();
 		player.shift(delta, true);
 		downloadButtonState(!player.isGettingURl());
-		int state = StateKeeper.getInstance().checkSongInfo(player.getPlayingSong().getComment());
-		if (MusicData.class == song.getClass() || StateKeeper.DOWNLOADED <= state) {
+		if (MusicData.class == song.getClass()) {
 			download.setVisibility(View.GONE);
 		} else {
 			download.setVisibility(View.VISIBLE);
@@ -800,14 +793,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void download() {
 		((MainActivity)getActivity()).setCoverHelper(true);
-		int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
-		downloadListener = new DownloadListener(getActivity(), (RemoteSong) song, id);
-		if (downloadListener.isBadInet()) {
-			Toast.makeText(getActivity(), ru.johnlife.lifetoolsmp3.R.string.search_message_no_internet, Toast.LENGTH_SHORT).show();
-			return;
-		}
-		download.setVisibility(View.GONE);
-		downloadListener.setUseAlbumCover(isUseAlbumCover);
 		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
@@ -822,7 +807,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 					@Override
 					public void run() {
-						downloadListener.onClick(parentView);
+						((MainActivity) getActivity()).download((RemoteSong)song,isUseAlbumCover);
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);

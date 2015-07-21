@@ -1,10 +1,33 @@
 package org.upmobile.newmusicdownloader.activity;
 
-import java.io.File;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileObserver;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.WindowManager;
 
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.DownloadListener;
-import org.upmobile.newmusicdownloader.Nulldroid_Advertisement;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
@@ -16,42 +39,20 @@ import org.upmobile.newmusicdownloader.fragment.PlayerFragment;
 import org.upmobile.newmusicdownloader.fragment.PlaylistFragment;
 import org.upmobile.newmusicdownloader.fragment.SearchFragment;
 
+import java.io.File;
+
 import ru.johnlife.lifetoolsmp3.PlaybackService;
+import ru.johnlife.lifetoolsmp3.StateKeeper;
 import ru.johnlife.lifetoolsmp3.Util;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.ui.DownloadClickListener;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.FileObserver;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, OnQueryTextListener, Constants {
 
-	private final String APP_THEME_WHITE_BLACK_ACTION_BAR = "AppThemeWhite.BlackActionBar";
-	private final String APP_THEME_WHITE = "AppThemeWhite";
-	private final String APP_THEME = "AppTheme";
-	private final String APP_THEME_WHITE_BLACK_ACTION_BAR_NO_FONTS = "AppThemeWhite.BlackActionBar.NoFonts";
-	private final String APP_THEME_WHITE_NO_FONTS = "AppThemeWhite.NoFonts";
-	private final String APP_THEME_NO_FONTS = "AppTheme.NoFonts";
 	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private MenuItem searchItem;
@@ -89,7 +90,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		if (null != v1) {
 			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.actionBarTitleBg)));
 		}
-		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+//		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 	
 	
@@ -189,23 +190,23 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-	        changeFragment(new SearchFragment(), false);
+	        changeFragment(new SearchFragment(), false, currentTag);
 			break;
 		case DOWNLOADS_FRAGMENT:
-	        changeFragment(new DownloadsFragment(), false);
+	        changeFragment(new DownloadsFragment(), false, currentTag);
 			break;
 		case LIBRARY_FRAGMENT:
-	        changeFragment(new LibraryFragment(), false);
+	        changeFragment(new LibraryFragment(), false, currentTag);
 			break;
 		case PLAYLIST_FRAGMENT:
-			changeFragment(new PlaylistFragment(), false);
+			changeFragment(new PlaylistFragment(), false, currentTag);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
 		    	Fragment fragment = new PlayerFragment();
-		    	changeFragment(fragment, true);
+		    	changeFragment(fragment, true, currentTag);
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
@@ -238,15 +239,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		setActionBarTitle(getResources().getString(title));
 	}
 	
-	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+	public void changeFragment(Fragment targetFragment, boolean isAnimate, String currentTag) {
 		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
 		currentTag = targetFragment.getClass().getSimpleName();
-		currentFragmentIsPlayer = currentTag.equals(PlayerFragment.class.getSimpleName());
+		this.currentTag = this.currentTag == null ? SearchFragment.class.getSimpleName() : this.currentTag;
+		currentFragmentIsPlayer = this.currentTag.equals(PlayerFragment.class.getSimpleName());
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
-		transaction.replace(R.id.content_frame, targetFragment, currentTag)
+		transaction.replace(R.id.content_frame, targetFragment, this.currentTag)
 				   .addToBackStack(targetFragment.getClass()
 				   .getSimpleName())
 				   .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -309,7 +311,56 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			navigationDrawerFragment.setSelectedItem(position);
 		}
 	}
-	
+
+	@Override
+	public void download(RemoteSong song) {
+		download(song, true);
+	}
+
+	public void download (final RemoteSong song, final boolean useCover) {
+		if (isThisSongDownloaded(song)) {
+			final View v = LayoutInflater.from(this).inflate(R.layout.notification_view, null);
+			WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT,
+					WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED, PixelFormat.TRANSLUCENT);
+			layoutParams.gravity = Gravity.BOTTOM;
+			layoutParams.windowAnimations = android.R.style.Animation_InputMethod;
+			final WindowManager manager = (WindowManager) getSystemService(Context.WINDOW_SERVICE);
+			v.findViewById(R.id.msgButton).setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					if (v.getVisibility() == View.GONE) return;
+					manager.removeView(v);
+					v.setVisibility(View.GONE);
+					int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+					DownloadListener downloadListener = new DownloadListener(MainActivity.this, song, id);
+					downloadListener.setDownloadPath(NewMusicDownloaderApp.getDirectory());
+					downloadListener.setUseAlbumCover(useCover);
+					downloadListener.downloadSong(false);
+				}
+			});
+			v.postDelayed(new Runnable() {
+				@Override
+				public void run() {
+					if (v.getVisibility() == View.GONE) return;
+					manager.removeView(v);
+					v.setVisibility(View.GONE);
+				}
+			}, 3000);
+			manager.addView(v,layoutParams);
+		} else {
+			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+			DownloadListener downloadListener = new DownloadListener(this, song, id);
+			downloadListener.setDownloadPath(NewMusicDownloaderApp.getDirectory());
+			downloadListener.setUseAlbumCover(useCover);
+			downloadListener.downloadSong(false);
+		}
+	}
+
+	public boolean isThisSongDownloaded(AbstractSong song) {
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		return !(song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state);
+	}
+
 	public void setDrawerEnabled(boolean isEnabled) {
 		navigationDrawerFragment.setEnabled(isEnabled);
 	}
@@ -333,7 +384,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		buttonBackEnabled = false;
 		showMiniPlayer(false);
 		Fragment fragment = new PlayerFragment();
-    	changeFragment(fragment, true);
+    	changeFragment(fragment, true, currentTag);
 	}
 	
 	@Override
