@@ -155,8 +155,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private boolean isDestroy;
 	private boolean hasPost;
 	private boolean showInfoMessage = false;
-	
-	private void initUpdater() {
+    private ImageView scrollableCover;
+
+    private void initUpdater() {
 		progressListener = new ProgressUpdaterListener() {
 
 			private static final String FAILURE = "failure";
@@ -224,6 +225,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void init() {
 		scrollView = (NotifyingScrollView)contentView.findViewById(R.id.scroll_view);
+        scrollableCover = (ImageView) contentView.findViewById(R.id.scrollable_cover);
 		scrollView.setImageResource(R.id.scrollable_cover);
 		generateDefaultCover();
 		scrollView.setImageBitmap(bigDefaultCover);
@@ -971,25 +973,27 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			paletteGenerator.cancel(true);
 		}
 		visualizerView.setUpVizualizerColor(-1, -1);
-		if (null != bitmap) {
-		paletteGenerator = Palette.generateAsync(bitmap, new PaletteAsyncListener() {
-			
-			
-			@Override
-			public void onGenerated(Palette palette) {
-				if (null == palette || null == palette.getVibrantSwatch() || null == palette.getMutedSwatch()) {
-					visualizerView.setUpVizualizerColor(-1, -1);
-					return;
-				}
-				visualizerView.setUpVizualizerColor(palette.getVibrantSwatch().getRgb(), palette.getMutedSwatch().getRgb());
-			}
-		});
-			scrollView.setImageBitmap(bitmap);
-		} else {
-			visualizerView.setUpVizualizerColor(-1, -1);
-			scrollView.setImageBitmap(bigDefaultCover);
-		}
-	}
+        if (null != bitmap) {
+            paletteGenerator = Palette.generateAsync(bitmap, new PaletteAsyncListener() {
+
+
+                @Override
+                public void onGenerated(Palette palette) {
+                    if (null == palette || null == palette.getVibrantSwatch() || null == palette.getMutedSwatch()) {
+                        visualizerView.setUpVizualizerColor(-1, -1);
+                        return;
+                    }
+                    visualizerView.setUpVizualizerColor(palette.getVibrantSwatch().getRgb(), palette.getMutedSwatch().getRgb());
+                }
+            });
+            scrollableCover.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            scrollView.setImageBitmap(bitmap);
+        } else {
+            visualizerView.setUpVizualizerColor(-1, -1);
+            scrollableCover.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+            scrollView.setImageBitmap(bigDefaultCover);
+        }
+    }
 	
 	private void setCheckBoxState(final boolean state) {
 		if (isAdded()) {
