@@ -18,12 +18,14 @@ import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.upmobile.materialmusicdownloader.BaseDownloadListener;
@@ -206,12 +208,46 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		searchView.setOnSearchClickListener(new OnClickListener() {
+		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+			@Override
+			public boolean onClose() {
+				return false;
+			}
+		});
+		((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+			}
 
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (PLAYLIST_FRAGMENT == currentPosition) {
+					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					playlist.forceDelete();
+				}
+				if (LIBRARY_FRAGMENT == currentPosition) {
+					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					library.forceDelete();
+				}
+			}
+		});
+		searchView.setOnSearchClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				if (navigationDrawerFragment.isDrawerOpen()) {
 					navigationDrawerFragment.closeDrawer();
+				}
+				if (PLAYLIST_FRAGMENT == currentPosition) {
+					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					playlist.forceDelete();
+				}
+				if (LIBRARY_FRAGMENT == currentPosition) {
+					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					library.forceDelete();
 				}
 			}
 		});
@@ -232,6 +268,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 			}
 		});
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	public void closeSearchView(boolean close) {
+		if(null == searchView) return;
+		searchView.setIconified(close);
 	}
 
 	@Override

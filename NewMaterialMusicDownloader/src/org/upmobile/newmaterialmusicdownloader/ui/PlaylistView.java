@@ -235,7 +235,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected void forceDelete() {
+	public void forceDelete() {
 		swipeUndoAdapter.forceDelete();
 	}
 	

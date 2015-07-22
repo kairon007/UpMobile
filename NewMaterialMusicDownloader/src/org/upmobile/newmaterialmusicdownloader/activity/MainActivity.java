@@ -18,10 +18,13 @@ import android.support.v4.widget.DrawerLayout.DrawerListener;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.upmobile.newmaterialmusicdownloader.BaseDownloadListener;
@@ -110,6 +113,38 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
         MenuItem searchItem = menu.findItem(R.id.action_search);
 		searchView = (SearchView) searchItem.getActionView();
 		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
+		((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+				if (ManagerFragmentId.playlistFragment() == getCurrentFragmentId()) {
+					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					playlist.forceDelete();
+				}
+				if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					library.forceDelete();
+				}
+			}
+		});
+		searchView.setOnSearchClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (ManagerFragmentId.playlistFragment() == getCurrentFragmentId()) {
+					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+					playlist.forceDelete();
+				}
+				if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+					library.forceDelete();
+				}
+			}
+		});
 		searchView.setOnQueryTextListener(new OnQueryTextListener() {
 
 			@Override
@@ -267,6 +302,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		String lastFragmentName = getPreviousFragmentName(1);
 		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+			fragment.forceDelete();
 			if (fragment.isVisible()) {
 				if (query.isEmpty()) {
 					fragment.clearFilter();
@@ -276,6 +312,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			}
 		} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
 			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+			fragment.forceDelete();
 			if (fragment.isVisible()) {
 				fragment.collapseAll();
 				if (query.isEmpty()) {

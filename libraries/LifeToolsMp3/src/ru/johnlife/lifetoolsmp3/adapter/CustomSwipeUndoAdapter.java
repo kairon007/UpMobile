@@ -3,6 +3,7 @@ package ru.johnlife.lifetoolsmp3.adapter;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,7 +21,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	private final int DELAY = 3000;
 	private CanNotifyListener listener;
-	private ArrayList<DissmissTimer> timers = new ArrayList<DissmissTimer>();
+	private ArrayList<DismissTimers> timers = new ArrayList<DismissTimers>();
 	private ArrayList<AbstractSong> songs = new ArrayList<>();
 	private BaseAdapter adapter;
 	
@@ -80,12 +81,12 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 
 	private void startTimer(int position) {
 		if (null == getItem(position)) return;
-		timers.add(new DissmissTimer(getItem(position), position).startTimer());
+		timers.add(new DismissTimers(getItem(position), position).startTimer());
 	}
 	
 	private void stopTimer(int position) {
 		Object tag = getItem(position);
-		for (DissmissTimer timer : timers) {
+		for (DismissTimers timer : timers) {
 			if (null == tag) {
 				notifyDataSetChanged();
 				return;
@@ -102,17 +103,17 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		return timers.size() > 0;
 	}
 	
-	private class DissmissTimer extends Timer {
+	private class DismissTimers extends Timer {
 		
 		private Object tag;
 		private int position;
 		
-		public DissmissTimer(Object tag, int position) {
+		public DismissTimers(Object tag, int position) {
 			this.position = position;
 			this.tag = tag;
 		}
 		
-		public DissmissTimer startTimer() {
+		public DismissTimers startTimer() {
 			schedule(new TimerTask() {
 				
 				@Override
@@ -145,8 +146,8 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		
 		@Override
 		public boolean equals(Object o) {
-			if (o instanceof DissmissTimer) {
-				return ((DissmissTimer)o).getTag().equals(this.getTag());
+			if (o instanceof DismissTimers) {
+				return ((DismissTimers)o).getTag().equals(this.getTag());
 			} else {
 				return o.equals(this.getTag());
 			}
@@ -167,18 +168,22 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	}
 	
 	public void forceDelete() {
-		ArrayList<DissmissTimer> removed = new ArrayList<DissmissTimer>();
-		for (DissmissTimer timer : timers) {
-			int position  = timer.getPosition();
-			dismiss(position);
-			removed.add(timer);
-			try {
-				timer.cancel();
-			} catch (Exception e) {
-				e.printStackTrace();
+		try {
+			ArrayList<DismissTimers> removed = new ArrayList<DismissTimers>();
+			for (DismissTimers timer : timers) {
+				int position = timer.getPosition();
+				dismiss(position);
+				removed.add(timer);
+				try {
+					timer.cancel();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+			timers.removeAll(removed);
+		} catch (Exception e) {
+			Log.e(getClass().getSimpleName(), e + "");
 		}
-		timers.removeAll(removed);
 	}
 
 	public ArrayList<AbstractSong> getSongs() {
