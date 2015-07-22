@@ -15,6 +15,8 @@ import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -69,8 +71,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private View wait;
 	private ImageButton previous;
 	private ImageButton forward;
-	private ImageButton editTag;
-	private ImageButton showLyrics;
 	private ImageButton shuffle;
 	private ImageButton repeat;
 	private ImageButton stop;
@@ -91,6 +91,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
     private ProgressBar progressLyrics;
+    private MenuItem showLyrics;
+    private MenuItem editTag;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -117,13 +119,29 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		return parentView;
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		getActivity().onBackPressed();
-		((MainActivity)getActivity()).setDrawerEnabled(true);
-		return super.onOptionsItemSelected(item);
-	}
-	
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.player_menu, menu);
+        showLyrics = menu.findItem(R.id.action_show_lyrics);
+        editTag = menu.findItem(R.id.action_edit_tag);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_show_lyrics:
+                showLyrics();
+                return true;
+            case R.id.action_edit_tag:
+                showEditTagDialog();
+                return true;
+            default:
+                getActivity().onBackPressed();
+                ((MainActivity)getActivity()).setDrawerEnabled(true);
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(this);
@@ -290,8 +308,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		repeat = (ImageButton) view.findViewById(R.id.repeat);
 		stop = (ImageButton) view.findViewById(R.id.stop);
 		btnDownload = (Button) view.findViewById(R.id.btn_download);
-		showLyrics = (ImageButton) view.findViewById(R.id.player_lyrics);
-		editTag = (ImageButton) view.findViewById(R.id.player_edit_tags);
 		volume = (SeekBar) view.findViewById(R.id.progress_volume);
 		shuffleMode = (TextView) view.findViewById(R.id.shuffleMode);
 		playerProgress = (SeekBar) view.findViewById(R.id.progress_track);
@@ -317,8 +333,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
-		editTag.setOnClickListener(this);
-		showLyrics.setOnClickListener(this);
 		playerCancelTags.setOnClickListener(this);
 		playerSaveTags.setOnClickListener(this);
 		player.setOnErrorListener(this);
@@ -393,12 +407,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			break;
 		case R.id.stop:
 			player.stopPressed();
-			break;
-		case R.id.player_lyrics:
-			showLyrics();
-			break;
-		case R.id.player_edit_tags:
-			showEditTagDialog();
 			break;
 		case R.id.player_save_tags:
 			saveTags();
@@ -481,6 +489,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
         View lyricsFrame = parentView.findViewById(R.id.player_lyrics_frame);
 		if (lyricsFrame.getVisibility() == View.GONE) {
+            showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);
             lyricsFrame.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
@@ -509,19 +518,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			lyricsFetcher.startSerach();
             progressLyrics.setVisibility(View.VISIBLE);
 		} else {
+            showLyrics.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.lyricsIndicator));
             lyricsFrame.setVisibility(View.GONE);
 		}
 	}
 
 	private void showEditTagDialog() {
 		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
+            editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
 			Util.hideKeyboard(getActivity(), parentView);
 			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
 		} else {
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
+            editTag.setIcon(R.drawable.ic_player_edit_grey);
+            parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
@@ -700,7 +712,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void error(final String error) {
 		if (null == getActivity()) return;
 		getActivity().runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
