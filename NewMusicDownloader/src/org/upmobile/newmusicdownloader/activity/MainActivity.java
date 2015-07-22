@@ -387,11 +387,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 
 	@Override
 	public void showMiniPlayer(boolean isShow) {
-		if (currentFragmentIsPlayer) {
-			super.showMiniPlayer(false);
-			return;
-		}
-		super.showMiniPlayer(isShow);
+		super.showMiniPlayer(currentFragmentIsPlayer ? false : isShow);
 	}
 
 	@Override
