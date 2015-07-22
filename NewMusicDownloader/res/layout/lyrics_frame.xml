@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_gravity="center_horizontal"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_gravity="center_horizontal"
+              android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView1"
@@ -12,14 +12,14 @@
         android:layout_gravity="center"
         android:text="@string/lyrics"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="?attr/textViewColor" />
+        android:textColor="?attr/textViewColor"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:background="?attr/textViewColor" />
+        android:background="?attr/textViewColor"/>
 
     <ImageView
         android:id="@+id/lyrics_load_image"
@@ -27,13 +27,20 @@
         android:layout_height="48dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/loader_black"
-        android:visibility="gone" />
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/progress_lyrics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/player_lyrics_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="?attr/textViewColor" />
+        android:textColor="?attr/textViewColor"/>
 
 </LinearLayout>

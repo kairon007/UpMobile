@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -89,8 +90,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private int checkIdCover;
     private boolean isDestroy;
     private boolean isUseAlbumCover = true;
-	
-	@Override
+    private ProgressBar progressLyrics;
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		parentView = inflater.inflate(R.layout.player_fragment, container, false);
 		player = PlaybackService.get(getActivity());
@@ -297,6 +299,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerArtist = (TextView) view.findViewById(R.id.artistName);
 		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
 		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
+        progressLyrics = (ProgressBar) view.findViewById(R.id.progress_lyrics);
 		playerLyricsView = (TextView) view.findViewById(R.id.player_lyrics_view);
 		playerSaveTags = (Button) view.findViewById(R.id.player_save_tags);
 		playerCancelTags = (Button) view.findViewById(R.id.player_cancel_tags);
@@ -476,20 +479,22 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText("");
 		}
-		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.GONE) {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.VISIBLE);
+        View lyricsFrame = parentView.findViewById(R.id.player_lyrics_frame);
+		if (lyricsFrame.getVisibility() == View.GONE) {
+            lyricsFrame.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
 			parentView.post(new Runnable() {
-				@Override
-				public void run() {
-					((ScrollView) parentView.findViewById(R.id.scrollView2)).smoothScrollTo(location[0] * 2, location[1]);
-				}
-			});
+                @Override
+                public void run() {
+                    ((ScrollView) parentView.findViewById(R.id.scrollView2)).smoothScrollTo(location[0] * 2, location[1]);
+                }
+            });
 			lyricsFetcher = new SearchLyrics(new OnLyricsFetchedListener() {
 
 				@Override
 				public void onLyricsFetched(boolean foundLyrics, String lyrics) {
+                    progressLyrics.setVisibility(View.GONE);
 					try {
 						if (foundLyrics) {
 							playerLyricsView.setText(Html.fromHtml(lyrics));
@@ -497,13 +502,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 							String songName = song.getArtist() + " - " + song.getTitle();
 							playerLyricsView.setText(getResources().getString(R.string.download_dialog_no_lyrics, songName));
 						}
-					} catch (Exception e) {
+					} catch (Exception ignored) {
 					}
 				}
 			}, song.getArtist(), song.getTitle());
 			lyricsFetcher.startSerach();
+            progressLyrics.setVisibility(View.VISIBLE);
 		} else {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
+            lyricsFrame.setVisibility(View.GONE);
 		}
 	}
 
@@ -661,7 +667,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private void download() {
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+		song.getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
 			public void success(String url) {
@@ -693,7 +699,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void error(final String error) {
 		if (null == getActivity()) return;
-		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
+		getActivity().runOnUiThread(new Runnable() {
 			
 			@Override
 			public void run() {
