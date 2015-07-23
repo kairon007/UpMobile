@@ -191,22 +191,22 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		}
 		switch (position) {
 		case SEARCH_FRAGMENT:
-	        changeFragment(new SearchFragment(), false, currentTag);
+	        changeFragment(new SearchFragment(), false);
 			break;
 		case DOWNLOADS_FRAGMENT:
-	        changeFragment(new DownloadsFragment(), false, currentTag);
+	        changeFragment(new DownloadsFragment(), false);
 			break;
 		case LIBRARY_FRAGMENT:
-	        changeFragment(new LibraryFragment(), false, currentTag);
+	        changeFragment(new LibraryFragment(), false);
 			break;
 		case PLAYLIST_FRAGMENT:
-			changeFragment(new PlaylistFragment(), false, currentTag);
+			changeFragment(new PlaylistFragment(), false);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
 		    if (!lastFragmentName.equals(PlayerFragment.class.getSimpleName())) {
-		    	changeFragment(new PlayerFragment(), true, currentTag);
+		    	changeFragment(new PlayerFragment(), true);
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
@@ -239,15 +239,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		setActionBarTitle(getResources().getString(title));
 	}
 	
-	public void changeFragment(Fragment targetFragment, boolean isAnimate, String currentTag) {
-		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
-		this.currentTag = this.currentTag == null ? SearchFragment.class.getSimpleName() : this.currentTag;
-		currentFragmentIsPlayer = targetFragment.getClass().getSimpleName().equals(PlayerFragment.class.getSimpleName());
+	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+		currentTag = targetFragment.getClass().getSimpleName();
+		setSearchViewVisibility(currentTag);
+		currentFragmentIsPlayer = currentTag.equals(PlayerFragment.class.getSimpleName());
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
-		transaction.replace(R.id.content_frame, targetFragment, this.currentTag)
+		transaction.replace(R.id.content_frame, targetFragment, currentTag)
 				   .addToBackStack(targetFragment.getClass()
 				   .getSimpleName())
 				   .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -382,7 +382,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		buttonBackEnabled = false;
 		showMiniPlayer(false);
 		Fragment fragment = new PlayerFragment();
-    	changeFragment(fragment, true, currentTag);
+    	changeFragment(fragment, true);
 	}
 
 	@Override
