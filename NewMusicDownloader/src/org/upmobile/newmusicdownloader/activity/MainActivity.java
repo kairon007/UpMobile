@@ -242,7 +242,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void changeFragment(Fragment targetFragment, boolean isAnimate, String currentTag) {
 		setSearchViewVisibility(targetFragment.getClass().getSimpleName());
 		this.currentTag = this.currentTag == null ? SearchFragment.class.getSimpleName() : this.currentTag;
-		currentFragmentIsPlayer = this.currentTag.equals(PlayerFragment.class.getSimpleName());
+		currentFragmentIsPlayer = targetFragment.getClass().getSimpleName().equals(PlayerFragment.class.getSimpleName());
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
