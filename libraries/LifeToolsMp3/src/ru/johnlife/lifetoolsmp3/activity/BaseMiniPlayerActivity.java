@@ -333,6 +333,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				customDownloadButton();
 				return;
 			}
+            miniPlayerAnimationStart(true);
 			Animation slideUp = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_up);
 			slideUp.setAnimationListener(new AnimationListener() {
 			
@@ -349,6 +350,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 					isAnimated = false;
 					if (null != fakeView) fakeView.setVisibility(View.VISIBLE);
 					customDownloadButton();
+                    miniPlayerAnimationEnd(true);
 				}
 			});
 			miniPlayer.setVisibility(View.VISIBLE);
@@ -367,28 +369,35 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				return;
 			}
-			Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
+            miniPlayerAnimationStart(false);
+			final Animation slideDown = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_down);
 			slideDown.setAnimationListener(new AnimationListener() {
-				
+
 				@Override
 				public void onAnimationStart(Animation animation) {
 					if (null != fakeView) fakeView.setVisibility(View.GONE);
 					((View)miniPlayer.getParent()).setVisibility(View.GONE);
 				}
-				
+
 				@Override
 				public void onAnimationRepeat(Animation animation) {}
-				
+
 				@Override
 				public void onAnimationEnd(Animation animation) {
 					isAnimated = false;
 					miniPlayer.setVisibility(View.GONE);
 					((View)miniPlayer.getParent()).setVisibility(View.GONE);
+                    miniPlayerAnimationEnd(false);
 				}
 			});
-			View parentMiniPlayer = (View) miniPlayer.getParent();
+			final View parentMiniPlayer = (View) miniPlayer.getParent();
 			parentMiniPlayer.setAnimation(slideDown);
-			parentMiniPlayer.startAnimation(slideDown);
+            parentMiniPlayer.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    parentMiniPlayer.startAnimation(slideDown);
+                }
+            }, 300);
 			isAnimated = true;
 		}
 	}
@@ -483,7 +492,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 				}
 			};
 			checkIdCover  = readyListener.hashCode();
-			((RemoteSong) song).getCover(readyListener);		
+			((RemoteSong) song).getCover(readyListener);
 		} else {
 			setCover(song.getCover());
 		}
@@ -631,5 +640,10 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		}
 		super.onConfigurationChanged(newConfig);
 	}
-	
+
+    protected void miniPlayerAnimationStart(boolean isUpAnimation) {
+    }
+
+    protected void miniPlayerAnimationEnd(boolean isUpAnimation) {
+    }
 }

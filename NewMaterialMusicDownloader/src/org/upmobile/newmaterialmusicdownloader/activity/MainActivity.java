@@ -205,7 +205,23 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		getSupportActionBar().setTitle(title);
 	}
 
-	public void changeFragment(int fragmentId, boolean fromDraver) {
+    @Override
+    protected void miniPlayerAnimationStart(boolean isUpAnimation) {
+        PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+        if (null != playlist) {
+            playlist.miniPlayerAnimationStart(isUpAnimation);
+        }
+    }
+
+    @Override
+    protected void miniPlayerAnimationEnd(boolean isUpAnimation) {
+        PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+        if (null != playlist) {
+            playlist.miniPlayerAnimationEnd(isUpAnimation);
+        }
+    }
+
+    public void changeFragment(int fragmentId, boolean fromDraver) {
 		if (getCurrentFragmentId() == fragmentId) return;
 		isOpenFromDraver = fromDraver;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {

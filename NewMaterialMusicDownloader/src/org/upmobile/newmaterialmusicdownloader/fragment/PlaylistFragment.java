@@ -57,4 +57,12 @@ public class PlaylistFragment extends Fragment {
 	public void forceDelete() {
 		playlistView.forceDelete();
 	}
+
+    public void miniPlayerAnimationStart(boolean isUpAnimation) {
+        playlistView.miniPlayerAnimationStart(isUpAnimation);
+    }
+
+    public void miniPlayerAnimationEnd(boolean isUpAnimation) {
+        playlistView.miniPlayerAnimationEnd(isUpAnimation);
+    }
 }

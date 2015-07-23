@@ -5,13 +5,14 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -43,7 +44,8 @@ import ru.johnlife.uilibrary.widget.textviews.FloatingEditText;
 
 public class PlaylistView extends BasePlaylistView {
 
-	private MaterialDialog.ButtonCallback buttonCallback;
+    private final FloatingActionButton fab;
+    private MaterialDialog.ButtonCallback buttonCallback;
 	private MaterialDialog.Builder builder;
 	private MaterialDialog dialog;
 	private CustomSwipeUndoAdapter swipeUndoAdapter;
@@ -52,7 +54,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
-		FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.floatingButton);
+		fab = (FloatingActionButton) getView().findViewById(R.id.floatingButton);
 		fab.attachToListView(listView, new ScrollDirectionListener() {
 			@Override
 			public void onScrollDown() { }
@@ -245,5 +247,42 @@ public class PlaylistView extends BasePlaylistView {
 	protected void collapseSearchView () {
 		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
 	}
-	
+
+    public void miniPlayerAnimationStart(boolean isUpAnimation) {
+        Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.floating_btn_hide);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                fab.setVisibility(View.INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        fab.startAnimation(anim);
+    }
+
+    public void miniPlayerAnimationEnd(boolean isUpAnimation) {
+        Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.floating_btn_show);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                fab.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+        fab.startAnimation(anim);
+    }
 }
