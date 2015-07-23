@@ -320,9 +320,11 @@ public class MainActivity extends BaseClearActivity implements Constants {
 	@Override
 	public void setCover(Bitmap bmp) {
 		if (null == bmp) {
+            service.updatePictureNotification(BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher));
 			bmp = BitmapFactory.decodeResource(getResources(), R.drawable.def_cover_circle);
-		}
-		service.updatePictureNotification(bmp);
+		} else {
+            service.updatePictureNotification(bmp);
+        }
 		((ImageView) findViewById(R.id.mini_player_cover)).setImageBitmap(bmp);
 	}
 

@@ -82,8 +82,7 @@ public final class Util {
 		}
 		Matrix m = new Matrix();
 		m.postScale(scale, scale);
-		Bitmap small = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
-		return small;
+        return Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
 	}
 	
 	public static Bitmap resizeBitmap(Bitmap original, float height, float width) {
@@ -92,25 +91,22 @@ public final class Util {
 		float scale = Math.min(scaleHeight, scaledWidth);
 		Matrix m = new Matrix();
 		m.postScale(scale, scale);
-		Bitmap resize = Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
-		return resize;
+        return Bitmap.createBitmap(original, 0, 0, original.getWidth(), original.getHeight(), m, false);
 	}
 	
 	public static int existFile(String parentName, String fileName) {
 		int result = 0;
 		File file = new File(parentName);
 		File[] fileArray = file.listFiles();
-		for (int i = 0; i < fileArray.length; i++) {
-			File f = fileArray[i];
-			String fName = f.getName().split(".mp3")[0];
-			if(fName.contains("-[")){
-				fName = fName.split("-\\[")[0];
-			}
-			if (fileName.equals(fName)){
-				result++;
-				continue;
-			}
-		}
+        for (File f : fileArray) {
+            String fName = f.getName().split(".mp3")[0];
+            if (fName.contains("-[")) {
+                fName = fName.split("-\\[")[0];
+            }
+            if (fileName.equals(fName)) {
+                result++;
+            }
+        }
 		return result;
 	}
 	
@@ -126,7 +122,7 @@ public final class Util {
 	            byte[] artwork = myRetriever.getEmbeddedPicture();
 	            return BitmapFactory.decodeByteArray(artwork, 0, artwork.length);
 			}
-			ImageData imageData = (ImageData) pictureList.get(0);
+			ImageData imageData = pictureList.get(0);
 			if (imageData == null) {
 				return null;
 			}
@@ -199,14 +195,12 @@ public final class Util {
 	
 	public static int dpToPx(Context context, int dp) {
 	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-	    int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));       
-	    return px;
+        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 	}
 	
 	public static int pxToDp(Context context, int px) {
 	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-	    int dp = Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));       
-	    return dp;
+        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 	}
 	
 	public static Bitmap textViewToBitmap(View view, int width, int height, int pR, int pT){

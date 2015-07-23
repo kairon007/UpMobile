@@ -34,7 +34,6 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -110,8 +109,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerLyricsView;
 	private TextView playerTitleBarTitle;
 	private TextView playerTitleBarArtis;
-	private String title;
-	private String artist;
     private int delta_top;
     private int delta_left;
 	private int top;
@@ -140,7 +137,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 		@Override
 		public void start(AbstractSong s) {
-			song = s.getClass() != MusicData.class ? ((RemoteSong) s).cloneSong() : s;
+			song = s.getClass() == MusicData.class ? s : ((RemoteSong) s).cloneSong();
 			if (isDestroy) return;
 			playProgress.clearAnimation();
 			playProgress.setVisibility(View.GONE);
@@ -188,6 +185,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			song = s;
 			setElementsView(0);
 			getCover(song);
+            showLyrics(song);
 		}
 
 		@Override
@@ -242,10 +240,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setKeyListener();
 		showLyrics(song);
 		getCover(song);
-		startImageAnimation(playerCover);
+		startImageAnimation();
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
-		changePlayPauseView(prepared ? !player.isPlaying() : true);
+		changePlayPauseView(!(prepared && player.isPlaying()));
 		if (!prepared && player.isEnqueueToStream()) {
 			play.setVisibility(View.GONE);
 			playProgress.setVisibility(View.VISIBLE);
@@ -365,14 +363,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				return false;
 			}
 		});
-		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnTouchListener(new OnTouchListener() {
+		parentView.findViewById(R.id.scroller).setOnTouchListener(new OnTouchListener() {
 
-			@Override
-			public boolean onTouch(View v, MotionEvent event) {
-				editTag();
-				return false;
-			}
-		});
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                editTag();
+                return false;
+            }
+        });
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(new OnScrollChangedListener() {
 			
 			@Override
@@ -588,9 +586,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtArtist.setVisibility(View.GONE);
 			playerBtnArtist.setVisibility(View.VISIBLE);
 			Util.hideKeyboard(getActivity(), parentView);
-			artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtArtist.getText().toString());
+            String artist = Util.removeSpecialCharacters(playerEtArtist.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtArtist.getText().toString());
 			if (!artist.equals(song.getArtist())){
-				if (checkUnique(song.getTitle(),artist)) {
+				if (checkUnique(song.getTitle(), artist)) {
 					Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
 					toast.show();
 					return;
@@ -603,7 +601,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerEtTitle.setVisibility(View.GONE);
 			playerBtnTitle.setVisibility(View.VISIBLE);
 			Util.hideKeyboard(getActivity(), parentView);
-			title = Util.removeSpecialCharacters(playerEtTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtTitle.getText().toString());
+            String title = Util.removeSpecialCharacters(playerEtTitle.getText().toString().isEmpty() ? MP3Editor.UNKNOWN : playerEtTitle.getText().toString());
 			if (!title.equals(song.getTitle())){ 
 				if (checkUnique(title, song.getArtist())) {
 					Toast toast = Toast.makeText(getActivity(), R.string.file_already_exists, Toast.LENGTH_SHORT);
@@ -617,11 +615,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 	
 	private boolean checkUnique(String title, String artist) {
-		if (song.getClass() == MusicData.class) {
-			return new File(MessageFormat.format("{0}/{1} - {2}.mp3", new File(song.getPath()).getParentFile(), artist, title)).exists();
-		}
-		return false;
-	}
+        return song.getClass() == MusicData.class &&
+                new File(MessageFormat.format("{0}/{1} - {2}.mp3", new File(song.getPath()).getParentFile(), artist, title)).exists();
+    }
 	
 	private void saveTag() {
 		updateObject();
@@ -705,7 +701,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						playerLyricsView.setVisibility(View.VISIBLE);
 						playerLyricsView.setText(String.format(getString(R.string.download_dialog_no_lyrics), song.getTitle() + " - " + song.getArtist()));
 					}
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
 			
@@ -793,33 +789,33 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void download() {
 		((MainActivity)getActivity()).setCoverHelper(true);
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+		song.getDownloadUrl(new DownloadUrlListener() {
 
-			@Override
-			public void success(String url) {
-				if (!url.startsWith("http")) {
-					Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
-					toast.show();
-					return;
-				}
-				((RemoteSong) song).setDownloadUrl(url);
-				Runnable callbackRun = new Runnable() {
+            @Override
+            public void success(String url) {
+                if (!url.startsWith("http")) {
+                    Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
+                    toast.show();
+                    return;
+                }
+                ((RemoteSong) song).setDownloadUrl(url);
+                Runnable callbackRun = new Runnable() {
 
-					@Override
-					public void run() {
-						((MainActivity) getActivity()).download((RemoteSong)song,isUseAlbumCover);
-					}
-				};
-				new Handler(Looper.getMainLooper()).post(callbackRun);
-			}
+                    @Override
+                    public void run() {
+                        ((MainActivity) getActivity()).download((RemoteSong) song, isUseAlbumCover);
+                    }
+                };
+                new Handler(Looper.getMainLooper()).post(callbackRun);
+            }
 
-			@Override
-			public void error(String error) {
-			}
-		});
+            @Override
+            public void error(String error) {
+            }
+        });
 	}
 	
-	private void startImageAnimation(ImageView view) {
+	private void startImageAnimation() {
 		ViewTreeObserver observer = playerCover.getViewTreeObserver();
 		observer.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
 			@Override
@@ -848,8 +844,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void run() {
 				if (isDestroy) return;
-				((MainActivity) getActivity()).onBackPressed();
-				((MainActivity) getActivity()).overridePendingTransition(0, 0);
+				getActivity().onBackPressed();
+				getActivity().overridePendingTransition(0, 0);
 			}
 		}, playerCover, false);
 	}
@@ -875,7 +871,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
         			}
         		});
 
-        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", flag ? 1f : 0f, 1f);
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(parentView.findViewById(R.id.bg_layout), "alpha", flag ? 1f : 0f, 1f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
@@ -904,7 +900,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
                 	}
                 });
 
-        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(((RelativeLayout) parentView.findViewById(R.id.bg_layout)), "alpha", 1f, flag ? 1f : 0f);
+        ObjectAnimator bg_anim = ObjectAnimator.ofFloat(parentView.findViewById(R.id.bg_layout), "alpha", 1f, flag ? 1f : 0f);
         bg_anim.setDuration(DURATION);
         bg_anim.start();
     }
@@ -928,13 +924,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	
 	@Override
 	public void error(final String error) {
-		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT);
-				player.stopPressed();
-			}
-		});
+		getActivity().runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+                player.stopPressed();
+            }
+        });
 	}
 }

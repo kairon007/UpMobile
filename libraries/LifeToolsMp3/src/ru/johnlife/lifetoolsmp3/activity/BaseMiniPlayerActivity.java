@@ -550,13 +550,8 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 
 	protected void showProgress(boolean isShowProgres) {
-		if (isShowProgres) {
-			progress.setVisibility(View.VISIBLE);
-			playPause.setVisibility(View.GONE);
-		} else {
-			progress.setVisibility(View.GONE);
-			playPause.setVisibility(View.VISIBLE);
-		}
+        progress.setVisibility(isShowProgres ? View.VISIBLE : View.GONE);
+        playPause.setVisibility(isShowProgres ? View.GONE : View.VISIBLE);
 	}
 	
 	protected void setPlayerFragmentVisible(boolean value) {
