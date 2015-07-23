@@ -156,6 +156,10 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 		});
 	}
+
+	public SearchView getSearchView() {
+		return searchView;
+	}
 	
 	private String getLastFragmentName() {
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);

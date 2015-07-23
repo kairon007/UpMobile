@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -52,18 +53,18 @@ public class PlaylistView extends BasePlaylistView {
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
 		FloatingActionButton fab = (FloatingActionButton) getView().findViewById(R.id.floatingButton);
-        fab.attachToListView(listView, new ScrollDirectionListener() {
-            @Override
-            public void onScrollDown() { }
-            @Override
-            public void onScrollUp() { }
-        }, new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) { }
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { }
-        });
-        fab.setOnClickListener(new OnClickListener() {
+		fab.attachToListView(listView, new ScrollDirectionListener() {
+			@Override
+			public void onScrollDown() { }
+			@Override
+			public void onScrollUp() { }
+		}, new AbsListView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) { }
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { }
+		});
+		fab.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				showDialog();
@@ -76,7 +77,7 @@ public class PlaylistView extends BasePlaylistView {
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle = input.getText().toString().trim();
 				for (AbstractSong data : getAllItems()) {
-					if (data.getClass() == PlaylistData.class && 
+					if (data.getClass() == PlaylistData.class &&
 							((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
 						showMessage(getContext(), R.string.playlist_already_exists);
 						return;
@@ -84,6 +85,7 @@ public class PlaylistView extends BasePlaylistView {
 				}
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
+				collapseSearchView();
 				dialog.cancel();
 			}
 
@@ -237,6 +239,11 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	public void forceDelete() {
 		swipeUndoAdapter.forceDelete();
+	}
+
+	@Override
+	protected void collapseSearchView () {
+		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
 	}
 	
 }

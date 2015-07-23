@@ -625,4 +625,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			}
 		}
 	}
+
+	public SearchView getSearchView() {
+		return searchView;
+	}
 }

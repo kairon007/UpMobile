@@ -61,6 +61,7 @@ public class PlaylistView extends BasePlaylistView{
 				}
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
+				collapseSearchView();
 				dialog.cancel();
 			}
 			@Override
@@ -70,6 +71,11 @@ public class PlaylistView extends BasePlaylistView{
 				dialog.cancel();
 			}
 		};
+	}
+
+	@Override
+	protected void collapseSearchView () {
+		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
 	}
 
 	@Override

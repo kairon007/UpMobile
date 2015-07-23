@@ -62,8 +62,10 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected void forceDelete() {
-		// TODO Auto-generated method stub
-		
+	protected void forceDelete() {}
+
+	@Override
+	protected void collapseSearchView () {
+		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
 	}
 }
