@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
@@ -358,8 +360,18 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                                     @Override
                                     public void run() {
                                         listView.setSelection(adapter.getPosition(data));
+                                        final Animation flash = AnimationUtils.loadAnimation(getContext(), R.anim.flash);
+                                        getViewByPosition(adapter.getPosition(data), listView).postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getViewByPosition(adapter.getPosition(data), listView).setAnimation(flash);
+                                                flash.start();
+                                            }
+                                        }, 100);
                                     }
                                 });
+                                comment = null;
+                                return;
                             }
                         }
                         comment = null;
@@ -369,6 +381,18 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             hideProgress(view);
         }
         return true;
+    }
+
+    public View getViewByPosition(int pos, ListView listView) {
+        final int firstListItemPosition = listView.getFirstVisiblePosition();
+        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
+
+        if (pos < firstListItemPosition || pos > lastListItemPosition ) {
+            return listView.getAdapter().getView(pos, null, listView);
+        } else {
+            final int childIndex = pos - firstListItemPosition;
+            return listView.getChildAt(childIndex);
+        }
     }
 
     protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
