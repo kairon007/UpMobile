@@ -350,6 +350,14 @@
                     </ru.johnlife.uilibrary.widget.customviews.RippleView>
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/downloadedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/has_been_downloaded"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="center_horizontal"/>
 
                 <LinearLayout
                     android:orientation="horizontal"

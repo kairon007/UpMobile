@@ -172,7 +172,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setElementsView(0, s);
 			play.setClickable(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
-			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+			showDownloadedLabel();
 		}
 
 		@Override
@@ -189,7 +189,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			thatSongIsDownloaded(current);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
-			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+			showDownloadedLabel();
 		}
 
 		@Override
@@ -282,7 +282,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setVisibility(View.GONE);
 			ciRippleView.setVisibility(View.GONE);
 		}
-		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 		percent = 0;
 		setCoverToZoomView(null);
 		getCover(song);
@@ -307,6 +307,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		initUpdater();
 		thatSongIsDownloaded(song);
 		super.onResume();
+	}
+
+	private void showDownloadedLabel() {
+		boolean show = isThisSongDownloaded() && song.getClass() != MusicData.class;
+		scrollView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
+		((View) showInLib.getParent()).setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	@Override
@@ -629,7 +635,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setVisibility(View.VISIBLE);
 			ciRippleView.setVisibility(View.VISIBLE);
 		}
-		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 		cbUseCover.setOnCheckedChangeListener(null);
 		setDownloadButtonState(!player.isGettingURl());
 		play.setClickable(false);

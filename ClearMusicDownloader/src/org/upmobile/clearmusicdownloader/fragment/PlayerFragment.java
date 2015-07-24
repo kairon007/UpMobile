@@ -187,7 +187,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			setElementsView(0);
 			getCover(song);
 			showLyrics(song);
-			showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+			hideDownloadedLabel();
 		}
 
 		@Override
@@ -251,9 +251,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playProgress.setVisibility(View.VISIBLE);
 			playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		}
-		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		hideDownloadedLabel();
 		playerProgress.setEnabled(prepared);
 		downloadButtonState(!player.isGettingURl());
+	}
+
+	private void hideDownloadedLabel() {
+		boolean hide = ((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class;
+		parentView.findViewById(R.id.downloadedText).setVisibility(hide ? View.VISIBLE : View.GONE);
+		showInLibrary.setVisibility(hide ? View.VISIBLE : View.GONE);
 	}
 
 	private void setKeyListener() {
@@ -370,12 +376,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		});
 		parentView.findViewById(R.id.scroller).setOnTouchListener(new OnTouchListener() {
 
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                editTag();
-                return false;
-            }
-        });
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				editTag();
+				return false;
+			}
+		});
 		((UIParallaxScroll) parentView.findViewById(R.id.scroller)).setOnScrollChangedListener(new OnScrollChangedListener() {
 			
 			@Override
@@ -761,7 +767,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			download.setVisibility(View.VISIBLE);
 		}
-		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		hideDownloadedLabel();
 		showLyrics(player.getPlayingSong());
 	}
 	
@@ -816,16 +822,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 					@Override
 					public void run() {
-						((MainActivity) getActivity()).download((RemoteSong)song,isUseAlbumCover);
+						((MainActivity) getActivity()).download((RemoteSong) song, isUseAlbumCover);
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
 			}
 
-            @Override
-            public void error(String error) {
-            }
-        });
+			@Override
+			public void error(String error) {
+			}
+		});
 	}
 	
 	private void startImageAnimation() {
@@ -939,11 +945,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	public void error(final String error) {
 		getActivity().runOnUiThread(new Runnable() {
 
-            @Override
-            public void run() {
-                Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
-                player.stopPressed();
-            }
-        });
+			@Override
+			public void run() {
+				Toast.makeText(getActivity(), error, Toast.LENGTH_SHORT).show();
+				player.stopPressed();
+			}
+		});
 	}
 }

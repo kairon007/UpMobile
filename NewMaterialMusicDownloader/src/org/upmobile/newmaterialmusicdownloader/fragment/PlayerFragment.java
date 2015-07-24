@@ -434,7 +434,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			((View) showInLib.getParent()).setVisibility(View.GONE);
 			((RippleView) download.getParent()).setVisibility(View.GONE);
 		}
-		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 		final boolean prepared = player.isPrepared();
 		if (!prepared) {
 			playerProgress.setProgress(0);
@@ -557,7 +557,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			play.toggle(true);
 			getCover(song);
 			setElementsView(0);
-			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+			showDownloadedLabel();
 			playerProgress.setIndeterminate(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		}
@@ -572,7 +572,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setCoverToZoomView(null);
 			setElementsView(0);
 			thatSongIsDownloaded(current);
-			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+			showDownloadedLabel();
 		}
 
 		@Override
@@ -695,7 +695,13 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			download.setVisibility(View.VISIBLE);
 			((ViewGroup) download.getParent()).setVisibility(View.VISIBLE);
 		}
-		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
+	}
+
+	private void showDownloadedLabel() {
+		boolean show = isThisSongDownloaded() && song.getClass() != MusicData.class;
+		contentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
+		((View) showInLib.getParent()).setVisibility(show ? View.VISIBLE : View.GONE);
 	}
 
 	private void cancelProgressTask() {

@@ -232,6 +232,15 @@
                         android:src="?attr/actionVolume" />
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/downloadedText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/has_been_downloaded"
+                    android:textColor="?attr/textViewColor"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:gravity="center_horizontal"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

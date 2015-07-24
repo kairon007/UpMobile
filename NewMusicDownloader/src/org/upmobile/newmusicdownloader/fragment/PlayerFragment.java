@@ -164,7 +164,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			btnDownload.setVisibility(View.VISIBLE);
 		}
-		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 	}
 	
 	@Override
@@ -206,9 +206,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setClickablePlayerElement(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		wait.setVisibility(View.VISIBLE);
-		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 	}
-	
+
+	private void showDownloadedLabel() {
+		boolean show = ((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class;
+		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
+		showInLibrary.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
 	@Override
 	public void onPause() {
 		((MainActivity) getActivity()).showPlayerElement(player.isPrepared());
@@ -269,7 +275,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			btnDownload.setVisibility(View.VISIBLE);
 		}
-		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadedLabel();
 	}
 	
 	@Override
