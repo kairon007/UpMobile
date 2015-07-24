@@ -225,7 +225,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				dialogPlayerView.pause();
 			}
 		}
-	};
+	}
 
 	PhoneStateListener phoneStateListener = new PhoneStateListener() {
 
@@ -259,7 +259,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 					try {
 						String src = getContext().getResources().getText(R.string.search_no_results_for).toString() + " " + searchField.getText().toString();
 						message.setText(src);
-					} catch(Exception e) {
+					} catch(Exception ignored) {
 						
 					}
 					hideBaseProgress();
@@ -494,20 +494,20 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			engineArray = getSettings().getSearchEnginesArray8(context);
 		}
 		engines = new ArrayList<>(engineArray.length);
-		for (int i = 0; i < engineArray.length; i++) {
-			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(engineArray[i][0]);
-			int maxPages = Integer.parseInt(engineArray[i][1]);
-			for (int page = 1; page <= maxPages; page++) {
-				engines.add(new Engine(engineClass, page));
-			}
-		}
+        for (String[] anEngineArray : engineArray) {
+            Class<? extends BaseSearchTask> engineClass = getSearchEngineClass(anEngineArray[0]);
+            int maxPages = Integer.parseInt(anEngineArray[1]);
+            for (int page = 1; page <= maxPages; page++) {
+                engines.add(new Engine(engineClass, page));
+            }
+        }
 	}
 	
 	private void initBoxEngines() {
 		ArrayList<String> list = getSettings().getEnginesArray(getContext());
 		if (list.size() > 1) {
 			if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
-				enginesAdapter = new ArrayAdapter<String>(getContext(), R.layout.item_of_engine, list);
+				enginesAdapter = new ArrayAdapter<>(getContext(), R.layout.item_of_engine, list);
 			} else {
 				enginesAdapter = new CustomSpinnerAdapter(getContext(), R.layout.item_of_engine, list);	
 			}
@@ -558,7 +558,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 						editor.putString(SPREF_CURRENT_ENGINES, getTitleSearchEngine8());
 						keyEngines = getTitleSearchEngine8();
 					}
-					editor.commit();
+					editor.apply();
 					
 					// start search with new engine
 					lastSearchString = "";
@@ -603,7 +603,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				Editor edit = downloadDetails.edit();
 				edit.clear();
 				edit.putString(BaseSearchView.DOWNLOAD_DIR, downloadPath);
-				edit.commit();
+				edit.apply();
 			} else if (!new File(sharedDownloadPath).exists()) {
 				return downloadPath;
 			} else {
@@ -630,7 +630,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		Editor edit = downloadDetails.edit();
 		edit.clear();
 		edit.putString(BaseSearchView.DOWNLOAD_DIR, downloadPath);
-		edit.commit();
+		edit.apply();
 	}
 	
 	public static boolean isOffline(Context context) {
@@ -657,7 +657,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			if (getAdvertisment().isOnlineLib(getContext())) {
 				getAdvertisment().searchStartLib(getContext());
 			}
-		} catch (Exception e) { }
+		} catch (Exception ignored) { }
 	}
 
 	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
@@ -670,10 +670,10 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				try {
 					String searchEngine = jsonArray.getString(i);
 					searchEngines.add(searchEngine);
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 				}
 			}
-		} catch (Exception e) { }
+		} catch (Exception ignored) { }
 		return searchEngines;
 	}
 	
@@ -703,7 +703,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		keeper.activateOptions(StateKeeper.SEARCH_EXE_OPTION);
 		keeper.deactivateOptions(StateKeeper.SEARCH_STOP_OPTION);
 		if (isBlacklistedQuery(songName)) {
-			List<Engine> nothingSearch = new ArrayList<Engine>();
+			List<Engine> nothingSearch = new ArrayList<>();
 			Class<? extends BaseSearchTask> engineClass = getSearchEngineClass("SearchNothing");
 			nothingSearch.add(new Engine(engineClass, 1));
 			taskIterator = nothingSearch.iterator();
@@ -731,7 +731,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			Engine engine = taskIterator.next();
 			String str = null != extraSearch ? extraSearch : searchField.getText().toString();
 			extraSearch = null;
-			searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(new Object[] {this, str});
+			searchTask = engine.getEngineClass().getConstructor(BaseSearchTask.PARAMETER_TYPES).newInstance(this, str);
 			if (searchTask instanceof SearchWithPages) {
 				int page = engine.getPage();
 				((SearchWithPages) searchTask).setPage(page);
@@ -765,7 +765,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			return;
 		}
 		listViewImage = null;
-		if (!((ImageView) view.findViewById(R.id.cover)).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
+		if (!view.findViewById(R.id.cover).getContentDescription().equals(getResources().getString(R.string.default_cover))) {
 			Drawable draw = ((ImageView) view.findViewById(R.id.cover)).getDrawable();
 			if (null != listViewImage) {
 				listViewImage.recycle();
@@ -888,8 +888,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 			if (getSettings().getIsCoversEnabled(getContext())) {
 				if (null != listViewImage) {
 					dialogPlayerView.setCover(getResizedBitmap(listViewImage, 200, 200));
-					listViewImage = null;
-				} else {
+                } else {
 					dialogPlayerView.setCoverFromSong(song);
 				}
 			} else {
@@ -902,11 +901,12 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 		downloadListener = new BaseDownloadSongTask(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
-			boolean hasCover = ((RemoteSong) song).getCover(new OnBitmapReadyListener() {
-				
-				@Override
-				public void onBitmapReady(Bitmap bmp) {}
-			});
+			boolean hasCover = song.getCover(new OnBitmapReadyListener() {
+
+                @Override
+                public void onBitmapReady(Bitmap bmp) {
+                }
+            });
 			if (!hasCover) {
 				dialogPlayerView.hideCoverProgress();
 				dialogPlayerView.setCover(null);
@@ -929,8 +929,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	    float scaleHeight = ((float) newHeight) / height;
 	    Matrix matrix = new Matrix();
 	    matrix.postScale(scaleWidth, scaleHeight);
-	    Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-	    return resizedBitmap;
+        return Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
 	}
 	
 	@SuppressLint("NewApi")

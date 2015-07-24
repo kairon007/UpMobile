@@ -67,7 +67,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected Bitmap getDeafultCover() {
+	protected Bitmap getDefaultCover() {
 		return BitmapFactory.decodeResource(getResources(), org.upmobile.clearmusicdownloader.R.drawable.def_cover_circle);
 	}
 

@@ -33,8 +33,7 @@ public abstract class BaseDownloadsView extends View{
 	private Timer timer;
 	private Updater updater;
 	private static final int DEFAULT_SONG = 7340032; // 7 Mb
-	private int progress;
-	private Object lock  = new Object();
+    private final Object lock  = new Object();
 	private TextView messageView;
 
 	protected abstract String getDirectory();
@@ -84,7 +83,7 @@ public abstract class BaseDownloadsView extends View{
 	}
 	
 	private ArrayList<MusicData> checkDownloads() {
-		ArrayList<MusicData> list = new ArrayList<MusicData>();
+		ArrayList<MusicData> list = new ArrayList<>();
 		synchronized (lock) {
 			try {
 				if (null != manager) {
@@ -109,7 +108,7 @@ public abstract class BaseDownloadsView extends View{
 						updateList(running, list);
 					}
 				}
-			} catch (Exception e) {
+			} catch (Exception ignored) {
 			}
 		}
 		return sortList(list);
@@ -228,7 +227,7 @@ public abstract class BaseDownloadsView extends View{
 			final ArrayList<MusicData> list = checkDownloads();
 			Cursor c = manager.query(new DownloadManager.Query().setFilterByStatus(DownloadManager.STATUS_RUNNING));
 			while (c.moveToNext()) {
-				progress = 0;
+                int progress = 0;
 				int sizeIndex = c.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES);
 				int downloadedIndex = c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR);
 				int size = c.getInt(sizeIndex);

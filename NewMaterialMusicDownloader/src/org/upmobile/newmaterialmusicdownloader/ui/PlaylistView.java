@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,7 +35,6 @@ import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.buttons.fab.FloatingActionButton;
-import ru.johnlife.uilibrary.widget.buttons.fab.ScrollDirectionListener;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
@@ -55,23 +53,13 @@ public class PlaylistView extends BasePlaylistView {
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
 		fab = (FloatingActionButton) getView().findViewById(R.id.floatingButton);
-		fab.attachToListView(listView, new ScrollDirectionListener() {
-			@Override
-			public void onScrollDown() { }
-			@Override
-			public void onScrollUp() { }
-		}, new AbsListView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(AbsListView view, int scrollState) { }
-			@Override
-			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) { }
-		});
+		fab.attachToListView(listView, null, null);
 		fab.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				showDialog();
-			}
-		});
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
 		buttonCallback = new ButtonCallback() {
 			@Override
 			public void onPositive(MaterialDialog dialog) {
@@ -101,7 +89,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected Bitmap getDeafultCover() {
+	protected Bitmap getDefaultCover() {
 		return ((BitmapDrawable) getResources().getDrawable(R.drawable.ic_album_grey)).getBitmap();
 	}
 

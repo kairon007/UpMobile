@@ -55,7 +55,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     private TextView emptyMessage;
     private Handler uiHandler;
     private String filterQuery = "";
-    private Object lock = new Object();
+    private final Object lock = new Object();
     private CheckRemovedFiles checkRemovedFiles;
     private Cursor cursor;
     private PlaybackService service;
@@ -97,8 +97,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         uiHandler.sendMessage(msg);
         StateKeeper.getInstance().setLibrarysAdapter(list);
     }
-
-    ;
 
     private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
 
@@ -245,7 +243,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         listView = getListView(view);
         emptyMessage = getMessageView(view);
         adapter = getAdapter();
-        if (service.hasInstance()) {
+        if (PlaybackService.hasInstance()) {
             service = PlaybackService.get(view.getContext());
         } else {
             new Thread(new Runnable() {
@@ -265,7 +263,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                     ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(adapter.getAll());
                     service.setArrayPlayback(list);
                 }
-                if (!service.isPrepared() || !((MusicData) adapter.getItem(i)).equals(service.getPlayingSong().getPath())) {
+                if (!(service.isPrepared() && adapter.getItem(i).equals(service.getPlayingSong().getPath()))) {
                     ((BaseMiniPlayerActivity) getContext()).startSong(((MusicData) adapter.getItem(i)));
                 }
             }
@@ -304,7 +302,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     protected ArrayList<MusicData> querySong() {
         ArrayList<MusicData> result;
         synchronized (lock) {
-            result = new ArrayList<MusicData>();
+            result = new ArrayList<>();
             Cursor cursor = buildQuery(getContext().getContentResolver(), Util.addQuotesForSqlQuery(getFolderPath()));
             if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
                 cursor.close();
@@ -410,7 +408,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 
         @Override
         protected ArrayList<MusicData> doInBackground(Void... params) {
-            ArrayList<MusicData> badFiles = new ArrayList<MusicData>();
+            ArrayList<MusicData> badFiles = new ArrayList<>();
             if (srcList.isEmpty()) return null;
             for (MusicData data : srcList) {
                 if (!new File(data.getPath()).exists()) {

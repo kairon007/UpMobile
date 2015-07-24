@@ -472,14 +472,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		playingSong = arrayPlayback.get(position);
 		if (check(SMODE_PREPARED)) {
-			int msg;
-			if (check(SMODE_PAUSE)) {
-				msg = MSG_PLAY;
-				onMode(SMODE_PLAYING);
-			} else {
-				msg = MSG_PAUSE;
-				onMode(SMODE_PAUSE);
-			}
+			int msg = check(SMODE_PAUSE) ? MSG_PLAY : MSG_PAUSE;
+            onMode(check(SMODE_PAUSE) ? SMODE_PLAYING : SMODE_PAUSE);
 			buildSendMessage(playingSong, msg, 0, 0);
 		} else {
 			play(playingSong.getClass() != MusicData.class);

@@ -66,7 +66,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter {
         public PlaylistViewHolder(View v) {
             title = (TextView) v.findViewById(R.id.textTitle);
             artist = (TextView) v.findViewById(R.id.textHint);
-            cover = v.findViewById(R.id.item_cover);
+            cover = (ImageView) v.findViewById(R.id.item_cover);
             duration = (TextView) v.findViewById(R.id.textDuration);
             groupTitle = (TextView) v.findViewById(R.id.textTitle);
             playAll = v.findViewById(R.id.playAll);

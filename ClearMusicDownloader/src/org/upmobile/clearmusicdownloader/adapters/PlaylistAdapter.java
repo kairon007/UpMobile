@@ -82,7 +82,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		public PlaylistViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.textTitle);
 			artist = (TextView) v.findViewById(R.id.textHint);
-			cover = v.findViewById(R.id.item_cover);
+			cover = (ImageView) v.findViewById(R.id.item_cover);
 			duration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
 			playAll = v.findViewById(R.id.playAll);
@@ -93,11 +93,8 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		protected void hold(AbstractSong data, int position) {
 			super.hold(data, position);
 			if (data.getClass() == PlaylistData.class) {
-				if (((PlaylistData) data).isExpanded()) {
-					((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp));
-				} else {
-					((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_down_black_18dp));
-				}
+                ((ImageView) customGroupIndicator).setImageDrawable(getContext().getResources().getDrawable(
+                        ((PlaylistData) data).isExpanded() ? R.drawable.ic_keyboard_arrow_up_black_18dp : R.drawable.ic_keyboard_arrow_down_black_18dp));
 			}
 		}
 	}

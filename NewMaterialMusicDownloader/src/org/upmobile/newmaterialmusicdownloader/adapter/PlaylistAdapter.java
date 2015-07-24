@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,9 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		arrowUp = getContext().getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_18dp);
 	}
 
-	@Override
-	public View getUndoView(int paramInt, View paramView, ViewGroup paramViewGroup) {
+	@NonNull
+    @Override
+	public View getUndoView(int paramInt, View paramView, @NonNull ViewGroup paramViewGroup) {
 		View view = paramView;
 		if (view == null) {
 			view = LayoutInflater.from(getContext()).inflate(R.layout.list_item_undo_view, paramViewGroup, false);
@@ -49,8 +51,9 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		return view;
 	}
 
-	@Override
-	public View getUndoClickView(View paramView) {
+	@NonNull
+    @Override
+	public View getUndoClickView(@NonNull View paramView) {
 		return paramView.findViewById(R.id.undo_button);
 	}
 	
@@ -91,11 +94,11 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		public PlaylistViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.textTitle);
 			artist = (TextView) v.findViewById(R.id.textHint);
-			cover = v.findViewById(R.id.item_cover);
+			cover = (ImageView) v.findViewById(R.id.item_cover);
 			duration = (TextView) v.findViewById(R.id.textDuration);
-			groupTitle = (TextView) v.findViewById(R.id.textTitle);
-			playAll = (View) v.findViewById(R.id.playAll);
-			customGroupIndicator = (ImageView) v.findViewById(R.id.customGroupIndicator);
+            groupTitle = (TextView) v.findViewById(R.id.textTitle);
+			playAll = v.findViewById(R.id.playAll);
+			customGroupIndicator = v.findViewById(R.id.customGroupIndicator);
 		}
 
 		@Override
@@ -103,11 +106,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 			super.hold(data, position);
 			if (data.getClass() == PlaylistData.class) {
 				((ImageView) customGroupIndicator).setColorFilter(color);
-				if (((PlaylistData) data).isExpanded()) {
-					((ImageView) customGroupIndicator).setImageDrawable(arrowUp);
-				} else {
-					((ImageView) customGroupIndicator).setImageDrawable(arrowDown);
-				}
+                ((ImageView) customGroupIndicator).setImageDrawable(((PlaylistData) data).isExpanded() ? arrowUp : arrowDown);
 			}
 		}
 		

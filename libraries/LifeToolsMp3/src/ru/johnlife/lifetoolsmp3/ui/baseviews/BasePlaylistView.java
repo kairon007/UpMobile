@@ -72,7 +72,7 @@ public abstract class BasePlaylistView extends View {
 			MediaStore.Audio.Media.DURATION, 
 			MediaStore.Audio.Media.ALBUM, };
 	
-	protected abstract Bitmap getDeafultCover();
+	protected abstract Bitmap getDefaultCover();
 	
 	protected abstract String getDirectory();
 
@@ -423,16 +423,15 @@ public abstract class BasePlaylistView extends View {
 		if (null != musicData && ((PlaylistData) playlists.get(playlists.indexOf(data))).getSongs().size() == 0) {
 			((PlaylistData) playlists.get(playlists.indexOf(data))).setExpanded(false);
 		}
-		updateAdapter(playlists);
+        adapter.remove(data);
 	}
 
 	private ArrayList<AbstractSong> getPlaylists() {
-		ArrayList<AbstractSong> playlistDatas = null;
+		ArrayList<AbstractSong> playlistDatas = new ArrayList<>();
 		try {
-			playlistDatas = new ArrayList<AbstractSong>();
 			Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 			PlaylistData playlistData = new PlaylistData();
-			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
+			if (null == playlistCursor || playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
 				return playlistDatas;
 			}
 			if (playlistCursor.getString(1).contains(getDirectory())) {
@@ -447,11 +446,10 @@ public abstract class BasePlaylistView extends View {
 				}
 			}
 			playlistCursor.close();
-			return playlistDatas;
 		} catch (Exception e) {
 			e.printStackTrace();
-			return playlistDatas;
 		}
+        return playlistDatas;
 	}
 	
 	public PlaylistData getPlaylistBySong(MusicData song) {

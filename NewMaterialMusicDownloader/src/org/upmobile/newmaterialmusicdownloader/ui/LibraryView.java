@@ -82,8 +82,8 @@ public class LibraryView extends BaseLibraryView {
                     }
                 }
             });
-            swipeUndoAdapter.setAbsListView((DynamicListView) listView);
-            ((DynamicListView) listView).setAdapter(swipeUndoAdapter);
+            swipeUndoAdapter.setAbsListView(listView);
+            listView.setAdapter(swipeUndoAdapter);
             ((DynamicListView) listView).enableSimpleSwipeUndo();
         } catch (Throwable e){
             Log.d(getClass().getSimpleName(), "Exception: " + e);

@@ -605,8 +605,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		Util.hideKeyboard(getActivity(), buttonView);
 		if (buttonView.getId() == R.id.cbShowEqualizer) {
 			Editor editor = NewMaterialApp.getSharedPreferences().edit();
-			editor.putBoolean(PREF_VISUALIZER, isChecked);
-			editor.commit();
+            editor.putBoolean(PREF_VISUALIZER, isChecked);
+			editor.apply();
 			setupVisualizerFxAndUI(isChecked);
 			return;
 		}
@@ -999,7 +999,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
             scrollView.setImageBitmap(bigDefaultCover);
         }
     }
-	
+
 	private void setCheckBoxState(final boolean state) {
 		if (isAdded()) {
 			isUseAlbumCover = state;
@@ -1012,67 +1012,67 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 	
 	private void forceDownload() {
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
-			
-			@Override
-			public void success(String url) {
-				if (!url.startsWith("http")) return;
-				((RemoteSong) song).setDownloadUrl(url);
-				downloadListener.onClick(contentView);
-			}
-			
-			@Override
-			public void error(String error) {
-				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-					
-					@Override
-					public void run() {
-						((MainActivity) getActivity()).showMessage(R.string.download_failed);
-						download.setProgress(0);
-						setDownloadButtonState(true);
-					}
-				});
-			}
-		});
+		song.getDownloadUrl(new DownloadUrlListener() {
+
+            @Override
+            public void success(String url) {
+                if (!url.startsWith("http")) return;
+                ((RemoteSong) song).setDownloadUrl(url);
+                downloadListener.onClick(contentView);
+            }
+
+            @Override
+            public void error(String error) {
+                getActivity().runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        ((MainActivity) getActivity()).showMessage(R.string.download_failed);
+                        download.setProgress(0);
+                        setDownloadButtonState(true);
+                    }
+                });
+            }
+        });
 	}
 	
 	Runnable postDownload = new Runnable() {
 		public void run() {
 			hasPost = false;
-			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+			song.getDownloadUrl(new DownloadUrlListener() {
 
-				@Override
-				public void success(String url) {
-					if (!url.startsWith("http")) return;
-					((RemoteSong) song).setDownloadUrl(url);
-					downloadListener.onClick(contentView);
-					new Handler(Looper.getMainLooper()).post(new Runnable() {
+                @Override
+                public void success(String url) {
+                    if (!url.startsWith("http")) return;
+                    ((RemoteSong) song).setDownloadUrl(url);
+                    downloadListener.onClick(contentView);
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
 
-						@Override
-						public void run() {
-							if (downloadListener.getSongID() == -1) {
-								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
-								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,downloadListener.getDownloadId());
-								download.removeCallbacks(postDownload);
-							}
-						}
-					});
-				}
+                        @Override
+                        public void run() {
+                            if (downloadListener.getSongID() == -1) {
+                                progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+                                progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, downloadListener.getDownloadId());
+                                download.removeCallbacks(postDownload);
+                            }
+                        }
+                    });
+                }
 
-				@Override
-				public void error(String error) {
-					if (null == getActivity()) return;
-					((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							((MainActivity) getActivity()).showMessage(R.string.download_failed);
-							download.setProgress(0);
-							setDownloadButtonState(true);
-						}
-					});
-				}
-			});
+                @Override
+                public void error(String error) {
+                    if (null == getActivity()) return;
+                    getActivity().runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            ((MainActivity) getActivity()).showMessage(R.string.download_failed);
+                            download.setProgress(0);
+                            setDownloadButtonState(true);
+                        }
+                    });
+                }
+            });
 		}
 	};
 
@@ -1171,7 +1171,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	
 	private void generateDefaultCover() {		
 		Display display = getActivity().getWindowManager().getDefaultDisplay(); 
-		int height = (int)(display.getHeight()/2);
+		int height = display.getHeight()/2;
 
 		bigDefaultCover = Bitmap.createBitmap(height, height, Bitmap.Config.ARGB_8888);
 
