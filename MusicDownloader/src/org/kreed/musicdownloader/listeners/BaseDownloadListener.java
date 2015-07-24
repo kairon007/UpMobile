@@ -64,7 +64,7 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 	} 
 	
 	@Override
-	public CoverReadyListener notifyStartDownload(long downloadId) {
+	public RemoteSong.OnBitmapReadyListener notifyStartDownload(long downloadId) {
 		final MusicData downloadItem = new MusicData();
 		downloadItem.setSongArtist(songArtist);
 		downloadItem.setSongTitle(songTitle);
@@ -72,11 +72,11 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 		downloadItem.setDownloadId(downloadId);
 		downloadItem.setDownloadProgress(0);
 		downloadsTab.insertData(downloadItem);
-		return new CoverReadyListener() {
-			
+		return new RemoteSong.OnBitmapReadyListener() {
+
 			@Override
-			public void onCoverReady(Bitmap cover) {
-				downloadItem.setSongBitmap(cover);
+			public void onBitmapReady(Bitmap bmp) {
+				downloadItem.setSongBitmap(bmp);
 			}
 		};
 	}

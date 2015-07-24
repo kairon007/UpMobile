@@ -264,7 +264,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
         }
         boolean isUpdated = continueDownload(id, currentDownloadId);
         if (!isUpdated) {
-//            downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
+            downloadingSong.getCover(notifyStartDownload(currentDownloadId));
         }
         if (!earlierMsg) {
             ((Activity) context).runOnUiThread(new Runnable() {
@@ -333,7 +333,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
         context.getContentResolver().delete(rootUri, MediaStore.MediaColumns.DATA + "=?", new String[]{path});
     }
 
-    public CoverReadyListener notifyStartDownload(long downloadId) {
+    public RemoteSong.OnBitmapReadyListener notifyStartDownload(long downloadId) {
         return null;
     }
 

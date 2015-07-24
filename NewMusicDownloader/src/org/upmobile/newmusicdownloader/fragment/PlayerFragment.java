@@ -39,7 +39,6 @@ import org.upmobile.newmusicdownloader.activity.MainActivity;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
@@ -675,7 +674,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			return;
 		}
 		if (song.getClass() != MusicData.class) {
-			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
+			RemoteSong.OnBitmapReadyListener readyListener = new RemoteSong.OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {

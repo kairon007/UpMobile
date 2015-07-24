@@ -351,53 +351,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		super.onDestroy();
 	}
 
-//	private void animateCover (Boolean inRight) {
-//		final Animation slideIn = AnimationUtils.loadAnimation(getActivity(), R.anim.cover_in_right);
-//		final Animation slideOut = AnimationUtils.loadAnimation(getActivity(), R.anim.cover_out_left);
-//		slideOut.setAnimationListener(new Animation.AnimationListener() {
-//			@Override
-//			public void onAnimationStart(Animation animation) {
-//
-//			}
-//
-//			@Override
-//			public void onAnimationEnd(Animation animation) {
-//				coverView.setImageBitmap(defaultCover);
-//			}
-//
-//			@Override
-//			public void onAnimationRepeat(Animation animation) {
-//
-//			}
-//		});
-//		slideIn.setAnimationListener(new Animation.AnimationListener() {
-//			@Override
-//			public void onAnimationStart(Animation animation) {
-//
-//			}
-//
-//			@Override
-//			public void onAnimationEnd(Animation animation) {
-////				fakeCoverView.setImageBitmap(null);
-//			}
-//
-//			@Override
-//			public void onAnimationRepeat(Animation animation) {
-//
-//			}
-//		});
-//		fakeCoverView.post(new Runnable() {
-//			@Override
-//			public void run() {
-//				fakeCoverView.setAnimation(slideIn);
-//				fakeCoverView.setImageBitmap(defaultCover);
-//				coverView.setAnimation(slideOut);
-//				slideOut.start();
-//				slideIn.start();
-//			}
-//		});
-//	}
-
 	@Override
 	public void onClick(View v) {
 		closeEditViews();
@@ -407,11 +360,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			break;
 		case R.id.prev:
 			play(-1);
-//			animateCover(false);
 			break;
 		case R.id.next:
 			play(1);
-//			animateCover(true);
 			break;
 		case R.id.repeat:
 			repeat.setAlpha(player.offOnRepeat() ? 1 : (float) 0.5);
@@ -915,7 +866,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 			@Override
 			public void onBitmapReady(final Bitmap bmp) {
-				Log.d("logd", "onBitmapReady : player " + bmp);
 				if (hashCode() != checkIdCover) {
 					cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
 					return;

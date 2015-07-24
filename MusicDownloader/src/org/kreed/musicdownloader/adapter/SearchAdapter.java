@@ -18,7 +18,6 @@ import org.kreed.musicdownloader.listeners.BaseDownloadListener;
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.adapter.BaseSearchAdapter;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -56,7 +55,7 @@ public class SearchAdapter extends BaseSearchAdapter {
 		} else if (exist == 0 && !isCached) {
 			downloadListener = new BaseDownloadListener(getContext(), song, id);
 			if (downloadListener.isBadInet()) return;
-			song.setDownloaderListener(downloadListener.notifyStartDownload(id));
+			song.getCover(downloadListener.notifyStartDownload(id));
 			song.getDownloadUrl(new DownloadUrlListener() {
 
 				@Override
@@ -99,14 +98,14 @@ public class SearchAdapter extends BaseSearchAdapter {
 			//TODO white theme / black theme
 			cover.setImageResource(R.drawable.fallback_cover);
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong) item).isHasCoverFromSearch()) {
-				((RemoteSong) item).getSmallCover(false, new OnBitmapReadyListener() {
-							@Override
-							public void onBitmapReady(Bitmap bmp) {
-								if (null != bmp) {
-									cover.setImageBitmap(bmp);
-								}
-							}
-						});
+				((RemoteSong) item).getCover(new RemoteSong.OnBitmapReadyListener() {
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						if (null != bmp) {
+							cover.setImageBitmap(Util.resizeToSmall(bmp));
+						}
+					}
+				});
 			}
 			super.hold(item, position);
 		}

@@ -56,7 +56,6 @@ import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 import java.io.File;
 import java.text.MessageFormat;
 
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
@@ -782,7 +781,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerCover.setImageResource(R.drawable.def_cover_circle_web);
 		useCover.setVisibility(View.INVISIBLE);
 		if (song.getClass() != MusicData.class) {
-			OnBitmapReadyListener idBmpListener = new OnBitmapReadyListener() {
+			RemoteSong.OnBitmapReadyListener idBmpListener = new RemoteSong.OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
