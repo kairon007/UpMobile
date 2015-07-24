@@ -103,12 +103,31 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		if (!file.exists())
 			file.mkdirs();
 		fileObserver.startWatching();
-
 		// Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 	}
 
+	private void configCurrentId (BaseMaterialFragment baseMaterialFragment) {
+		if (baseMaterialFragment.getClass() == SearchFragment.class) {
+			currentFragmentID = SEARCH_FRAGMENT;
+		} else if (baseMaterialFragment.getClass() == DownloadsFragment.class){
+			currentFragmentID = DOWNLOADS_FRAGMENT;
+		} else if (baseMaterialFragment.getClass() == LibraryFragment.class){
+			currentFragmentID = LIBRARY_FRAGMENT;
+		}else if (baseMaterialFragment.getClass() == PlaylistFragment.class){
+			currentFragmentID = PLAYLIST_FRAGMENT;
+		} else if (baseMaterialFragment.getClass() == PlayerFragment.class){
+			currentFragmentID = PLAYER_FRAGMENT;
+		} else {
+			currentFragmentID = SEARCH_FRAGMENT;
+		}
+	}
 
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate) {
+		changeFragment(baseMaterialFragment, isAnimate, null);
+	}
+
+	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate, AbstractSong song) {
+		configCurrentId(baseMaterialFragment);
 		if (null != searchView) {
 			Util.hideKeyboard(this, searchView);
 		}
@@ -119,6 +138,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		}
 		if (((Fragment) baseMaterialFragment).isAdded()) {
 			((Fragment) baseMaterialFragment).onResume();
+		}
+		if (baseMaterialFragment.getClass() == LibraryFragment.class) {
+			Bundle b = new Bundle();
+			b.putParcelable("KEY_SELECTED_SONG", song);
+			((Fragment) baseMaterialFragment).setArguments(b);
 		}
 		FragmentTransaction tr = getFragmentManager().beginTransaction();
 		if (isAnimate && isAnimationEnabled()) {
@@ -314,6 +338,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 				getFragmentManager().popBackStack();
 			}
 		} else if (currentFragmentID == LIBRARY_FRAGMENT) {
+			if (!navigationDrawerFragment.isDrawerIndicatorEnabled()) {
+				getFragmentManager().popBackStack();
+				showMiniPlayer(false);
+				return;
+			}
 			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
 			Fragment fragment;
 			if (current == MusicData.class) {

@@ -6,7 +6,6 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +18,7 @@ import java.util.List;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseClearActivity extends BaseMiniPlayerActivity implements Constants {
@@ -32,6 +32,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     private LinearLayout topFrame;
 	private Fragment lastOpenedFragment;
 	private TextView tvTitle;
+	private View leftMenu;
+	private View titleBar;
 	protected boolean isBackButtonEnabled = false;
   
     protected abstract Fragment[] getFragments();
@@ -54,9 +56,9 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         changeFragment(getFragments()[Constants.SEARCH_FRAGMENT], false);
         tvTitle.setText(titles[Constants.SEARCH_FRAGMENT]);
         hidePlayerElement();
+		leftMenu = findViewById(R.id.title_bar_left_menu);
+		titleBar = findViewById(R.id.title_bar);
     }
-
-
 
 	private void init() {
 		topFrame = (LinearLayout) findViewById(R.id.layout_top);
@@ -77,20 +79,8 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
         	resideMenu.addMenuItem(item);
         }
-        findViewById(R.id.title_bar_left_menu).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Util.hideKeyboard(BaseClearActivity.this, view);
-				resideMenu.openMenu();
-			}
-		});
-        findViewById(R.id.title_bar).setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View view) {
-				Util.hideKeyboard(BaseClearActivity.this, view);
-				resideMenu.openMenu();
-			}
-		});
+        findViewById(R.id.title_bar_left_menu).setOnClickListener(this);
+        findViewById(R.id.title_bar).setOnClickListener(this);
     }
 
 	public void setMenuListener(ResideMenu.OnMenuListener listener) {
@@ -100,28 +90,36 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
     @Override
     public void onClick(View view) {
     	super.onClick(view);
-    	Util.hideKeyboard(this, view);
-        for (int i = 0; i < menuItems.length; i++) {
-        	if (view == menuItems[i]) {
-        		if (menuItems[i].getType() == ResideMenuItem.Types.TYPE_SETTINGS) {
-        			showDialog(); 
-        			break;
-        		}
-        		if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {
-        			resideMenu.closeMenu();
-        			return;
-        		}
-        		if (i == PLAYER_FRAGMENT) {
-        			isBackButtonEnabled = true;
-        			changeFragment(getPlayerFragment(), true);
-        		} else {
-        			showMiniPlayer(null != service ? service.isEnqueueToStream(): false);
-        			changeFragment(fragments[i], false);
-        		}
-        		tvTitle.setText(titles[i]);
-        	}
-        }
-        resideMenu.closeMenu();
+		if (view.getId() == leftMenu.getId()) {
+			Util.hideKeyboard(BaseClearActivity.this, view);
+			resideMenu.openMenu();
+		} else if (view.getId() == titleBar.getId()) {
+			Util.hideKeyboard(BaseClearActivity.this, view);
+			resideMenu.openMenu();
+		} else {
+			Util.hideKeyboard(this, view);
+			for (int i = 0; i < menuItems.length; i++) {
+				if (view == menuItems[i]) {
+					if (menuItems[i].getType() == ResideMenuItem.Types.TYPE_SETTINGS) {
+						showDialog();
+						break;
+					}
+					if (lastOpenedFragment.getClass().getSimpleName().equals(fragments[i].getClass().getSimpleName())) {
+						resideMenu.closeMenu();
+						return;
+					}
+					if (i == PLAYER_FRAGMENT) {
+						isBackButtonEnabled = true;
+						changeFragment(getPlayerFragment(), true);
+					} else {
+						showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
+						changeFragment(fragments[i], false);
+					}
+					tvTitle.setText(titles[i]);
+				}
+			}
+			resideMenu.closeMenu();
+		}
     }
 
 	//Example of menuListener
@@ -133,13 +131,23 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		@Override
         public void closeMenu() { }
     };
-    
+
 	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+		changeFragment(targetFragment, isAnimate, null);
+	}
+    
+	public void changeFragment(Fragment targetFragment, boolean isAnimate, AbstractSong song) {
+		if (null != targetFragment && targetFragment.isAdded() && targetFragment.isVisible()) return;
 		manageSearchView(targetFragment.getClass().getSimpleName());
 		currentFragmentIsPlayer = targetFragment.getClass() == getFragments()[PLAYER_FRAGMENT].getClass();
 		lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
+		if (targetFragment.getClass() == getFragments()[LIBRARY_FRAGMENT].getClass()) {
+			Bundle b = new Bundle();
+			b.putParcelable("KEY_SELECTED_SONG", song);
+			targetFragment.setArguments(b);
+		}
 		if (isAnimate && isAnimationEnabled()) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up,
 					R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down,
@@ -175,6 +183,18 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			tvTitle.setText(title);
 			manageSearchView(lastFragmentName);
 			showMiniPlayer(service.isEnqueueToStream());
+		} else if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[LIBRARY_FRAGMENT].getClass().getSimpleName()) && lastOpenedFragment.getArguments().getParcelable("KEY_SELECTED_SONG") != null) {
+			getFragmentManager().popBackStack();
+			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
+			String lastFragmentName = backEntry.getName();
+			lastOpenedFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
+			String title = getNameCurrentFragment(lastFragmentName);
+			tvTitle.setText(title);
+			manageSearchView(lastFragmentName);
+			titleBar.setOnClickListener(this);
+			leftMenu.setOnClickListener(this);
+			leftMenu.setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebar_menu_selector));
+			showMiniPlayer(false);
 		} else {
 			if (isMiniPlayerPrepared()) {
 				stopChildsServices();
@@ -234,6 +254,10 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		if (!isPlaying()) {
 			resideMenu.hideLastElement();
 		}
+	}
+
+	public void setTvTitle(String title) {
+		tvTitle.setText(title);
 	}
 	
 }

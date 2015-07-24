@@ -169,6 +169,10 @@ public class FragmentDrawer extends Fragment implements Constants {
     	mDrawerToggle.setDrawerIndicatorEnabled(unlock);
     	mDrawerLayout.setDrawerLockMode(unlock ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
     }
+
+    public boolean isDrawerIndicatorEnabled() {
+        return mDrawerToggle.isDrawerIndicatorEnabled();
+    }
     
     public void openDrawer() {
     	mDrawerLayout.openDrawer(GravityCompat.START);

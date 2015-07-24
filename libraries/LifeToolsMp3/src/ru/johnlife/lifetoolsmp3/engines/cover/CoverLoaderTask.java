@@ -43,11 +43,6 @@ public class CoverLoaderTask implements ImageLoadingListener {
 			}
 		    ImageLoader.getInstance().loadImage(coverUrl, this);			
 		} catch (Throwable e) {
-			for (OnBitmapReadyListener listener : listeners) {
-				if (null != listener) {
-					listener.onBitmapReady(null);
-				}
-			}
 			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 		}
 		return;

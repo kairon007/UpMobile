@@ -1,15 +1,17 @@
 package org.upmobile.newmaterialmusicdownloader.fragment;
 
-import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
-import org.upmobile.newmaterialmusicdownloader.R;
-import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.ui.LibraryView;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.upmobile.newmaterialmusicdownloader.ManagerFragmentId;
+import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
+import org.upmobile.newmaterialmusicdownloader.ui.LibraryView;
+
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 public class LibraryFragment extends Fragment {
 	
@@ -37,9 +39,11 @@ public class LibraryFragment extends Fragment {
 		super.onResume();
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.libraryFragment());
-		act.setDraverEnabled(true);
 		act.setTitle(R.string.tab_library);
 		act.showToolbarShadow(true);
+		AbstractSong abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
+		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());
+		act.setDraverEnabled(null == abstractSong ? true : false);
 		libraryView.onResume();
 	}
 	

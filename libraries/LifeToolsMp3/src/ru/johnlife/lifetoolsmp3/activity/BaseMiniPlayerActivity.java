@@ -512,21 +512,21 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	private void downloadSong() {
 		song.getDownloadUrl(new DownloadUrlListener() {
 
-            @Override
-            public void success(String url) {
-                ((RemoteSong) song).setDownloadUrl(url);
-                download(((RemoteSong) song));
-            }
+			@Override
+			public void success(String url) {
+				((RemoteSong) song).setDownloadUrl(url);
+				download(((RemoteSong) song));
+			}
 
-            @Override
-            public void error(final String error) {
-                runOnUiThread(new Runnable() {
-                    public void run() {
-                        showMessage(getString(R.string.error_getting_url_songs));
-                    }
-                });
-            }
-        });
+			@Override
+			public void error(final String error) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						showMessage(getString(R.string.error_getting_url_songs));
+					}
+				});
+			}
+		});
 	}
 	
 	protected void download(RemoteSong song) {

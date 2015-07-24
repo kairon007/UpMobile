@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/detail_background"
     tools:context="org.upmobile.clearmusicdownloader.activity.MainActivity"
-    tools:ignore="contentDescription" >
+    tools:ignore="contentDescription">
 
     <com.special.utils.UIParallaxScroll
         android:id="@+id/scroller"
@@ -16,12 +16,11 @@
         android:clickable="true"
         android:descendantFocusability="beforeDescendants"
         android:fillViewport="true"
-        app:headerView="@+id/layout_top" >
+        app:headerView="@+id/layout_top">
 
-        <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+            android:layout_height="match_parent">
 
             <View
                 android:id="@+id/cover_empty_view"
@@ -29,16 +28,16 @@
                 android:layout_height="256dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp" />
-            
+
             <CheckBox
                 android:id="@+id/use_cover"
                 style="@style/CheckBoxAppTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/cover_empty_view"
-                android:visibility="visible"
                 android:layout_alignRight="@id/cover_empty_view"
-                android:checked="true" />
+                android:layout_below="@id/cover_empty_view"
+                android:checked="true"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:id="@+id/player_artist_frame"
@@ -48,7 +47,7 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp" >
+                android:paddingRight="8dp">
 
                 <TextView
                     android:id="@+id/player_artist"
@@ -68,7 +67,7 @@
                     android:id="@+id/player_edit_artist"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/button_selector_inverse_light" >
+                    android:background="@drawable/button_selector_inverse_light">
 
                     <ImageView
                         android:layout_width="24dp"
@@ -85,9 +84,9 @@
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="true"
                     android:fontFamily="sans-serif-light"
+                    android:imeOptions="actionDone"
                     android:inputType="textNoSuggestions"
                     android:singleLine="true"
-                    android:imeOptions="actionDone"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/textsize_xlarge"
                     android:visibility="gone" />
@@ -101,7 +100,7 @@
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp" >
+                android:paddingRight="8dp">
 
                 <TextView
                     android:id="@+id/player_title"
@@ -120,7 +119,7 @@
                     android:id="@+id/player_edit_title"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/button_selector_inverse_light" >
+                    android:background="@drawable/button_selector_inverse_light">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -137,12 +136,12 @@
                     android:layout_height="wrap_content"
                     android:focusableInTouchMode="true"
                     android:fontFamily="sans-serif-light"
+                    android:imeOptions="actionDone"
                     android:inputType="textNoSuggestions"
                     android:singleLine="true"
-                    android:imeOptions="actionDone"
                     android:textColor="@android:color/white"
                     android:textSize="@dimen/textsize_medium_small"
-                    android:visibility="gone" >
+                    android:visibility="gone">
 
                     <requestFocus />
                 </EditText>
@@ -156,7 +155,7 @@
                 android:layout_below="@id/player_title_frame"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
-                android:padding="4dp" >
+                android:padding="4dp">
 
                 <TextView
                     android:id="@+id/player_current_time"
@@ -191,7 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/player_statistics"
                 android:background="@android:color/white"
-                android:padding="4dp" >
+                android:padding="4dp">
 
                 <ImageButton
                     android:id="@+id/player_previous"
@@ -204,7 +203,7 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1" >
+                    android:layout_weight="1">
 
                     <ImageButton
                         android:id="@+id/player_play"
@@ -241,16 +240,33 @@
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:paddingBottom="4dp"
-                android:paddingTop="4dp" >
+                android:paddingTop="4dp">
 
-                <Button
-                    android:id="@+id/player_download"
-                    style="@style/UIButton"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="3dp"
-                    android:text="@string/download_dialog_download" />
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/showButton"
+                        style="@style/UIButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:text="@string/view_in_library" />
+
+                    <Button
+                        android:id="@+id/player_download"
+                        style="@style/UIButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="3dp"
+                        android:layout_weight="1"
+                        android:text="@string/download_dialog_download" />
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/lyrics_tv"
@@ -275,7 +291,7 @@
                 android:layout_below="@+id/button"
                 android:background="@android:color/white"
                 android:gravity="center"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <include
                     android:id="@+id/player_lyrics_frame"
@@ -291,7 +307,7 @@
     <RelativeLayout
         android:id="@+id/layout_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:id="@+id/layout_top"
@@ -299,7 +315,7 @@
             android:layout_height="wrap_content"
             android:background="@color/bar_color"
             android:fitsSystemWindows="true"
-            android:visibility="visible" >
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/title_bar_left_menu"
@@ -314,7 +330,7 @@
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:paddingLeft="104dp" >
+                android:paddingLeft="104dp">
 
                 <TextView
                     android:id="@+id/titleBarTitle"
@@ -340,16 +356,15 @@
         </FrameLayout>
     </RelativeLayout>
 
-    <com.special.utils.UICircularImage
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.special.utils.UICircularImage xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/player_cover"
         android:layout_width="256dp"
         android:layout_height="256dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         android:src="@drawable/def_cover_circle_web"
         app:line_color="@android:color/white"
-        android:layout_marginTop="8dp"
         app:line_color_press="@android:color/white"
         app:line_width="1dp"
         app:padding="0dp" />

@@ -74,11 +74,6 @@ public class MuzicBrainzCoverLoaderTask extends CoverLoaderTask {
 					ImageLoader.getInstance().loadImage(result, MuzicBrainzCoverLoaderTask.this);
 				}
 			} catch (Throwable e) {
-				for (OnBitmapReadyListener listener : listeners) {
-					if (null != listener) {
-						listener.onBitmapReady(null);
-					}
-				}
 				Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
 			}
 		}

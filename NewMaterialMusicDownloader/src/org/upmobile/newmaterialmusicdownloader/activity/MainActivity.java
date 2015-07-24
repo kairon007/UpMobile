@@ -221,7 +221,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
         }
     }
 
-    public void changeFragment(int fragmentId, boolean fromDraver) {
+	public void changeFragment(int fragmentId, boolean fromDraver) {
+		changeFragment(fragmentId, fromDraver, null);
+	}
+
+	public void changeFragment(int fragmentId, boolean fromDraver, AbstractSong song) {
 		if (getCurrentFragmentId() == fragmentId) return;
 		isOpenFromDraver = fromDraver;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
@@ -237,7 +241,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else if (fragmentId == ManagerFragmentId.playlistFragment()) {
 			selectedFragment = new PlaylistFragment();
 		} else if (fragmentId == ManagerFragmentId.libraryFragment()) {
-			selectedFragment = new LibraryFragment();
+			Bundle b = new Bundle();
+			b.putParcelable("KEY_SELECTED_SONG", song);
+			LibraryFragment libraryFragment = new LibraryFragment();
+			libraryFragment.setArguments(b);
+			selectedFragment = libraryFragment;
 		} else if (fragmentId == ManagerFragmentId.playerFragment()) {
 			selectedFragment = new PlayerFragment();
 			showMiniPlayer(false);

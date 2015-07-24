@@ -219,6 +219,10 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         mCallbacks = null;
     }
 
+    public boolean isDrawerIndicatorEnabled() {
+        return mDrawerToggle.isDrawerIndicatorEnabled();
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

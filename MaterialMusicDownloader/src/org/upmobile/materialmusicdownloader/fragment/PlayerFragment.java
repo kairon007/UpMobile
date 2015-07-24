@@ -125,6 +125,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TextView playerTotalTime;
 	private TrueSeekBar playerProgress;
 	private Bitmap defaultCover;
+	private ActionProcessButton showInLib;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
@@ -171,6 +172,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			setElementsView(0, s);
 			play.setClickable(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
+			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		}
 
 		@Override
@@ -187,6 +189,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			thatSongIsDownloaded(current);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+			((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		}
 
 		@Override
@@ -268,14 +271,18 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		activity.setVisibleSearchView(false);
 		setHasOptionsMenu(true);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		if (song.getClass() != MusicData.class && StateKeeper.DOWNLOADED != state) {
+		if (song.getClass() != MusicData.class) {
 			if (StateKeeper.DOWNLOADING == state) {
 				((RippleView) download.getParent()).setEnabled(false);
 				download.setClickable(false);
 				download.setMode(ActionProcessButton.Mode.ENDLESS);
 				download.setProgress(50);
 			}
+		} else {
+			download.setVisibility(View.GONE);
+			ciRippleView.setVisibility(View.GONE);
 		}
+		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		percent = 0;
 		setCoverToZoomView(null);
 		getCover(song);
@@ -365,8 +372,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 				shuffleMode.setVisibility(View.INVISIBLE);
 			}
 			break;
+		case R.id.showButton:
+			showSongInLibrary();
+			break;
 		case R.id.download:
-			showDownloadMessage();
+			download();
 			break;
 		case R.id.songNameBox:
 			openTitleField();
@@ -377,24 +387,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void showDownloadMessage() {
-		if (isThisSongDownloaded()) {
-			undo.clear();
-			undo.message(R.string.has_been_downloaded);
-			undo.duration(MESSAGE_DURATION);
-			undo.noicon(true);
-			undo.style(new UndoBarStyle(-1, R.string.download_anyway));
-			undo.listener(new UndoListener() {
-
-				@Override
-				public void onUndo(Parcelable token) {
-					download();
-				}
-			});
-			undo.show();
-		} else {
-			download();
-		}
+	private void showSongInLibrary() {
+		((MainActivity)getActivity()).changeFragment(new LibraryFragment(), false, song);
 	}
 
 	private boolean isThisSongDownloaded() {
@@ -473,6 +467,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		shuffle = (TextView) view.findViewById(R.id.shuffle);
 		repeat = (TextView) view.findViewById(R.id.repeat);
 		download = (ActionProcessButton) view.findViewById(R.id.download);
+		showInLib = (ActionProcessButton) contentView.findViewById(R.id.showButton);
 		ciRippleView = (RippleView) view.findViewById(R.id.circularRipple);
 		playerProgress = (TrueSeekBar) view.findViewById(R.id.progress_track);
 		tvTitle = (TextView) view.findViewById(R.id.songName);
@@ -500,6 +495,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		download.setOnClickListener(this);
 		artistBox.setOnClickListener(this);
 		titleBox.setOnClickListener(this);
+		showInLib.setOnClickListener(this);
 		playerContent.findViewById(R.id.shuffleParent).setOnClickListener(this);
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
@@ -570,6 +566,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 					download.setProgress(0);
 					setDownloadButtonState(true);
 				} else {
+					((View) showInLib.getParent()).setVisibility(song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 					download.setProgress(canceled ? 0 : 100);
 				}
 			}
@@ -632,6 +629,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setVisibility(View.VISIBLE);
 			ciRippleView.setVisibility(View.VISIBLE);
 		}
+		((View) showInLib.getParent()).setVisibility(isThisSongDownloaded() && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		cbUseCover.setOnCheckedChangeListener(null);
 		setDownloadButtonState(!player.isGettingURl());
 		play.setClickable(false);

@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -42,341 +43,374 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
 
-	private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
+    private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
 
-	public static final int MSG_FILL_ADAPTER = 1;
-	
-	private ViewGroup view;
-	private BaseAbstractAdapter<MusicData> adapter;
-	private ListView listView;
-	private TextView emptyMessage;
-	private Handler uiHandler;
-	private String filterQuery = "";
-	private Object lock = new Object();
-	private CheckRemovedFiles checkRemovedFiles;
-	private Cursor cursor;
-	private PlaybackService service;
-	
-	private ContentObserver observer = new ContentObserver(null) {
+    public static final int MSG_FILL_ADAPTER = 1;
 
-		@Override
-		public void onChange(boolean selfChange) {
-			super.onChange(selfChange);
-			if (isUserDeleted) {
-				isUserDeleted = false;
-				return;
-			}
-			fillAdapter(querySong());
-		}
+    private ViewGroup view;
+    private BaseAbstractAdapter<MusicData> adapter;
+    private ListView listView;
+    private TextView emptyMessage;
+    private Handler uiHandler;
+    private String filterQuery = "";
+    private Object lock = new Object();
+    private CheckRemovedFiles checkRemovedFiles;
+    private Cursor cursor;
+    private PlaybackService service;
 
-		@Override
-		public void onChange(boolean selfChange, Uri uri) {
-			super.onChange(selfChange, uri);
-			if (isUserDeleted) {
-				isUserDeleted = false;
-				return;
-			}
-			if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
-				fillAdapter(querySong());
-			}
-		}
-	};
-	
-	private void fillAdapter(ArrayList<MusicData> list) {
-		if (list.isEmpty() && !adapter.isEmpty()) {
-			adapter.clear();
-			return;
-		}
-		Message msg = new Message();
-		msg.what = MSG_FILL_ADAPTER;
-		msg.obj = list;
-		uiHandler.sendMessage(msg);
-		StateKeeper.getInstance().setLibrarysAdapter(list);
-	};
-	
-	private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
+    private ContentObserver observer = new ContentObserver(null) {
 
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				if (View.VISIBLE == emptyMessage.getVisibility()) {
-					emptyMessage.setVisibility(View.GONE);
-				} else {
-					adapter.clear();
-				}
-				showProgress(view);
-				updateAdapter();
-			}
-		}
-	};
-	
-	protected boolean isUserDeleted = false;
-	protected abstract BaseAbstractAdapter<MusicData> getAdapter();
-	protected abstract ListView getListView(View view);
-	public abstract TextView getMessageView(View view);
-	protected abstract String getFolderPath();
-	protected abstract int getLayoutId();
-	protected abstract void forceDelete();
+        @Override
+        public void onChange(boolean selfChange) {
+            super.onChange(selfChange);
+            if (isUserDeleted) {
+                isUserDeleted = false;
+                return;
+            }
+            fillAdapter(querySong());
+        }
 
-	public void onPause() {
-		((BaseLibraryAdapter) adapter).resetListener();
-		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
-		if (null != checkRemovedFiles) {
-			checkRemovedFiles.cancel(true);
-			checkRemovedFiles = null;
-		}
-		StateKeeper.getInstance().setLibaryFirstPosition(listView.getFirstVisiblePosition());
-	}
-	
-	public void onResume() {
-		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
-		((BaseLibraryAdapter) adapter).setListener();
-		checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
-		if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			checkRemovedFiles.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-		} else {
-			checkRemovedFiles.execute();
-		}
-		updateAdapter();
-	}
-	
-	private PlaybackService getService() {
-		if (PlaybackService.hasInstance()) {
-			return PlaybackService.get(getContext());
-		}
-		return null;
-	}
-	
-	public BaseLibraryView(LayoutInflater inflater) {
-		super(inflater.getContext());
-		uiHandler = new Handler(this);
-		getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
-		init(inflater);
-		if (null != listView) {
-			showProgress(view);
-			listView.setAdapter(adapter);
-			animateListView(listView, adapter);
-		}
-	}
-	
-	private void updateAdapter() {
-		if (null != StateKeeper.getInstance().getLibrarysAdapter()) fillAdapter(StateKeeper.getInstance().getLibrarysAdapter());
-		new Thread(new Runnable() {
-			
-			private ArrayList<MusicData> querySong;
+        @Override
+        public void onChange(boolean selfChange, Uri uri) {
+            super.onChange(selfChange, uri);
+            if (isUserDeleted) {
+                isUserDeleted = false;
+                return;
+            }
+            if (uri.equals(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI)) {
+                fillAdapter(querySong());
+            }
+        }
+    };
+    private String comment;
 
-			@Override
-			public void run() {
-				querySong = querySong();
-				uiHandler.postDelayed(new Runnable() {
+    private void fillAdapter(ArrayList<MusicData> list) {
+        if (list.isEmpty() && !adapter.isEmpty()) {
+            adapter.clear();
+            return;
+        }
+        Message msg = new Message();
+        msg.what = MSG_FILL_ADAPTER;
+        msg.obj = list;
+        uiHandler.sendMessage(msg);
+        StateKeeper.getInstance().setLibrarysAdapter(list);
+    }
 
-					@Override
-					public void run() {
-						fillAdapter(querySong);
-						int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
-						if (firstPosition != 0 && firstPosition < adapter.getCount()) {
-							listView.setSelection(firstPosition);
-						}
-						if (querySong.isEmpty()) {
-							hideProgress(view);
-							listView.setEmptyView(emptyMessage);
-						}
-					} 
+    ;
 
-				}, 1000);
-			}
-		}).start();
-	}
-	
-	protected void showProgress(View v) {
-		v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
-	}
-	
-	protected void hideProgress(View v) {
-		v.findViewById(R.id.progress).setVisibility(View.GONE);
-	}
+    private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
 
-	public View getView() {
-		return view;
-	}
-	
-	public void applyFilter(String srcFilter) {
-		adapter.getFilter().filter(srcFilter);
-		filterQuery = srcFilter;
-	}
-	
-	public void clearFilter() {
-		adapter.clearFilter();
-		filterQuery = "";
-	}
-	
-	public void showMessage(String message) {
-		Toast.makeText(getContext(), message ,Toast.LENGTH_SHORT).show();
-	}
-	
-	protected void adapterCancelTimer() {
-		adapter.cancelTimer();
-	}
-	
-	protected void deleteAdapterItem(MusicData item) {
-		adapter.remove(item);
-	}
-	
-	protected void deleteServiceItem(MusicData item) {
-		getService().remove(item);
-	}
-	
-	private void init(LayoutInflater inflater) {
-		view = (ViewGroup) inflater.inflate(getLayoutId(), null);
-		listView = getListView(view);
-		emptyMessage = getMessageView(view);
-		adapter = getAdapter();
-		if (service.hasInstance()) {
-			service = PlaybackService.get(view.getContext());
-		} else {
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					service = PlaybackService.get(view.getContext());
-				}
-			});
-		}
-		listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-				forceDelete();
-				Util.hideKeyboard(getContext(), view);
-				if (!service.isCorrectlyState(MusicData.class, adapter.getCount())) {
-					ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(adapter.getAll());
-					service.setArrayPlayback(list);
-				}
-				if (!service.isPrepared() || !((MusicData) adapter.getItem(i)).equals(service.getPlayingSong().getPath())) {
-					((BaseMiniPlayerActivity) getContext()).startSong(((MusicData) adapter.getItem(i)));
-				}
-			}
-		});
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-				forceDelete();
-				AbstractSong data = (AbstractSong) adapter.getItem(position);
-				showMenu(view, (MusicData) data);
-				return true;
-			}
-		});
-	}
-	
-	private void showMenu(final View view, final MusicData musicData) {
-		PopupMenu menu = new PopupMenu(getContext(), view);
-		menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
-		menu.getMenu().getItem(0).setVisible(false);
-		menu.getMenu().getItem(1).setVisible(false);
-		menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.contains(PREF_DIRECTORY_PREFIX)) {
+                if (View.VISIBLE == emptyMessage.getVisibility()) {
+                    emptyMessage.setVisibility(View.GONE);
+                } else {
+                    adapter.clear();
+                }
+                showProgress(view);
+                updateAdapter();
+            }
+        }
+    };
 
-			@Override
-			public boolean onMenuItemClick(MenuItem paramMenuItem) {
-				if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
-					adapter.remove(musicData);
-					musicData.reset(getContext());
-				}
-				return false;
-			}
-			
-		});
-		menu.show();
-	}
-	
-	protected ArrayList<MusicData> querySong() {
-		ArrayList<MusicData> result;
-		synchronized (lock) {
-			result = new ArrayList<MusicData>();
-			Cursor cursor = buildQuery(getContext().getContentResolver(), Util.addQuotesForSqlQuery(getFolderPath()));
-			if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
-				cursor.close();
-				return result;
-			}
-			MusicData d = new MusicData();
-			d.populate(cursor);
-			result.add(d);
-			while (cursor.moveToNext()) {
-				MusicData data = new MusicData();
-				data.populate(cursor);
-				result.add(data);
-			}
-			cursor.close();
-		}
-		return result;
-	}
-	
-	private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
-		synchronized (lock) {
-			if (null != cursor && !cursor.isClosed()) {
-				cursor.close();
-			}
-			String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
-			cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
-		}
-		return cursor;
-	}
-	
-	@Override
-	public boolean handleMessage(Message msg) {
-		if (msg.what == MSG_FILL_ADAPTER) {
-			ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
-			adapter.setDoNotifyData(false);
-			adapter.clear();
-			adapter.add(list);
-			if (!filterQuery.isEmpty()) {
-				applyFilter(filterQuery);
-			} else {
-				adapter.notifyDataSetChanged();
-			}
-			hideProgress(view);
-		}
-		return true;
-	}
+    protected boolean isUserDeleted = false;
 
-	protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
-		//Animate ListView in childs, if need
-	}
-	
-	private class CheckRemovedFiles extends AsyncTask<Void, Void, ArrayList<MusicData>> {
-		
+    protected abstract BaseAbstractAdapter<MusicData> getAdapter();
 
-		private ArrayList<MusicData> srcList;
+    protected abstract ListView getListView(View view);
 
-		public CheckRemovedFiles(ArrayList<MusicData> srcList) {
-			this.srcList = srcList;
-		}
+    public abstract TextView getMessageView(View view);
 
-		@Override
-		protected ArrayList<MusicData> doInBackground(Void... params) {
-			ArrayList<MusicData> badFiles = new ArrayList<MusicData>();
-			if (srcList.isEmpty()) return null;
-			for (MusicData data : srcList) {
-				if (!new File(data.getPath()).exists()) {
-					badFiles.add(data);
-				}
-			}
-			for (MusicData musicData : badFiles) {
-				if (isCancelled()) return null;
-				srcList.remove(musicData);
-				musicData.reset(getContext());
-			}
-			return srcList;
-		}
-		
-		@Override
-		protected void onPostExecute(ArrayList<MusicData> result) {
-			if (null != result) {
-				fillAdapter(result);
-			}
-			super.onPostExecute(result);
-		}
-	}
-	
-	public String getFilterQuery() {
-		return filterQuery;
-	}
+    protected abstract String getFolderPath();
+
+    protected abstract int getLayoutId();
+
+    protected abstract void forceDelete();
+
+    public void onPause() {
+        ((BaseLibraryAdapter) adapter).resetListener();
+        MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
+        if (null != checkRemovedFiles) {
+            checkRemovedFiles.cancel(true);
+            checkRemovedFiles = null;
+        }
+        StateKeeper.getInstance().setLibaryFirstPosition(listView.getFirstVisiblePosition());
+    }
+
+    public void onResume() {
+        MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
+        ((BaseLibraryAdapter) adapter).setListener();
+        checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
+        if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            checkRemovedFiles.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            checkRemovedFiles.execute();
+        }
+        updateAdapter();
+    }
+
+    private PlaybackService getService() {
+        if (PlaybackService.hasInstance()) {
+            return PlaybackService.get(getContext());
+        }
+        return null;
+    }
+
+    public BaseLibraryView(LayoutInflater inflater) {
+        super(inflater.getContext());
+        uiHandler = new Handler(this);
+        getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
+        init(inflater);
+        if (null != listView) {
+            showProgress(view);
+            listView.setAdapter(adapter);
+            animateListView(listView, adapter);
+        }
+    }
+
+    private void updateAdapter() {
+        if (null != StateKeeper.getInstance().getLibrarysAdapter())
+            fillAdapter(StateKeeper.getInstance().getLibrarysAdapter());
+        new Thread(new Runnable() {
+
+            private ArrayList<MusicData> querySong;
+
+            @Override
+            public void run() {
+                querySong = querySong();
+                uiHandler.postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        fillAdapter(querySong);
+                        int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
+                        if (firstPosition != 0 && firstPosition < adapter.getCount()) {
+                            listView.setSelection(firstPosition);
+                        }
+                        if (querySong.isEmpty()) {
+                            hideProgress(view);
+                            listView.setEmptyView(emptyMessage);
+                        }
+                    }
+
+                }, 1000);
+            }
+        }).start();
+    }
+
+    protected void showProgress(View v) {
+        v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
+    }
+
+    protected void hideProgress(View v) {
+        v.findViewById(R.id.progress).setVisibility(View.GONE);
+    }
+
+    public View getView() {
+        return view;
+    }
+
+    public void applyFilter(String srcFilter) {
+        adapter.getFilter().filter(srcFilter);
+        filterQuery = srcFilter;
+    }
+
+    public void clearFilter() {
+        adapter.clearFilter();
+        filterQuery = "";
+    }
+
+    public void showMessage(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    protected void adapterCancelTimer() {
+        adapter.cancelTimer();
+    }
+
+    protected void deleteAdapterItem(MusicData item) {
+        adapter.remove(item);
+    }
+
+    protected void deleteServiceItem(MusicData item) {
+        getService().remove(item);
+    }
+
+    private void init(LayoutInflater inflater) {
+        view = (ViewGroup) inflater.inflate(getLayoutId(), null);
+        listView = getListView(view);
+        emptyMessage = getMessageView(view);
+        adapter = getAdapter();
+        if (service.hasInstance()) {
+            service = PlaybackService.get(view.getContext());
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    service = PlaybackService.get(view.getContext());
+                }
+            });
+        }
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                forceDelete();
+                Util.hideKeyboard(getContext(), view);
+
+                if (!service.isCorrectlyState(MusicData.class, adapter.getCount())) {
+                    ArrayList<AbstractSong> list = new ArrayList<AbstractSong>(adapter.getAll());
+                    service.setArrayPlayback(list);
+                }
+                if (!service.isPrepared() || !((MusicData) adapter.getItem(i)).equals(service.getPlayingSong().getPath())) {
+                    ((BaseMiniPlayerActivity) getContext()).startSong(((MusicData) adapter.getItem(i)));
+                }
+            }
+        });
+        listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                forceDelete();
+                AbstractSong data = (AbstractSong) adapter.getItem(position);
+                showMenu(view, (MusicData) data);
+                return true;
+            }
+        });
+    }
+
+    private void showMenu(final View view, final MusicData musicData) {
+        PopupMenu menu = new PopupMenu(getContext(), view);
+        menu.getMenuInflater().inflate(R.menu.library_menu, menu.getMenu());
+        menu.getMenu().getItem(0).setVisible(false);
+        menu.getMenu().getItem(1).setVisible(false);
+        menu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(MenuItem paramMenuItem) {
+                if (paramMenuItem.getItemId() == R.id.library_menu_delete) {
+                    adapter.remove(musicData);
+                    musicData.reset(getContext());
+                }
+                return false;
+            }
+
+        });
+        menu.show();
+    }
+
+    protected ArrayList<MusicData> querySong() {
+        ArrayList<MusicData> result;
+        synchronized (lock) {
+            result = new ArrayList<MusicData>();
+            Cursor cursor = buildQuery(getContext().getContentResolver(), Util.addQuotesForSqlQuery(getFolderPath()));
+            if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
+                cursor.close();
+                return result;
+            }
+            MusicData d = new MusicData();
+            d.populate(cursor);
+            result.add(d);
+            while (cursor.moveToNext()) {
+                MusicData data = new MusicData();
+                data.populate(cursor);
+                result.add(data);
+            }
+            cursor.close();
+        }
+        return result;
+    }
+
+    private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
+        synchronized (lock) {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+            String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
+            cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+        }
+        return cursor;
+    }
+
+    public void highlightSong(String comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public boolean handleMessage(Message msg) {
+        if (msg.what == MSG_FILL_ADAPTER) {
+            ArrayList<MusicData> list = ((ArrayList<MusicData>) msg.obj);
+            adapter.setDoNotifyData(false);
+            adapter.clear();
+            adapter.add(list);
+            if (!filterQuery.isEmpty()) {
+                applyFilter(filterQuery);
+            } else {
+                adapter.notifyDataSetChanged();
+            }
+            if (null != comment) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (final MusicData data : adapter.getAll()) {
+                            if (null != data.getComment() && data.getComment().trim().equalsIgnoreCase(comment.trim())) {
+                                ((Activity) getContext()).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        listView.setSelection(adapter.getPosition(data));
+                                    }
+                                });
+                            }
+                        }
+                        comment = null;
+                    }
+                }).start();
+            }
+            hideProgress(view);
+        }
+        return true;
+    }
+
+    protected void animateListView(ListView listView, BaseAbstractAdapter<MusicData> adapter) {
+        //Animate ListView in childs, if need
+    }
+
+    private class CheckRemovedFiles extends AsyncTask<Void, Void, ArrayList<MusicData>> {
+
+
+        private ArrayList<MusicData> srcList;
+
+        public CheckRemovedFiles(ArrayList<MusicData> srcList) {
+            this.srcList = srcList;
+        }
+
+        @Override
+        protected ArrayList<MusicData> doInBackground(Void... params) {
+            ArrayList<MusicData> badFiles = new ArrayList<MusicData>();
+            if (srcList.isEmpty()) return null;
+            for (MusicData data : srcList) {
+                if (!new File(data.getPath()).exists()) {
+                    badFiles.add(data);
+                }
+            }
+            for (MusicData musicData : badFiles) {
+                if (isCancelled()) return null;
+                srcList.remove(musicData);
+                musicData.reset(getContext());
+            }
+            return srcList;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<MusicData> result) {
+            if (null != result) {
+                fillAdapter(result);
+            }
+            super.onPostExecute(result);
+        }
+    }
+
+    public String getFilterQuery() {
+        return filterQuery;
+    }
 }

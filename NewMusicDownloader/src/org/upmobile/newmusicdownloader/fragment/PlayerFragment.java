@@ -77,6 +77,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView shuffleMode;
 	private ImageView playerCover;
 	private Button btnDownload;
+	private Button showInLibrary;
 	private Button playerSaveTags;
 	private Button playerCancelTags;
 	private TextView playerTitle;
@@ -163,6 +164,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			btnDownload.setVisibility(View.VISIBLE);
 		}
+		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 	}
 	
 	@Override
@@ -204,6 +206,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		setClickablePlayerElement(false);
 		playerProgress.setVisibility(View.INVISIBLE);
 		wait.setVisibility(View.VISIBLE);
+		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 	}
 	
 	@Override
@@ -266,6 +269,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			btnDownload.setVisibility(View.VISIBLE);
 		}
+		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 	}
 	
 	@Override
@@ -307,6 +311,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		shuffle = (ImageButton) view.findViewById(R.id.shuffle);
 		repeat = (ImageButton) view.findViewById(R.id.repeat);
 		stop = (ImageButton) view.findViewById(R.id.stop);
+		showInLibrary = (Button) view.findViewById(R.id.showButton);
 		btnDownload = (Button) view.findViewById(R.id.btn_download);
 		volume = (SeekBar) view.findViewById(R.id.progress_volume);
 		shuffleMode = (TextView) view.findViewById(R.id.shuffleMode);
@@ -337,6 +342,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerSaveTags.setOnClickListener(this);
 		player.setOnErrorListener(this);
 		player.addStatePlayerListener(this);
+		showInLibrary.setOnClickListener(this);
 	}
 	
 	private void setElementsView(int progress) {
@@ -416,10 +422,18 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
+			editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
+			break;
+		case R.id.showButton:
+			showInLibrary();
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void showInLibrary() {
+		((MainActivity) getActivity()).changeFragment(new LibraryFragment(), false, song);
 	}
 
 	private void hideOpenViews() {
@@ -537,6 +551,14 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
+			final int [] location = new int[2];
+			playerCancelTags.getLocationInWindow(location);
+			parentView.post(new Runnable() {
+				@Override
+				public void run() {
+					((ScrollView) parentView.findViewById(R.id.scrollView2)).smoothScrollTo(location[0], location[1]);
+				}
+			});
 		}
 	}
 	

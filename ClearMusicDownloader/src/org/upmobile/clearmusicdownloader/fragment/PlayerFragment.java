@@ -103,6 +103,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private ImageView playerCover;
 	private ImageView lyricsLoader;
 	private Button download;
+	private Button showInLibrary;
 	private Button playerTitleBarBack;
 	private TextView playerCurrTime;
 	private TextView playerTotalTime;
@@ -185,7 +186,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			song = s;
 			setElementsView(0);
 			getCover(song);
-            showLyrics(song);
+			showLyrics(song);
+			showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		}
 
 		@Override
@@ -249,6 +251,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playProgress.setVisibility(View.VISIBLE);
 			playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		}
+		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		playerProgress.setEnabled(prepared);
 		downloadButtonState(!player.isGettingURl());
 	}
@@ -310,6 +313,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		previous = (ImageButton) view.findViewById(R.id.player_previous);
 		forward = (ImageButton) view.findViewById(R.id.player_forward);
 		download = (Button) view.findViewById(R.id.player_download);
+		showInLibrary = (Button) view.findViewById(R.id.showButton);
 		lyricsLoader= (ImageView) view.findViewById(R.id.lyrics_load_image);
 		playerTitleBarBack = (Button) view.findViewById(R.id.title_bar_left_menu);
 		playerProgress = (SeekBar) view.findViewById(R.id.player_progress);
@@ -339,6 +343,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerBtnArtist.setOnClickListener(this);
 		playerBtnTitle.setOnClickListener(this);
 		download.setOnClickListener(this);
+		showInLibrary.setOnClickListener(this);
 		playerTitleBarBack.setOnClickListener(this);
 		useCover.setOnCheckedChangeListener(this);
 		playerEtArtist.setOnKeyListener(new OnKeyListener() {
@@ -541,9 +546,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		case R.id.player_edit_artist:
 			openArtistField();
 			break;
+		case R.id.showButton:
+			showInLibrary();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void showInLibrary() {
+		((MainActivity) getActivity()).changeFragment(new LibraryFragment(), false, song);
 	}
 
 	private void openArtistField() {
@@ -701,7 +713,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 						playerLyricsView.setVisibility(View.VISIBLE);
 						playerLyricsView.setText(String.format(getString(R.string.download_dialog_no_lyrics), song.getTitle() + " - " + song.getArtist()));
 					}
-				} catch (Exception ignored) {
+				} catch (Exception e) {
 				}
 			}
 			
@@ -749,6 +761,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		} else {
 			download.setVisibility(View.VISIBLE);
 		}
+		showInLibrary.setVisibility(((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class ? View.VISIBLE : View.GONE);
 		showLyrics(player.getPlayingSong());
 	}
 	
@@ -789,25 +802,25 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	private void download() {
 		((MainActivity)getActivity()).setCoverHelper(true);
-		song.getDownloadUrl(new DownloadUrlListener() {
+		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
 
-            @Override
-            public void success(String url) {
-                if (!url.startsWith("http")) {
-                    Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
-                    toast.show();
-                    return;
-                }
-                ((RemoteSong) song).setDownloadUrl(url);
-                Runnable callbackRun = new Runnable() {
+			@Override
+			public void success(String url) {
+				if (!url.startsWith("http")) {
+					Toast toast = Toast.makeText(player, R.string.error_retrieving_the_url, Toast.LENGTH_SHORT);
+					toast.show();
+					return;
+				}
+				((RemoteSong) song).setDownloadUrl(url);
+				Runnable callbackRun = new Runnable() {
 
-                    @Override
-                    public void run() {
-                        ((MainActivity) getActivity()).download((RemoteSong) song, isUseAlbumCover);
-                    }
-                };
-                new Handler(Looper.getMainLooper()).post(callbackRun);
-            }
+					@Override
+					public void run() {
+						((MainActivity) getActivity()).download((RemoteSong)song,isUseAlbumCover);
+					}
+				};
+				new Handler(Looper.getMainLooper()).post(callbackRun);
+			}
 
             @Override
             public void error(String error) {

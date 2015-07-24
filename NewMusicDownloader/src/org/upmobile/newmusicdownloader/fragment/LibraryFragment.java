@@ -1,19 +1,23 @@
 package org.upmobile.newmusicdownloader.fragment;
 
+import android.app.Fragment;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+
 import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.ui.LibraryView;
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 
 public class LibraryFragment extends Fragment {
 
 	private LibraryView libraryView;
+	AbstractSong abstractSong;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,15 +33,25 @@ public class LibraryFragment extends Fragment {
 		activity.setSelectedItem(Constants.LIBRARY_FRAGMENT);
 		activity.setCurrentTag(getClass().getSimpleName());
 		activity.setTitle(R.string.tab_library);
-		activity.setDrawerEnabled(true);
+		abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
+		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());
+		activity.setDrawerEnabled(null == abstractSong ? true : false);
+		if (null != abstractSong) {
+			activity.showMiniPlayer(true);
+			setHasOptionsMenu(true);
+		}
 		libraryView.onResume();
+		super.onResume();
 	}
-	
+
 	@Override
-	public void onPause() {
-		libraryView.onPause();
-		super.onPause();
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (null != abstractSong) {
+			getActivity().onBackPressed();
+		}
+		return super.onOptionsItemSelected(item);
 	}
+
 
 	public void setFilter(String filter) {
 		libraryView.applyFilter(filter);

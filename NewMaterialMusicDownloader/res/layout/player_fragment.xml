@@ -276,7 +276,7 @@
                                 android:layout_height="32dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_shuffle_grey" />
-                            <TextView 
+                            <TextView
                                 android:id="@+id/shuffleMode"
                                 android:layout_width="16dp"
                                 android:layout_height="32dp"
@@ -351,26 +351,59 @@
                 </LinearLayout>
 
 
-                <ru.johnlife.uilibrary.widget.customviews.RippleView
-                    style="@style/RippleStyleRectangle"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp" >
+                    android:layout_height="match_parent">
 
-                    <ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton
-                        android:id="@+id/download"
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
+                        style="@style/RippleStyleRectangle"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:text="@string/download_dialog_download"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
-                        app:pb_colorComplete="?attr/colorPrimary"
-                        app:pb_colorNormal="?attr/colorPrimary"
-                        app:pb_colorPressed="?attr/colorPrimaryDark"
-                        app:pb_colorProgress="?attr/colorAccent"
-                        app:pb_textComplete="@string/downloaded"
-                        app:pb_textProgress="@string/downloading" />
-                </ru.johnlife.uilibrary.widget.customviews.RippleView>
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginRight="4dp">
+
+                        <ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton
+                            android:id="@+id/showButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="@string/view_in_library"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            app:pb_colorComplete="?attr/colorPrimary"
+                            app:pb_colorNormal="?attr/colorPrimary"
+                            app:pb_colorPressed="?attr/colorPrimary"
+                            app:pb_colorProgress="?attr/colorAccent"/>
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
+
+                    <ru.johnlife.uilibrary.widget.customviews.RippleView
+                        style="@style/RippleStyleRectangle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="4dp">
+
+                        <ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton
+                            android:id="@+id/download"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:text="@string/download_dialog_download"
+                            android:textColor="@android:color/white"
+                            android:textSize="18sp"
+                            app:pb_colorComplete="?attr/colorPrimary"
+                            app:pb_colorNormal="?attr/colorPrimary"
+                            app:pb_colorPressed="?attr/colorPrimaryDark"
+                            app:pb_colorProgress="?attr/colorAccent"
+                            app:pb_textComplete="@string/downloaded"
+                            app:pb_textProgress="@string/downloading" />
+                    </ru.johnlife.uilibrary.widget.customviews.RippleView>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/textView1"

@@ -238,18 +238,26 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void setActionBarTitle(int title) {
 		setActionBarTitle(getResources().getString(title));
 	}
+
+	public void changeFragment(Fragment fragment, boolean isAnimate) {
+		changeFragment(fragment, isAnimate, null);
+	}
 	
-	public void changeFragment(Fragment targetFragment, boolean isAnimate) {
+	public void changeFragment(Fragment targetFragment, boolean isAnimate, AbstractSong song) {
 		currentTag = targetFragment.getClass().getSimpleName();
 		setSearchViewVisibility(currentTag);
 		currentFragmentIsPlayer = currentTag.equals(PlayerFragment.class.getSimpleName());
+		if (targetFragment.getClass() == LibraryFragment.class) {
+			Bundle b = new Bundle();
+			b.putParcelable("KEY_SELECTED_SONG", song);
+			targetFragment.setArguments(b);
+		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		if (isAnimate && Nulldroid_Settings.ENABLE_ANIMATIONS) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up, R.anim.fragment_slide_out_up, R.anim.fragment_slide_in_down, R.anim.fragment_slide_out_down);
 		}
 		transaction.replace(R.id.content_frame, targetFragment, currentTag)
-				   .addToBackStack(targetFragment.getClass()
-				   .getSimpleName())
+				   .addToBackStack(targetFragment.getClass().getSimpleName())
 				   .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 				   .commit();
 	}
@@ -274,13 +282,19 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			navigationDrawerFragment.closeDrawer();
 			return;
 		}
-		Fragment currentFragment = getFragmentManager().findFragmentByTag(currentTag);
+		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+		String lastFragmentName = backEntry.getName();
+		Fragment currentFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
 		setSearchViewVisibility(getPreviousFragmentName(2));
-		currentFragmentIsPlayer = false;
 		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
+			currentFragmentIsPlayer = false;
 			showMiniPlayer(service.isEnqueueToStream());
+		} else if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == LibraryFragment.class && !navigationDrawerFragment.isDrawerIndicatorEnabled()){
+			getFragmentManager().popBackStack();
+			showMiniPlayer(false);
+			invalidateOptionsMenu();
 		} else {
 			if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();

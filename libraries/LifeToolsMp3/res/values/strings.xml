@@ -162,4 +162,5 @@
      <string name="auto_shuffle">Auto shuffle mode on</string>
     <string name="download_anyway">Download anyway</string>
     <string name="has_been_downloaded">This song has been downloaded</string>
+    <string name="view_in_library">View in Library</string>
 </resources>

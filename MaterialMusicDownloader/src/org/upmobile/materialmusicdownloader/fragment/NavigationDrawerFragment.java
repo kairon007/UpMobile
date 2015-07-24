@@ -248,7 +248,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		if ( mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
-		return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(item);
 	}
 
     private ActionBar getActionBar() {
