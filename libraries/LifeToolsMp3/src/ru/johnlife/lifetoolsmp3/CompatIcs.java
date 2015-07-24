@@ -75,8 +75,7 @@ public class CompatIcs {
 	 *            A context to use.
 	 * @param song
 	 *            The song containing the new metadata.
-	 * @param state
-	 *            PlaybackService state, used to determine playback state.
+	 *
 	 */
 	@SuppressWarnings("deprecation")
 	public static void updateRemote(Context context, AbstractSong song) {

@@ -17,7 +17,6 @@ import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
@@ -134,7 +133,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		}
 	}
 
-	public void getCover(final OnBitmapReadyListener readyListener) {
+	public void getCover(final RemoteSong.OnBitmapReadyListener readyListener) {
 		Util.getExecutorService().submit(new Runnable() {
 			@Override
 			public void run() {

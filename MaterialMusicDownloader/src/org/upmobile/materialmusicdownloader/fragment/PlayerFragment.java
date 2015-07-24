@@ -29,6 +29,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
@@ -52,7 +54,6 @@ import org.upmobile.materialmusicdownloader.ui.TrueSeekBar;
 
 import java.io.File;
 
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.listeners.RenameTaskSuccessListener;
@@ -87,10 +88,12 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private PlaybackService player;
 	private BaseDownloadListener downloadListener;
 	private ProgressUpdaterListener progressListener;
+	private RemoteSong.OnBitmapReadyListener readyListener;
 
 	private View contentView;
 	private View headView;
 	private ImageView coverView;
+	private ImageView fakeCoverView;
 	private View playerContent;
 
 	private ActionProcessButton download;
@@ -168,7 +171,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			if (isDestroy) return;
 			setDownloadButtonState(true);
 			changePlayPauseView(true);
-			getCover(song);
 			setElementsView(0, s);
 			play.setClickable(true);
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
@@ -184,8 +186,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			playerProgress.setSecondaryProgress(0);
 			song = current;
 			setElementsView(0, current);
-			setCoverToZoomView(null);
 			showLyrics();
+			getCover(song);
 			thatSongIsDownloaded(current);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
@@ -349,6 +351,53 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		super.onDestroy();
 	}
 
+//	private void animateCover (Boolean inRight) {
+//		final Animation slideIn = AnimationUtils.loadAnimation(getActivity(), R.anim.cover_in_right);
+//		final Animation slideOut = AnimationUtils.loadAnimation(getActivity(), R.anim.cover_out_left);
+//		slideOut.setAnimationListener(new Animation.AnimationListener() {
+//			@Override
+//			public void onAnimationStart(Animation animation) {
+//
+//			}
+//
+//			@Override
+//			public void onAnimationEnd(Animation animation) {
+//				coverView.setImageBitmap(defaultCover);
+//			}
+//
+//			@Override
+//			public void onAnimationRepeat(Animation animation) {
+//
+//			}
+//		});
+//		slideIn.setAnimationListener(new Animation.AnimationListener() {
+//			@Override
+//			public void onAnimationStart(Animation animation) {
+//
+//			}
+//
+//			@Override
+//			public void onAnimationEnd(Animation animation) {
+////				fakeCoverView.setImageBitmap(null);
+//			}
+//
+//			@Override
+//			public void onAnimationRepeat(Animation animation) {
+//
+//			}
+//		});
+//		fakeCoverView.post(new Runnable() {
+//			@Override
+//			public void run() {
+//				fakeCoverView.setAnimation(slideIn);
+//				fakeCoverView.setImageBitmap(defaultCover);
+//				coverView.setAnimation(slideOut);
+//				slideOut.start();
+//				slideIn.start();
+//			}
+//		});
+//	}
+
 	@Override
 	public void onClick(View v) {
 		closeEditViews();
@@ -358,9 +407,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			break;
 		case R.id.prev:
 			play(-1);
+//			animateCover(false);
 			break;
 		case R.id.next:
 			play(1);
+//			animateCover(true);
 			break;
 		case R.id.repeat:
 			repeat.setAlpha(player.offOnRepeat() ? 1 : (float) 0.5);
@@ -434,9 +485,11 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void onUndo(@Nullable Parcelable token) {
-					setCoverToZoomView(song.getCover());
+					getCover(song);
+					cbUseCover.setOnCheckedChangeListener(null);
 					cbUseCover.setChecked(true);
 					isUseAlbumCover = true;
+					cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
 				}
 
 				@Override
@@ -635,6 +688,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			download.setVisibility(View.VISIBLE);
 			ciRippleView.setVisibility(View.VISIBLE);
 		}
+		setCoverToZoomView(null);
 		showDownloadedLabel();
 		cbUseCover.setOnCheckedChangeListener(null);
 		setDownloadButtonState(!player.isGettingURl());
@@ -844,39 +898,55 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void getCover(final AbstractSong song) {
+		final Animation blind = AnimationUtils.loadAnimation(getActivity(), R.anim.blind);
+		coverView.post(new Runnable() {
+			@Override
+			public void run() {
+				blind.cancel();
+				coverView.clearAnimation();
+				coverView.setAnimation(blind);
+				blind.start();
+			}
+		});
+		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
 		cbUseCover.setOnCheckedChangeListener(null);
 		setCheckBoxState(false);
-		Bitmap bitmap = song.getCover();
-		if (null != bitmap) {
-			setCoverToZoomView(bitmap);
-			setCheckBoxState(true);
-			((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-			cbUseCover.setOnCheckedChangeListener(this);
-			return;
-		}
-		((View) cbUseCover.getParent()).setVisibility(View.INVISIBLE);
-		if (song.getClass() != MusicData.class) {
-			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
+		readyListener = new RemoteSong.OnBitmapReadyListener() {
 
-				@Override
-				public void onBitmapReady(Bitmap bmp) {
-					if (hashCode() != checkIdCover) {
-						cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
-						return;
-					}
-					if (null != bmp) {
-						((RemoteSong) song).setHasCover(true);
-						((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
-						setCoverToZoomView(bmp);
-						player.updatePictureNotification(bmp);
-						setCheckBoxState(true);
-					}
+			@Override
+			public void onBitmapReady(final Bitmap bmp) {
+				Log.d("logd", "onBitmapReady : player " + bmp);
+				if (hashCode() != checkIdCover) {
+					cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
+					return;
 				}
-			};
-			checkIdCover = readyListener.hashCode();
+				coverView.post(new Runnable() {
+					@Override
+					public void run() {
+						blind.cancel();
+						coverView.clearAnimation();
+						if (null != bmp) {
+							if (song.getClass() != MusicData.class) {
+								((RemoteSong) song).setHasCover(true);
+							}
+							((View) cbUseCover.getParent()).setVisibility(View.VISIBLE);
+							setCoverToZoomView(bmp);
+							player.updatePictureNotification(bmp);
+							setCheckBoxState(true);
+						} else {
+
+						}
+						cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
+					}
+				});
+			}
+		};
+		checkIdCover = readyListener.hashCode();
+		if (song.getClass() == MusicData.class) {
+			((MusicData) song).getCover(readyListener);
+		} else {
 			((RemoteSong) song).getCover(readyListener);
 		}
-		cbUseCover.setOnCheckedChangeListener(this);
 	}
 
 	/**

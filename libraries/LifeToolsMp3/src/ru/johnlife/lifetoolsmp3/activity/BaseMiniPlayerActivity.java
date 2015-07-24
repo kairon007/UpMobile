@@ -27,7 +27,6 @@ import java.util.ArrayList;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.services.HelperService;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService.OnErrorListener;
@@ -481,7 +480,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			setCover(null);
-			OnBitmapReadyListener readyListener = new OnBitmapReadyListener() {
+			RemoteSong.OnBitmapReadyListener readyListener = new RemoteSong.OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {

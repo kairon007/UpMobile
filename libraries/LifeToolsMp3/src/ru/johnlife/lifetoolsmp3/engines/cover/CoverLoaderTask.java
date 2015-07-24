@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.engines.cover;
 
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 
@@ -8,61 +9,54 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
-import java.util.ArrayList;
-import java.util.List;
+public abstract class CoverLoaderTask extends AsyncTask<String, Void, String> implements ImageLoadingListener {
 
-public class CoverLoaderTask implements ImageLoadingListener {
+    private String coverUrl;
+    private final String artist;
+    private final String title;
+    private final OnCoverTaskListener coverTaskListener;
 
-	public interface OnBitmapReadyListener {
-		public void onBitmapReady(Bitmap bmp);
-	}
-		
-	protected List<OnBitmapReadyListener> listeners = new ArrayList<OnBitmapReadyListener>();
-	private String coverUrl;
-	
-	protected CoverLoaderTask() {}
-	
-	public CoverLoaderTask(String coverUrl) {
-		this.coverUrl = coverUrl;
-	}
-	
-	public void addListener(OnBitmapReadyListener listener) {
-		listeners.add(listener);
-	}
-	
-	public void execute() {
-		try {
-			if (null == coverUrl || coverUrl.equals("NOT_FOUND") || "".equals(coverUrl) || "null".equals(coverUrl)) {
-				for (OnBitmapReadyListener listener : listeners) {
-					if (null != listener) {
-						listener.onBitmapReady(null);
-					}
-				}
-				Log.e(getClass().getSimpleName(), "Error, cover not found from engines");
-				return;
-			}
-		    ImageLoader.getInstance().loadImage(coverUrl, this);			
-		} catch (Throwable e) {
-			Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
-		}
-		return;
-	}
+    public CoverLoaderTask(String coverUrl, String artist, String title, OnCoverTaskListener coverTaskListener) {
+        this.coverUrl = coverUrl;
+        this.artist = artist;
+        this.title = title;
+        this.coverTaskListener = coverTaskListener;
+    }
 
-	@Override
-	public void onLoadingCancelled(String arg0, View arg1) {}
+    public interface OnCoverTaskListener {
+        void onCoverTaskFinished(Bitmap bitmap);
+    }
 
-	@Override
-	public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
-		for (OnBitmapReadyListener listener : listeners) {
-			if (null != listener) {
-				listener.onBitmapReady(arg2);
-			}
-		}
-	}
+    @Override
+    protected void onPostExecute(String s) {
+        super.onPostExecute(s);
+        try {
+            if (null == s || s.equals("NOT_FOUND") || "".equals(s) || "null".equals(s)) {
+                if (null != coverTaskListener) coverTaskListener.onCoverTaskFinished(null);
+                Log.i(getClass().getSimpleName(), "Error, cover not found from engines");
+                return;
+            }
+            ImageLoader.getInstance().loadImage(s, this);
+        } catch (Throwable e) {
+            Log.e(getClass().getSimpleName(), "Error while reading links contents", e);
+        }
+    }
 
-	@Override
-	public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {}
+    @Override
+    public void onLoadingCancelled(String arg0, View arg1) {
+    }
 
-	@Override
-	public void onLoadingStarted(String arg0, View arg1) {}
+    @Override
+    public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+        coverTaskListener.onCoverTaskFinished(arg2);
+    }
+
+    @Override
+    public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+        coverTaskListener.onCoverTaskFinished(null);
+    }
+
+    @Override
+    public void onLoadingStarted(String arg0, View arg1) {
+    }
 }

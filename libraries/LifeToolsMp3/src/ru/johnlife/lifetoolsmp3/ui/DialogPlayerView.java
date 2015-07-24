@@ -38,7 +38,6 @@ import android.widget.Toast;
 import java.util.HashMap;
 
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -380,7 +379,7 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 	}
 
 	public void setCoverFromSong(RemoteSong song) {
-		song.getCover(new OnBitmapReadyListener() {
+		song.getCover(new RemoteSong.OnBitmapReadyListener() {
 
 			@Override
 			public void onBitmapReady(Bitmap bmp) {

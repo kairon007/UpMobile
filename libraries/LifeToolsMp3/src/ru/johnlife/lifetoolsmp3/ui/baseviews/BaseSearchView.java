@@ -92,7 +92,6 @@ import ru.johnlife.lifetoolsmp3.engines.SearchWithPages;
 import ru.johnlife.lifetoolsmp3.engines.SearchYouTube;
 import ru.johnlife.lifetoolsmp3.engines.SearchYouTubeMusic;
 import ru.johnlife.lifetoolsmp3.engines.SearchZvukoff;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -901,16 +900,16 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		}
 		downloadListener = new BaseDownloadSongTask(getContext(), song, 0);
 		if (getSettings().getIsCoversEnabled(getContext())) {
-			boolean hasCover = song.getCover(new OnBitmapReadyListener() {
+			song.getCover(new RemoteSong.OnBitmapReadyListener() {
 
-                @Override
-                public void onBitmapReady(Bitmap bmp) {
-                }
-            });
-			if (!hasCover) {
-				dialogPlayerView.hideCoverProgress();
-				dialogPlayerView.setCover(null);
-			}
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					if (null == bmp) {
+						dialogPlayerView.hideCoverProgress();
+						dialogPlayerView.setCover(null);
+					}
+				}
+			});
 		}
 		
 		int lableStatus = keeper.checkSongInfo(song.getComment());

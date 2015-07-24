@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -156,18 +155,18 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 				threeDot.setTag(position);
 			}
 			if (getSettings().getIsCoversEnabled(getContext()) && ((RemoteSong) item).isHasCoverFromSearch()) {
-				((RemoteSong) item).getSmallCover(false, new OnBitmapReadyListener() {
-					
+				((RemoteSong) item).getCover(new RemoteSong.OnBitmapReadyListener() {
+
 					int tag = position;
-						
-							@Override
-							public void onBitmapReady(Bitmap bmp) {
-								boolean set = null == threeDot ? true : tag == (int) threeDot.getTag();
-								if (null != bmp && set) {
-									cover.setImageBitmap(bmp);
-								}
-							}
-						});
+
+					@Override
+					public void onBitmapReady(Bitmap bmp) {
+						boolean set = null == threeDot ? true : tag == (int) threeDot.getTag();
+						if (null != bmp && set) {
+							cover.setImageBitmap(Util.resizeToSmall(bmp));
+						}
+					}
+				});
 			}
 		}
 		

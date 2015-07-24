@@ -53,7 +53,6 @@ import java.util.TimerTask;
 
 import ru.johnlife.lifetoolsmp3.BaseConstants;
 import ru.johnlife.lifetoolsmp3.R;
-import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask.OnBitmapReadyListener;
 import ru.johnlife.lifetoolsmp3.engines.task.DownloadGrooveshark;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.GrooveSong;
@@ -265,7 +264,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
         }
         boolean isUpdated = continueDownload(id, currentDownloadId);
         if (!isUpdated) {
-            downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
+//            downloadingSong.setDownloaderListener(notifyStartDownload(currentDownloadId));
         }
         if (!earlierMsg) {
             ((Activity) context).runOnUiThread(new Runnable() {
@@ -440,13 +439,13 @@ public class BaseDownloadSongTask implements View.OnClickListener {
         }
 
         if (useCover) {
-            downloadingSong.getCover(new OnBitmapReadyListener() {
+            downloadingSong.getCover(new RemoteSong.OnBitmapReadyListener() {
 
                 @Override
                 public void onBitmapReady(Bitmap bmp) {
                     write(src, bmp, downloadingSong, src_set);
                 }
-            }, true);
+            });
         } else {
             write(src, null, downloadingSong, src_set);
         }

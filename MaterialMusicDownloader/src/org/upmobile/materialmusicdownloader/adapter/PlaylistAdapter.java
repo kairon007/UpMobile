@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
@@ -81,7 +82,7 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 		public PlaylistViewHolder(View v) {
 			title = (TextView) v.findViewById(R.id.textTitle);
 			artist = (TextView) v.findViewById(R.id.textHint);
-			cover = v.findViewById(R.id.item_cover);
+			cover = (ImageView) v.findViewById(R.id.item_cover);
 			duration = (TextView) v.findViewById(R.id.textDuration);
 			groupTitle = (TextView) v.findViewById(R.id.textTitle);
 			playAll = (TextView) v.findViewById(R.id.playAll);
