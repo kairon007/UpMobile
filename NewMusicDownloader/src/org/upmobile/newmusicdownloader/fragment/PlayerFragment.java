@@ -93,6 +93,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
     private ProgressBar progressLyrics;
     private MenuItem showLyrics;
     private MenuItem editTag;
+    private View playerEditTagDialog;
+    private View playerLyricsFrame;
 
     @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
@@ -321,6 +323,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		volume = (SeekBar) view.findViewById(R.id.progress_volume);
 		shuffleMode = (TextView) view.findViewById(R.id.shuffleMode);
 		playerProgress = (SeekBar) view.findViewById(R.id.progress_track);
+        playerLyricsFrame = view.findViewById(R.id.player_lyrics_frame);
+        playerEditTagDialog = view.findViewById(R.id.player_edit_tag_dialog);
 		playerTitle = (TextView) view.findViewById(R.id.songName);
 		playerArtist = (TextView) view.findViewById(R.id.artistName);
 		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
@@ -423,7 +427,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			saveTags();
 		case R.id.player_cancel_tags:
 			Util.hideKeyboard(getActivity(), v);
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+			playerEditTagDialog.setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
@@ -442,15 +446,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	}
 
 	private void hideOpenViews() {
-		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+		if (playerEditTagDialog.getVisibility() == View.VISIBLE) {
+			playerEditTagDialog.setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
 		}
-		if (parentView.findViewById(R.id.player_lyrics_frame).getVisibility() == View.VISIBLE) {
-			parentView.findViewById(R.id.player_lyrics_frame).setVisibility(View.GONE);
+		if (playerLyricsFrame.getVisibility() == View.VISIBLE) {
+			playerLyricsFrame.setVisibility(View.GONE);
 		}
+        editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
 		isUseAlbumCover = true;
 	}
 
@@ -464,7 +469,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					int current = player.getCurrentPosition();
 					playerProgress.setProgress(current);
 					playerCurrTime.setText(Util.getFormatedStrDuration(current));
-				} 
+				}
 				playerProgress.postDelayed(this, 1000);
 			} catch (Exception e) {
 				Log.d(getClass().getSimpleName(), e + "");
@@ -506,10 +511,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText("");
 		}
-        View lyricsFrame = parentView.findViewById(R.id.player_lyrics_frame);
-		if (lyricsFrame.getVisibility() == View.GONE) {
+		if (playerLyricsFrame.getVisibility() == View.GONE) {
             showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);
-            lyricsFrame.setVisibility(View.VISIBLE);
+            playerLyricsFrame.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
 			parentView.post(new Runnable() {
@@ -538,21 +542,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
             progressLyrics.setVisibility(View.VISIBLE);
 		} else {
             showLyrics.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.lyricsIndicator));
-            lyricsFrame.setVisibility(View.GONE);
+            playerLyricsFrame.setVisibility(View.GONE);
 		}
 	}
 
 	private void showEditTagDialog() {
-		if (parentView.findViewById(R.id.player_edit_tag_dialog).getVisibility() == View.VISIBLE) {
+		if (playerEditTagDialog.getVisibility() == View.VISIBLE) {
             editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
 			Util.hideKeyboard(getActivity(), parentView);
-			parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+			playerEditTagDialog.setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
 		} else {
             editTag.setIcon(R.drawable.ic_player_edit_grey);
-            parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.VISIBLE);
+            playerEditTagDialog.setVisibility(View.VISIBLE);
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());
 			playerTagsAlbum.setText(song.getAlbum());
@@ -588,7 +592,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void success(String path) {
 				song.setPath(path);
 				renameTask.cancelProgress();
-				parentView.findViewById(R.id.player_edit_tag_dialog).setVisibility(View.GONE);
+				playerEditTagDialog.setVisibility(View.GONE);
 				if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 					playerTagsCheckBox.setChecked(true);
 				}
