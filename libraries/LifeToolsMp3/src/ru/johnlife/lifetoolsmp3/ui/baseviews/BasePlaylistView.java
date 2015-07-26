@@ -118,7 +118,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void onPause () {
-		MusicApp.getSharedPreferences().edit().putStringSet(PREF_LAST_OPENED, getOpenedPlaylists()).commit();
+		MusicApp.getSharedPreferences().edit().putStringSet(PREF_LAST_OPENED, getOpenedPlaylists()).apply();
 		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
 	}
 	
@@ -126,7 +126,7 @@ public abstract class BasePlaylistView extends View {
 		ArrayList<AbstractSong> allItems = getAllItems();
 		HashSet<String> myHashSet = (HashSet<String>) MusicApp.getSharedPreferences().getStringSet(PREF_LAST_OPENED, new HashSet<String>());
 		for (AbstractSong data : getAllItems()) {
-			if (data.getClass() == PlaylistData.class && myHashSet.contains(String.valueOf(((PlaylistData)data).getId()))) {
+			if (data.getClass() == PlaylistData.class && myHashSet.contains(String.valueOf(data.getId()))) {
 				if (((PlaylistData) data).getSongs().size() == 0 || ((PlaylistData) data).isExpanded()) continue;
 				allItems.addAll(allItems.indexOf(data) + 1, ((PlaylistData) data).getSongs());
 				((PlaylistData) data).setExpanded(true);
@@ -136,10 +136,10 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	private HashSet getOpenedPlaylists() {
-		HashSet<String> myHashSet = new HashSet<String>();
+		HashSet<String> myHashSet = new HashSet<>();
 		for (AbstractSong data : getAllItems()) {
 			if (data.getClass() == PlaylistData.class && ((PlaylistData) data).isExpanded()) {
-				myHashSet.add(String.valueOf(((PlaylistData) data).getId()));
+				myHashSet.add(String.valueOf(data.getId()));
 			}
 		}
 		return myHashSet;
@@ -170,7 +170,7 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void collapseAll () {
-		ArrayList<MusicData> music = new ArrayList<MusicData>();
+		ArrayList<MusicData> music = new ArrayList<>();
 		ArrayList<AbstractSong> playlists = getAllItems();
 		for (AbstractSong data : playlists ) {
 			if (data.getClass() == MusicData.class) {
@@ -215,14 +215,14 @@ public abstract class BasePlaylistView extends View {
 						showMessage(getContext(), R.string.playlist_is_empty);
 	            		return;
 					}
-					if (!((PlaylistData) abstractSong).isExpanded()) {
-						playlists.addAll(position + 1, songs);
-						((PlaylistData) abstractSong).setExpanded(true);
-					} else {
-						playlists.removeAll(songs);
-						((PlaylistData) abstractSong).setExpanded(false);
-					}
-					updateAdapter(playlists);
+                    if (((PlaylistData) abstractSong).isExpanded()) {
+                        playlists.removeAll(songs);
+                        ((PlaylistData) abstractSong).setExpanded(false);
+                    } else {
+                        playlists.addAll(position + 1, songs);
+                        ((PlaylistData) abstractSong).setExpanded(true);
+                    }
+                    updateAdapter(playlists);
 				} else {
 					Util.hideKeyboard(getContext(), view);
 					if (null != playbackService) {
@@ -424,6 +424,7 @@ public abstract class BasePlaylistView extends View {
 			((PlaylistData) playlists.get(playlists.indexOf(data))).setExpanded(false);
 		}
         adapter.remove(data);
+        updateAdapter(playlists);
 	}
 
 	private ArrayList<AbstractSong> getPlaylists() {

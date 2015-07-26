@@ -10,6 +10,7 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Audio.AudioColumns;
 import android.provider.MediaStore.MediaColumns;
+import android.support.annotation.NonNull;
 
 import org.cmc.music.metadata.MusicMetadata;
 import org.cmc.music.metadata.MusicMetadataSet;
@@ -122,7 +123,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	@Override
 	public Bitmap getCover() {
 		if (cover != null) return cover;
-		File file = new File(path);		
+		File file = new File(path);
 		try {
 			MusicMetadataSet src_set = new MyID3().read(file);
 			MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
@@ -161,7 +162,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 		} catch (Exception e) {
 			android.util.Log.d(getClass().getSimpleName(), "Exception! Metadata is bad. " + e);
 		}
-		return null != comment && !comment.isEmpty() ? comment : EMPTY_COMMENT;
+		return null == comment || comment.isEmpty() ? EMPTY_COMMENT : comment;
 	}
 	
 	public void setComment(String comment) {
@@ -246,7 +247,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	}
 
 	@Override
-	public int compareTo(MusicData another) {
+	public int compareTo(@NonNull MusicData another) {
 		if (id > another.id)
 			return 1;
 		else if (id < another.id)
@@ -264,15 +265,11 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	public boolean equals(Object object) {
 		if (this == object)
 			return true;
-		if (null == object)
-			return false;
-		if (this.getClass() != object.getClass())
+		if (null == object || this.getClass() != object.getClass())
 			return false;
 		MusicData another = (MusicData) object;
-		if (this.id != another.id)
-			return false;
-		return true;
-	}
+        return this.id == another.id;
+    }
 
 	public void turnOff(int flag) {
 		setFlag(flag, false);
@@ -284,8 +281,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 
 	public boolean check(int flag) {
 		int buf = mode;
-		boolean result = (buf & flag) == flag;
-		return result;
+        return (buf & flag) == flag;
 	}
 
 	private void setFlag(int flag, boolean onOff) {

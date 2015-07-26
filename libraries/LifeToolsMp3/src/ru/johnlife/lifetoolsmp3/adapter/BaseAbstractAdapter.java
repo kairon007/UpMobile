@@ -1,8 +1,5 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
-import java.util.ArrayList;
-
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+
 public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAdapter {
 
-	private ArrayList<T> items = new ArrayList<T>();
+	private ArrayList<T> items;
 	private ArrayList<T> originalItems;
 	
 	private Context context;
@@ -27,6 +28,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.layoutId = resource;
 		this.context = context;
+        items = new ArrayList<>();
 	}
 
 	public BaseAbstractAdapter(Context context, int resource, ArrayList<T> array) {
@@ -59,7 +61,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<T> getAll() {
-		ArrayList<T> result = new ArrayList<T>();
+		ArrayList<T> result = new ArrayList<>();
 		for (int i = 0; i < getCount(); i++) {
 			result.add((T) getItem(i));
 		}
@@ -87,7 +89,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	}
 	
 	public void changeData(ArrayList<T> array) {
-		if (null != originalItems) {
+		if (null == filter && null != originalItems) {
 			originalItems = array;
 		}
 		items = array;
@@ -95,9 +97,9 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			notifyDataSetChanged();
 		}
 	}
-	
+
 	public void clear() {
-		if (null != originalItems) {
+		if (null == filter && null != originalItems) {
 			originalItems.clear();
 		}
 		items.clear();
@@ -174,7 +176,8 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		if (null == filter || null == originalItems) {
 			return;
 		}
-		changeData(originalItems);
+        filter = null;
+        changeData(originalItems);
 		notifyDataSetChanged();
 		originalItems = null;
 	}
@@ -200,15 +203,15 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			FilterResults results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (originalItems == null) {
-				originalItems = new ArrayList<T>(items);
+				originalItems = new ArrayList<>(items);
 			}
 			if (prefix == null || prefix.length() == 0) {
-				ArrayList<T> list = new ArrayList<T>(originalItems);
+				ArrayList<T> list = new ArrayList<>(originalItems);
 				results.values = list;
 				results.count = list.size();
 			} else {
-				ArrayList<T> list = new ArrayList<T>(originalItems);
-				ArrayList<T> nlist = new ArrayList<T>();
+				ArrayList<T> list = new ArrayList<>(originalItems);
+				ArrayList<T> nlist = new ArrayList<>();
 				int count = list.size();
 				for (int i = 0; i < count; i++) {
 					T data = list.get(i);
