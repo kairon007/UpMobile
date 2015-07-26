@@ -112,28 +112,28 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	
 	public interface OnStatePlayerListener {
 		
-		public enum State {
+		enum State {
 			START, PLAY, PAUSE, STOP, ERROR, UPDATE
 		}
 		
-		public void start(AbstractSong song);
-		public void play(AbstractSong song);
-		public void	pause(AbstractSong song);
-		public void stop (AbstractSong song);
-		public void stopPressed();
-		public void onTrackTimeChanged(int time, boolean isOverBuffer);	//TRUE - if overbuffered
-		public void onBufferingUpdate(double percent);
-		public void update (AbstractSong song);
-		public void	error ();
+		void start(AbstractSong song);
+		void play(AbstractSong song);
+		void pause(AbstractSong song);
+		void stop(AbstractSong song);
+		void stopPressed();
+		void onTrackTimeChanged(int time, boolean isOverBuffer);	//TRUE - if overbuffered
+		void onBufferingUpdate(double percent);
+		void update(AbstractSong song);
+		void error();
 			
 	}
 	
 	public interface OnPlaybackServiceDestroyListener {
-		public void playbackServiceIsDestroyed();
+		void playbackServiceIsDestroyed();
 	}
 	
 	public interface OnErrorListener {
-		public void error(String error);
+		void error(String error);
 	}
 	
 	private class HeadsetIntentReceiver extends BroadcastReceiver {
@@ -529,14 +529,14 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		}
 		boolean result = enabledShuffleAll();
 		if (result && null == arrayPlaybackOriginal) {
-			arrayPlaybackOriginal = new ArrayList<AbstractSong>();
+			arrayPlaybackOriginal = new ArrayList<>();
 			for (AbstractSong song : arrayPlayback) {
 				arrayPlaybackOriginal.add(song);
 			}
 			long seed = System.nanoTime();
 			Collections.shuffle(arrayPlayback, new Random(seed));
 		} else if (!enabledShuffleAll()){
-			arrayPlayback = new ArrayList<AbstractSong>(arrayPlaybackOriginal);
+			arrayPlayback = new ArrayList<>(arrayPlaybackOriginal);
 			arrayPlaybackOriginal = null;
 		}
 		return result;
@@ -917,8 +917,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 		closeIntent.setAction(CLOSE_ACTION);
 		PendingIntent pcloseIntent = PendingIntent.getService(this, 0, closeIntent, 0);
 
-		NotificationCompat.Builder builder = null;
-		int drawable = 0;
+		NotificationCompat.Builder builder;
+		int drawable;
 		String state = (playing) ? getString(R.string.pause) : getString(R.string.play);
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
 			drawable = (playing) ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play;

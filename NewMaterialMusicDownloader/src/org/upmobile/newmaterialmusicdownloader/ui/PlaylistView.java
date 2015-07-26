@@ -1,6 +1,7 @@
 package org.upmobile.newmaterialmusicdownloader.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -149,6 +151,16 @@ public class PlaylistView extends BasePlaylistView {
 									.positiveText(R.string.create)
 									.negativeText(android.R.string.cancel);
 		dialog = builder.build();
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    dialog.getActionButton(DialogAction.POSITIVE).performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
 		dialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
 		final FloatingEditText editText = (FloatingEditText) dialog.getCustomView().findViewById(android.R.id.edit);
 		editText.setHint(R.string.playlist_name);

@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
@@ -21,6 +22,7 @@ import java.util.List;
 import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
+import ru.johnlife.uilibrary.widget.dialogs.materialdialog.DialogAction;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog;
 import ru.johnlife.uilibrary.widget.dialogs.materialdialog.MaterialDialog.ButtonCallback;
 
@@ -41,8 +43,8 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		}
 
 		@Override
-		public void onNeutral(MaterialDialog dialog) {
-			MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
+		public void onNeutral(final MaterialDialog dialog) {
+			final MaterialDialog dlg = new MaterialDialog.Builder(getActivity())
 			.title(R.string.add_new_folder)
 			.titleColorAttr(R.attr.colorTextPrimary)
 			.positiveColorAttr(R.attr.colorPrimary)
@@ -80,12 +82,22 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 						return newDirFile.mkdir();
 					}
 					return false;
-				};
+				}
 			})
 			.positiveText(android.R.string.ok)
 			.negativeText(android.R.string.cancel)
 			.build();
 			((EditText)dlg.getCustomView().findViewById(android.R.id.edit)).setHint(R.string.folder_name);
+            dlg.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                        dlg.getActionButton(DialogAction.POSITIVE).performClick();
+                        return true;
+                    }
+                    return false;
+                }
+            });
 			dlg.show();
 		}
 		
@@ -95,7 +107,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		}
 	};
 
-	public static interface FolderSelectCallback {
+	public interface FolderSelectCallback {
 		void onFolderSelection(File folder);
 	}
 
@@ -146,21 +158,34 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 	
 	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		return new MaterialDialog.Builder(getActivity())
-				.title(parentFolder.getAbsolutePath())
-				.items(getContentsArray())
-				.notClickableItems(getAudioFiles())
-				.titleColorAttr(R.attr.colorTextPrimary)
-				.itemColorAttr(R.attr.colorTextSecondary)
-				.positiveColorAttr(R.attr.colorPrimary)
-				.neutralColorAttr(R.attr.colorPrimary)
-				.itemsCallback(this)
-				.callback(mButtonCallback)
-				.autoDismiss(false)
-				.neutralText(R.string.add_folder)
-				.positiveText(android.R.string.ok)
-				.negativeText(android.R.string.cancel)
-				.build();
+        final MaterialDialog dialog = new MaterialDialog.Builder(getActivity())
+                .title(parentFolder.getAbsolutePath())
+                .items(getContentsArray())
+                .notClickableItems(getAudioFiles())
+                .titleColorAttr(R.attr.colorTextPrimary)
+                .itemColorAttr(R.attr.colorTextSecondary)
+                .positiveColorAttr(R.attr.colorPrimary)
+                .neutralColorAttr(R.attr.colorPrimary)
+                .itemsCallback(this)
+                .callback(mButtonCallback)
+                .autoDismiss(false)
+                .neutralText(R.string.add_folder)
+                .positiveText(android.R.string.ok)
+                .negativeText(android.R.string.cancel)
+                .build();
+
+        dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    dialog.getActionButton(DialogAction.POSITIVE).performClick();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        return dialog;
 	}
 	
 	@Override
