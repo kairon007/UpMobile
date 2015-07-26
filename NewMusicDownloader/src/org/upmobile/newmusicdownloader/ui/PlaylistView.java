@@ -19,9 +19,7 @@ import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
 
 public class PlaylistView extends BasePlaylistView {
 
-	private ListView lView;
-
-	public PlaylistView(LayoutInflater inflater) {
+    public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
 	}
 
@@ -37,8 +35,7 @@ public class PlaylistView extends BasePlaylistView {
 
 	@Override
 	protected ListView getListView(View view) {
-		lView = (ListView) view.findViewById(R.id.list);
-		return lView;
+        return (ListView) view.findViewById(R.id.list);
 	}
 	
 	@Override

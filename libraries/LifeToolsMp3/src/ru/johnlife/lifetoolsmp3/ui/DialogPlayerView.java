@@ -270,7 +270,7 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 					progressLayout.setVisibility(View.GONE);
 					if (foundLyrics && null != dialog && dialog.isShowing()) {
 						lyricsTextView.setText(Html.fromHtml(lyrics));
-						StateKeeper.getInstance().setLyricsString(lyrics);
+						StateKeeper.getInstance().setLyrics(lyrics);
 					} else {
 						if (null != dialog && dialog.isShowing()) {
 							String message = String.format(view.getContext().getResources().getString(R.string.download_dialog_no_lyrics), strArtist + " - " + strTitle);

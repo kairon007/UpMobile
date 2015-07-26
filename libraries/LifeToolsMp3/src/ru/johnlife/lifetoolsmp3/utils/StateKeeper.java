@@ -40,7 +40,7 @@ public class StateKeeper {
 	private BaseSearchView searchView;
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
-	private ArrayList<MusicData> librarysAdapter;
+	private ArrayList<MusicData> libraryAdapterItems;
 	private DialogPlayerView dialogPlayerViewInstance;
 	private RemoteSong downloadSong;
 	private View viewItem;
@@ -56,7 +56,7 @@ public class StateKeeper {
 	private int clickPosition;
 	private int currentPlayersId;
 	private int tempID3UseCover;
-	private int libaryFirstPosition;
+	private int libraryFirstPosition;
 	/**
 	 * The class flags hold various states.
 	 */
@@ -377,12 +377,12 @@ public class StateKeeper {
 		else this.tempID3UseCover = 0;
 	}
 
-	public ArrayList<MusicData> getLibrarysAdapter() {
-		return librarysAdapter;
+	public ArrayList<MusicData> getLibraryAdapterItems() {
+		return libraryAdapterItems;
 	}
 
-	public void setLibrarysAdapter(ArrayList<MusicData> librarysAdapter) {
-		this.librarysAdapter = librarysAdapter;
+	public void setLibraryAdapterItems(ArrayList<MusicData> libraryAdapterItems) {
+		this.libraryAdapterItems = libraryAdapterItems;
 	}
 
 	public void setTempID3Fields(String[] strings) {
@@ -425,7 +425,7 @@ public class StateKeeper {
 		return lyrics;
 	}
 
-	public void setLyricsString(String lyrics) {
+	public void setLyrics(String lyrics) {
 		this.lyrics = lyrics;
 	}
 
@@ -469,12 +469,12 @@ public class StateKeeper {
 		return results;
 	}
 
-	public int getLibaryFirstPosition() {
-		return libaryFirstPosition;
+	public int getLibraryFirstPosition() {
+		return libraryFirstPosition;
 	}
 
-	public void setLibaryFirstPosition(int libaryFirstPosition) {
-		this.libaryFirstPosition = libaryFirstPosition;
+	public void setLibraryFirstPosition(int libraryFirstPosition) {
+		this.libraryFirstPosition = libraryFirstPosition;
 	}
 	
 	public void setSearchView(BaseSearchView searchView) {

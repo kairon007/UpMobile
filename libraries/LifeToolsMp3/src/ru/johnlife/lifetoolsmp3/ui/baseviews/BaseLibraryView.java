@@ -95,7 +95,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         msg.what = MSG_FILL_ADAPTER;
         msg.obj = list;
         uiHandler.sendMessage(msg);
-        StateKeeper.getInstance().setLibrarysAdapter(list);
+        StateKeeper.getInstance().setLibraryAdapterItems(list);
     }
 
     private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
@@ -135,7 +135,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             checkRemovedFiles.cancel(true);
             checkRemovedFiles = null;
         }
-        StateKeeper.getInstance().setLibaryFirstPosition(listView.getFirstVisiblePosition());
+        StateKeeper.getInstance().setLibraryFirstPosition(listView.getFirstVisiblePosition());
     }
 
     public void onResume() {
@@ -171,8 +171,9 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     }
 
     private void updateAdapter() {
-        if (null != StateKeeper.getInstance().getLibrarysAdapter())
-            fillAdapter(StateKeeper.getInstance().getLibrarysAdapter());
+        if (null != StateKeeper.getInstance().getLibraryAdapterItems()) {
+            fillAdapter(StateKeeper.getInstance().getLibraryAdapterItems());
+        }
         new Thread(new Runnable() {
 
             private ArrayList<MusicData> querySong;
@@ -185,7 +186,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                     @Override
                     public void run() {
                         fillAdapter(querySong);
-                        int firstPosition = StateKeeper.getInstance().getLibaryFirstPosition();
+                        int firstPosition = StateKeeper.getInstance().getLibraryFirstPosition();
                         if (firstPosition != 0 && firstPosition < adapter.getCount()) {
                             listView.setSelection(firstPosition);
                         }

@@ -147,10 +147,11 @@ public class DirectoryChooserDialog {
 
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
+                                StateKeeper.getInstance().setLibraryAdapterItems(null);
 								if (m_chosenDirectoryListener != null) {
 									m_chosenDirectoryListener.onChosenDir(m_dir);
 								}
-								StateKeeper.getInstance().setLibaryFirstPosition(0);
+								StateKeeper.getInstance().setLibraryFirstPosition(0);
 								keeper.closeDialog(StateKeeper.DIRCHOOSE_DIALOG);
 							}
 						}).setNegativeButton(android.R.string.cancel, new OnClickListener() {
@@ -195,8 +196,8 @@ public class DirectoryChooserDialog {
 	}
 
 	private void getDirectories(final String dir, final OnDirScanFinish scanFinish) {
-		final List<String> files = new ArrayList<String>();
-		final List<String> songs = new ArrayList<String>();
+		final List<String> files = new ArrayList<>();
+		final List<String> songs = new ArrayList<>();
 		final File system = new File(Environment.getExternalStorageDirectory().getPath() + "/Android");
 		new Thread(new Runnable() {
 			@Override
@@ -325,8 +326,7 @@ public class DirectoryChooserDialog {
 
 			public void onClick(DialogInterface dialog, int whichButton) {
 				keeper.closeDialog(StateKeeper.NEWDIR_DIALOG);
-				Editable newDir = input.getText();
-				String newDirName = newDir.toString();
+				String newDirName = input.getText().toString();
 				if (newDirName.isEmpty()) {
 					Toast.makeText(m_context, "Folder name can not be empty", Toast.LENGTH_SHORT).show();
 					return;

@@ -35,8 +35,9 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 		@Override
 		public void onPositive(MaterialDialog materialDialog) {
 			materialDialog.dismiss();
+            StateKeeper.getInstance().setLibraryAdapterItems(null);
 			mCallback.onFolderSelection(parentFolder);
-			StateKeeper.getInstance().setLibaryFirstPosition(0);
+			StateKeeper.getInstance().setLibraryFirstPosition(0);
 		}
 
 		@Override
@@ -56,7 +57,7 @@ public class FolderSelectorDialog extends DialogFragment implements	MaterialDial
 				
 				@Override
 				public void onPositive(MaterialDialog dialog) {
-					StateKeeper.getInstance().setLibaryFirstPosition(0);
+					StateKeeper.getInstance().setLibraryFirstPosition(0);
 					Util.hideKeyboard(getActivity(), dialog.getCustomView());
 					EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 					String temp = input.getText().toString().trim();
