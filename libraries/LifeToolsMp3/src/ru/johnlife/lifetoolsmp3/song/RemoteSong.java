@@ -24,6 +24,7 @@ public class RemoteSong extends Song implements CoverLoaderTask.OnCoverTaskListe
     public ArrayList<String[]> headers;
     private ArrayList<OnBitmapReadyListener> onBitmapReadyListeners = new ArrayList<>();
     protected List<DownloadUrlListener> downloadUrlListeners = new ArrayList<>();
+    private static final Object lock = new Object();
 
     public RemoteSong(String downloadUrl) {
         super(downloadUrl.hashCode());
@@ -113,14 +114,16 @@ public class RemoteSong extends Song implements CoverLoaderTask.OnCoverTaskListe
     }
 
     public void getCover(OnBitmapReadyListener onBitmapReadyListener) {
-        onBitmapReadyListeners.add(onBitmapReadyListener);
-        if (null != cover && null != cover.get()) {
-            setBmp(cover.get());
-            clearCoverLoaderQueue();
-            return;
+        synchronized (lock) {
+            onBitmapReadyListeners.add(onBitmapReadyListener);
+            if (null != cover && null != cover.get()) {
+                setBmp(cover.get());
+                clearCoverLoaderQueue();
+                return;
+            }
+            if (coverLoaderIndex != 0) return;
+            startSearch();
         }
-        if (coverLoaderIndex != 0) return;
-        startSearch();
     }
 
     @Override
@@ -160,11 +163,13 @@ public class RemoteSong extends Song implements CoverLoaderTask.OnCoverTaskListe
     }
 
     private void setBmp(Bitmap bmp) {
-        cover = new WeakReference<>(bmp);
-        for (OnBitmapReadyListener listener : onBitmapReadyListeners) {
-            listener.onBitmapReady(bmp);
+        synchronized (lock) {
+            cover = new WeakReference<>(bmp);
+            for (OnBitmapReadyListener listener : onBitmapReadyListeners) {
+                if (null != listener) listener.onBitmapReady(bmp);
+            }
+            onBitmapReadyListeners.clear();
         }
-        onBitmapReadyListeners.clear();
     }
 
     public RemoteSong setDownloadUrl(String url) {
