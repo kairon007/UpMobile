@@ -52,6 +52,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	private View download;
 	private View miniPlayer;
 	private View fakeView;
+	private View fakeMiniPlayer;
 	protected View progress;
 	private boolean isMiniPlayerPrepared = false;
 	
@@ -91,7 +92,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		@Override
 		public void start(AbstractSong s) {
 			song = s;
-			setData(s);
+//			setData(s);
 			isMiniPlayerPrepared = true;
 			showProgress(false);
 			showPlayerElement(true);
@@ -407,6 +408,9 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 
 	public void hideDownloadButton(boolean hide) {
 		download.setVisibility(hide ? View.GONE : View.VISIBLE);
+//		if (null != fakeMiniPlayer) {
+//			fakeMiniPlayer.findViewById(R.id.mini_player_download).setVisibility(hide ? View.GONE : View.VISIBLE);
+//		}
 	}
 
 	private void startFakeAnimation () {
@@ -414,7 +418,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			setData(song);
 			return;
 		}
-		final View fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
+		fakeMiniPlayer = findViewById(getMiniPlayerDuplicateID());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_artist)).setText(artist.getText());
 		((TextView)fakeMiniPlayer.findViewById(R.id.mini_player_title)).setText(title.getText());
 		((ImageView)fakeMiniPlayer.findViewById(R.id.mini_player_cover)).setImageDrawable(cover.getDrawable());
@@ -425,30 +429,31 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		final Animation slideOutLeft = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_out_left);
         slideOutLeft.setAnimationListener(new AnimationListener() {
 
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
 
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
 
-            @Override
-            public void onAnimationEnd(Animation animation) {
+			@Override
+			public void onAnimationEnd(Animation animation) {
 				fakeMiniPlayer.setVisibility(View.GONE);
 			}
 		});
 		final Animation slideInRight = AnimationUtils.loadAnimation(this, R.anim.miniplayer_slide_in_right);
 		fakeMiniPlayer.setVisibility(View.VISIBLE);
+		fakeMiniPlayer.findViewById(R.id.mini_player_download).setVisibility(View.GONE);
         long startTime = System.currentTimeMillis();
         slideOutLeft.setStartTime(startTime);
         fakeMiniPlayer.setAnimation(slideOutLeft);
 		slideInRight.setStartTime(startTime);
         miniPlayer.setAnimation(slideInRight);
         miniPlayer.post(new Runnable() {
-            @Override
-            public void run() {
-                miniPlayer.startAnimation(slideInRight);
+			@Override
+			public void run() {
+				miniPlayer.startAnimation(slideInRight);
 				fakeMiniPlayer.startAnimation(slideOutLeft);
 			}
 		});
@@ -475,12 +480,13 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 	}
 	
 	private void setData(final AbstractSong song) {
+		hideDownloadButton(MusicData.class == song.getClass());
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		showProgress(!service.isPrepared());
 		if (song.getClass() != MusicData.class) {
 			setCover(null);
-			RemoteSong.OnBitmapReadyListener readyListener = new RemoteSong.OnBitmapReadyListener() {
+				RemoteSong.OnBitmapReadyListener readyListener = new RemoteSong.OnBitmapReadyListener() {
 				
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
