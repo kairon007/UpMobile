@@ -195,18 +195,22 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				@Override
 				public void run() {
 					synchronized (WAIT) {
-						if (isDestroyed  || !player.isPlaying() || null == playingSong) {
-							return;
-						}
-						if (lastTime == player.getCurrentPosition()) {
-							notUpdateCount++;
-						} else {
-							notUpdateCount = 0;
-						}
-						lastTime = player.getCurrentPosition();
-						if (!isPrepared()) return;
-						for (OnStatePlayerListener listener : stateListeners) {
-							listener.onTrackTimeChanged(player.getCurrentPosition(), notUpdateCount > MAX_NOTUPDATE_COUNT);
+						try {
+							if (isDestroyed || !player.isPlaying() || null == playingSong) {
+								return;
+							}
+							if (lastTime == player.getCurrentPosition()) {
+								notUpdateCount++;
+							} else {
+								notUpdateCount = 0;
+							}
+							lastTime = player.getCurrentPosition();
+							if (!isPrepared()) return;
+							for (OnStatePlayerListener listener : stateListeners) {
+								listener.onTrackTimeChanged(player.getCurrentPosition(), notUpdateCount > MAX_NOTUPDATE_COUNT);
+							}
+						} catch (IllegalStateException e) {
+							Log.e(PlaybackService.class.getSimpleName(), "error: " + e);
 						}
 					}
 				}
