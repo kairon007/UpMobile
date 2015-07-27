@@ -55,7 +55,7 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener, PlaybackService.OnErrorListener{
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
-	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
+	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_ashgdqweywgdhcjsvhuhqjwg	qwfdsfsdvsCHANGED_ACTION";
 	private AbstractSong song;
 	private AudioManager audio;
 	private RenameTask renameTask;
@@ -208,6 +208,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerProgress.setVisibility(View.INVISIBLE);
 		wait.setVisibility(View.VISIBLE);
 		showDownloadedLabel();
+		getCover(current);
 	}
 
 	private void showDownloadedLabel() {
@@ -659,7 +660,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		player.pause();
 		player.shift(delta, true);
 		downloadButtonState(!player.isGettingURl());
-		getCover(player.getPlayingSong());
 	}
 
 	private void getCover(final AbstractSong song) {

@@ -37,6 +37,7 @@
     <string name="close">Close</string>
     <string name="download_failed">Download is failed</string>
     <string name="download_error">Please wait while song loads.</string>
+    <string name="server_error">An error occurred on the server. Can not play the song.</string>
     <string name="download_canceled">Download is canceled</string>
     <string name="search_message_no_internet">No internet connection.\nYou can retry later.</string>
     <string name="no_wi_fi">No Wi-Fi connection</string>

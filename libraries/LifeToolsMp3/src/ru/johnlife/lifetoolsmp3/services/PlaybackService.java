@@ -667,6 +667,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 	public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
 		switch (what) { // TO logs we should be aware of
 		case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+			showMessage(getString(R.string.server_error));
+			shift(1, false);
 			Log.e(getClass().getSimpleName(), "Unknown media playback error");
 			break;
 		case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
