@@ -156,7 +156,8 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 
 		@Override
 		public void onCallStateChanged(int state, String incomingNumber) {
-			switch (state) {
+            switch (state) {
+            case TelephonyManager.CALL_STATE_OFFHOOK:
 			case TelephonyManager.CALL_STATE_RINGING:
 				if (check(SMODE_PLAYING)) {
 					buildSendMessage(playingSong, MSG_PAUSE, 0, 0);
