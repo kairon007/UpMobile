@@ -484,10 +484,11 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		title.setText(song.getTitle());
 		artist.setText(song.getArtist());
 		showProgress(!service.isPrepared());
+		RemoteSong.OnBitmapReadyListener readyListener;
 		if (song.getClass() != MusicData.class) {
 			setCover(null);
-				RemoteSong.OnBitmapReadyListener readyListener = new RemoteSong.OnBitmapReadyListener() {
-				
+			readyListener = new RemoteSong.OnBitmapReadyListener() {
+
 				@Override
 				public void onBitmapReady(Bitmap bmp) {
 					if (this.hashCode() != checkIdCover) return;
@@ -496,21 +497,42 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 					setCover(bmp);
 				}
 			};
-			checkIdCover  = readyListener.hashCode();
+			checkIdCover = readyListener.hashCode();
 			((RemoteSong) song).getCover(readyListener);
 		} else {
-			setCover(song.getCover());
+			readyListener = new RemoteSong.OnBitmapReadyListener() {
+				@Override
+				public void onBitmapReady(Bitmap bmp) {
+					if (this.hashCode() != checkIdCover) return;
+					if (bmp != null) {
+						int size = Util.dpToPx(BaseMiniPlayerActivity.this, 64);
+						bmp = Util.resizeBitmap(bmp, size, size);
+					}
+					setCoverInUI(bmp);
+				}
+			};
+			checkIdCover = readyListener.hashCode();
+			((MusicData)song).getCover(readyListener);
 		}
+	}
+
+	public void setCoverInUI(final Bitmap bmp) {
+		runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				setCover(bmp);
+			}
+		});
 	}
 	
 	/**
 	 * Change background of button play/pause in mini player
 	 * 
-	 * @param playPayse true - image play, false - image pause
+	 * @param playPause true - image play, false - image pause
 	 */
-	protected void setPlayPauseMini(boolean playPayse) {
-		if (playPause.getClass() == ImageButton.class) {
-			((ImageButton) playPause).setImageResource(playPayse ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
+	protected void setPlayPauseMini(boolean playPause) {
+		if (this.playPause.getClass() == ImageButton.class) {
+			((ImageButton) this.playPause).setImageResource(playPause ? Util.getResIdFromAttribute(this, R.attr.miniPlayerPlay) : Util.getResIdFromAttribute(this, R.attr.miniPlayerPause));
 		}
 	}
 	
