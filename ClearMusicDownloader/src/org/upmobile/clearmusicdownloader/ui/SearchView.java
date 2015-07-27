@@ -125,7 +125,6 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	@Override
 	public BaseSearchAdapter getAdapter() {
 		if (null == adapter) {
-			new NullPointerException("Adapter must not be null");
 			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;

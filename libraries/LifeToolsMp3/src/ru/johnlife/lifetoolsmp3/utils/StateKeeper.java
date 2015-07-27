@@ -209,7 +209,7 @@ public class StateKeeper {
 	
 	public void saveStateAdapter(BaseSearchView view) {
 		searchView = null;
-		songField = view.getSearchField().getText().toString();
+		songField = view.getLastSearchString();
 		results = view.getAdapter().getAll();
 		if (results != null && !results.isEmpty()) listViewPosition = view.getListViewPosition();
 		else message = view.getMessage();

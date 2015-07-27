@@ -1046,7 +1046,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	public void setMessage(String msg) {
 		message.setText(msg);
 	}
-	
+
+    public String getLastSearchString() {
+        return lastSearchString;
+    }
+
 	public static String getTitleSearchEngine2() {
 		SharedPreferences prefs = MusicApp.getSharedPreferences();
 		return prefs.getString("search_engines_title_2", "Search Engine 2");
