@@ -701,6 +701,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		boolean show = isThisSongDownloaded() && song.getClass() != MusicData.class;
 		contentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		((View) showInLib.getParent()).setVisibility(show ? View.VISIBLE : View.GONE);
+		download.setText(show ? R.string.download_anyway : R.string.btn_download);
 	}
 
 	private void cancelProgressTask() {

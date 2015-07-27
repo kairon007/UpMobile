@@ -315,6 +315,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		boolean show = isThisSongDownloaded() && song.getClass() != MusicData.class;
 		scrollView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		((View) showInLib.getParent()).setVisibility(show ? View.VISIBLE : View.GONE);
+		download.setText(show ? R.string.download_anyway : R.string.btn_download);
 	}
 
 	@Override
@@ -967,15 +968,15 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 				@Override
 				public void error(String error) {
-					((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-						
+					new Handler(Looper.getMainLooper()).post((new Runnable() {
+
 						@Override
 						public void run() {
 							((MainActivity) getActivity()).showMessage(R.string.download_failed);
 							download.setProgress(0);
 							setDownloadButtonState(true);
 						}
-					});
+					}));
 				}
 			});
 		}

@@ -1,9 +1,12 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
+import android.app.DownloadManager;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -34,6 +37,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -48,6 +52,7 @@ import com.nineoldandroids.view.ViewHelper;
 import com.special.utils.UIParallaxScroll;
 import com.special.utils.UIParallaxScroll.OnScrollChangedListener;
 
+import org.upmobile.clearmusicdownloader.BaseDownloadListener;
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
@@ -65,8 +70,11 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+import ru.johnlife.lifetoolsmp3.tasks.ProgressUpdaterTask;
 import ru.johnlife.lifetoolsmp3.tasks.RenameTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.MP3Editor;
+import ru.johnlife.lifetoolsmp3.utils.DownloadCache;
+import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
@@ -84,6 +92,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private SearchLyrics lyricsFetcher;
 	private View parentView;
 	private SeekBar playerProgress;
+	private ProgressUpdaterTask progressUpdater;
+	private ProgressUpdaterTask.ProgressUpdaterListener progressListener;
 	
 	private UndoBar undo;
 	
@@ -109,6 +119,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private TextView playerLyricsView;
 	private TextView playerTitleBarTitle;
 	private TextView playerTitleBarArtis;
+	private ProgressBar downloadProgress;
     private int delta_top;
     private int delta_left;
 	private int top;
@@ -187,6 +198,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			getCover(song);
 			showLyrics(song);
 			hideDownloadedLabel();
+			thatSongIsDownloaded(s);
 		}
 
 		@Override
@@ -225,6 +237,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onDestroyView() {
 		player.removeStatePlayerListener(stateListener);
+		cancelProgressTask();
 		super.onDestroyView();
 	}
 	
@@ -253,12 +266,17 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		hideDownloadedLabel();
 		playerProgress.setEnabled(prepared);
 		downloadButtonState(!player.isGettingURl());
+		cancelProgressTask();
+		initUpdater();
+		thatSongIsDownloaded(song);
 	}
 
 	private void hideDownloadedLabel() {
-		boolean hide = ((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class;
-		parentView.findViewById(R.id.downloadedText).setVisibility(hide ? View.VISIBLE : View.GONE);
-		showInLibrary.setVisibility(hide ? View.VISIBLE : View.GONE);
+		boolean show = ((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class;
+		((TextView) parentView.findViewById(R.id.downloadedText)).setText(R.string.has_been_downloaded);
+		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
+		showInLibrary.setVisibility(show ? View.VISIBLE : View.GONE);
+		download.setText(show ? R.string.download_anyway : R.string.btn_download);
 	}
 
 	private void setKeyListener() {
@@ -337,6 +355,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerLyricsView = (TextView) view.findViewById(R.id.player_lyrics_view);
 		playerCover = (ImageView) view.findViewById(R.id.player_cover);
 		useCover = (CheckBox) view.findViewById(R.id.use_cover);
+		downloadProgress = (ProgressBar) view.findViewById(R.id.downloadProgress);
 		undo = new UndoBar(getActivity());
 	}
 
@@ -768,6 +787,10 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		}
 		hideDownloadedLabel();
 		showLyrics(player.getPlayingSong());
+		if (player.enabledRepeat()) return;
+		download.setVisibility(player.getPlayingSong().getClass() != MusicData.class ? View.VISIBLE : View.GONE);
+		showDownloadProgress(false);
+		cancelProgressTask();
 	}
 	
 	private void getCover(final AbstractSong song) {
@@ -805,9 +828,19 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		useCover.setClickable(state);
 	}
 
+	private void showDownloadProgress(boolean show) {
+		((TextView) parentView.findViewById(R.id.downloadedText)).setText(show ? R.string.downloading : R.string.has_been_downloaded);
+		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
+		downloadProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+	}
+
 	private void download() {
+		if (song.getClass() == MusicData.class) return;
+		download.setVisibility(View.GONE);
+		showDownloadProgress(true);
+		downloadProgress.setIndeterminate(true);
 		((MainActivity)getActivity()).setCoverHelper(true);
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+		song.getDownloadUrl(new DownloadUrlListener() {
 
 			@Override
 			public void success(String url) {
@@ -821,7 +854,12 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 					@Override
 					public void run() {
-						((MainActivity) getActivity()).download((RemoteSong) song, isUseAlbumCover);
+						int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
+						BaseDownloadListener downloadListener = new BaseDownloadListener(getActivity(), (RemoteSong) song, id);
+						downloadListener.setDownloadPath(ClearMusicDownloaderApp.getDirectory());
+						downloadListener.setUseAlbumCover(isUseAlbumCover);
+						downloadListener.downloadSong(false);
+						thatSongIsDownloaded(song);
 					}
 				};
 				new Handler(Looper.getMainLooper()).post(callbackRun);
@@ -831,6 +869,69 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			public void error(String error) {
 			}
 		});
+	}
+
+	private void initUpdater() {
+		progressListener = new ProgressUpdaterTask.ProgressUpdaterListener() {
+
+			private static final String FAILURE = "failure";
+			boolean canceled = false;
+
+			@Override
+			public void onProgressUpdate(Integer... values) {
+				if (canceled) return;
+				int progress = values[0];
+				((TextView) parentView.findViewById(R.id.downloadedText)).setText(R.string.downloading);
+				parentView.findViewById(R.id.downloadedText).setVisibility(View.VISIBLE);
+				downloadProgress.setIndeterminate(false);
+				downloadProgress.setProgress(progress);
+			}
+
+			@Override
+			public void onCancelled() {
+				canceled = true;
+			}
+
+			@Override
+			public void onPostExecute(String params) {
+				if (FAILURE.equals(params)) {
+					((MainActivity) getActivity()).showMessage(R.string.download_failed);
+					showDownloadProgress(false);
+					download.setVisibility(View.VISIBLE);
+				} else {
+					download.setVisibility(View.VISIBLE);
+					download.setText(R.string.download_anyway);
+					showDownloadProgress(false);
+					parentView.findViewById(R.id.downloadedText).setVisibility(View.VISIBLE);
+					showInLibrary.setVisibility(View.VISIBLE);
+					showInLibrary.setEnabled(false);
+					showInLibrary.setClickable(false);
+					showInLibrary.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							showInLibrary.setEnabled(true);
+							showInLibrary.setClickable(true);
+						}
+					}, 1500);
+				}
+			}
+
+			@Override
+			public void onPreExecute() {
+				download.setVisibility(View.GONE);
+				canceled = false;
+				showDownloadProgress(true);
+				downloadProgress.setIndeterminate(true);
+				downloadProgress.setMax(100);
+			}
+
+		};
+	}
+
+	private void cancelProgressTask() {
+		if (null != progressUpdater) {
+			progressUpdater.cancel(true);
+		}
 	}
 	
 	private void startImageAnimation() {
@@ -854,6 +955,57 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void downloadButtonState(boolean state) {
 		download.setClickable(state);
 		download.setEnabled(state);
+	}
+
+	private void thatSongIsDownloaded(final AbstractSong checkingSong) {
+		if (checkingSong.getClass() == MusicData.class) return;
+		int status = StateKeeper.getInstance().checkSongInfo(checkingSong.getComment());
+		if (status == StateKeeper.NOT_DOWNLOAD) {
+			showDownloadProgress(false);
+			download.setVisibility(View.VISIBLE);
+			return;
+		}
+		checkingSong.getDownloadUrl(new DownloadUrlListener() {
+
+			@Override
+			public void success(String url) {
+				if (isDestroy) return;
+				int[] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED};
+				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
+				for (int statusDownload : statuses) {
+					Cursor cursor = manager.query(new DownloadManager.Query().setFilterByStatus(statusDownload));
+					if (cursor != null) {
+						while (cursor.moveToNext()) {
+							if (null != url && url.equals(cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_URI)))) {
+								long id = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_ID));
+								progressUpdater = new ProgressUpdaterTask(progressListener, getActivity());
+								progressUpdater.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, id);
+								showDownloadProgress(true);
+								downloadProgress.setIndeterminate(true);
+								cursor.close();
+								return;
+							}
+						}
+						cursor.close();
+					}
+				}
+				boolean isCached = DownloadCache.getInstanse().getCachedItem(checkingSong.getTitle(), checkingSong.getArtist()) != null;
+				if (StateKeeper.getInstance().checkSongInfo(checkingSong.getComment()) == StateKeeper.DOWNLOADING && isCached) {
+					new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+						@Override
+						public void run() {
+							showDownloadProgress(true);
+							downloadProgress.setIndeterminate(true);
+						}
+					});
+				}
+			}
+
+			@Override
+			public void error(String error) {
+			}
+		});
 	}
 	
 	private void onBackPress() {

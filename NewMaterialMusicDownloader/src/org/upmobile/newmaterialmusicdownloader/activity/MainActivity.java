@@ -74,6 +74,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private Toolbar toolbar;
 	private View toolbarShadow;
 	private FragmentDrawer drawerFragment;
+	private Bitmap downloadBtn;
 
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -480,6 +481,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	@Override
 	protected void setImageDownloadButton() {
+		if (null == downloadBtn) {
+			downloadBtn = getDownloadBtnBmp();
+		}
+		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(downloadBtn);
+	}
+
+	private Bitmap getDownloadBtnBmp() {
 		int height = 48;
 		int width = 48;
 		Bitmap bitMap = Bitmap.createBitmap(Util.dpToPx(this, width), Util.dpToPx(this, height), Bitmap.Config.ARGB_8888);
@@ -488,14 +496,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setStyle(Paint.Style.FILL);
-		float verts[] = { 
+		float verts[] = {
 				Util.dpToPx(this, 0),
-				Util.dpToPx(this, (height / 3 - 2)), 
-				Util.dpToPx(this, (height - 1)), 
-				Util.dpToPx(this, (height / 3 - 2)), 
+				Util.dpToPx(this, (height / 3 - 2)),
+				Util.dpToPx(this, (height - 1)),
+				Util.dpToPx(this, (height / 3 - 2)),
 				Util.dpToPx(this, (height / 8 * 4)),
 				Util.dpToPx(this, (height / 8 * 6))};
-		int verticesColors[] = { 
+		int verticesColors[] = {
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
 				getResources().getColor(Util.getResIdFromAttribute(this, R.attr.colorPrimary)),
@@ -509,7 +517,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		canvas.drawLine(0, Util.dpToPx(this, (height - 6)), Util.dpToPx(this, width), Util.dpToPx(this, (height - 6)), paint);
 		paint.setStrokeWidth(Util.dpToPx(this, 34));
 		canvas.drawLine(Util.dpToPx(this, width / 3), 0, Util.dpToPx(this, (height / 8 * 5 + 1)), 0, paint);
-		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bitMap);
+		return bitMap;
 	}
 
 	protected void setSearchViewVisibility(String fragmentName) {

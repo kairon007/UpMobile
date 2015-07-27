@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -354,7 +355,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                     @Override
                     public void run() {
                         for (final MusicData data : adapter.getAll()) {
-                            if (null != data.getComment() && data.getComment().trim().equalsIgnoreCase(comment.trim())) {
+                            Log.d("logd", "run : " + comment + " - " + data.getComment());
+                            if (null != data && null != data.getComment() && data.getComment().trim().equalsIgnoreCase(comment.trim())) {
                                 ((Activity) getContext()).runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -383,13 +385,12 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     }
 
     public View getViewByPosition(int pos, ListView listView) {
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
+        int firstListItemPosition = listView.getFirstVisiblePosition();
+        int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
         if (pos < firstListItemPosition || pos > lastListItemPosition ) {
             return listView.getAdapter().getView(pos, null, listView);
         } else {
-            final int childIndex = pos - firstListItemPosition;
+            int childIndex = pos - firstListItemPosition;
             return listView.getChildAt(childIndex);
         }
     }

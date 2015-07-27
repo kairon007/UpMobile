@@ -241,11 +241,25 @@
                 android:text="@string/has_been_downloaded"
                 android:textColor="@color/theme_color" />
 
+            <ProgressBar
+                android:id="@+id/downloadProgress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/downloadedText"
+                android:max="100"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:background="@android:color/white"
+                android:indeterminate="true"
+                android:visibility="gone"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressDrawable="@drawable/progress" />
+
             <LinearLayout
                 android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/downloadedText"
+                android:layout_below="@+id/downloadProgress"
                 android:background="@android:color/white"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
