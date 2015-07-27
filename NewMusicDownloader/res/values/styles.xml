@@ -21,8 +21,8 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
-        <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
-        <item name="editIndicator">@drawable/ic_player_edit</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_white</item>
+        <item name="editIndicator">@drawable/ic_player_edit_white</item>
         <item name="textViewColor">@android:color/white</item>
         <item name="driverBackgroundColor">@color/background_driver_dark</item>
         <item name="searchBackgroundColor">@color/default_black_color</item>
@@ -156,8 +156,8 @@
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:popupMenuStyle">@style/myPopupMenuStyle</item>
         <item name="android:scrollbarStyle">insideOverlay</item>
-        <item name="lyricsIndicator">@drawable/ic_player_lyrics</item>
-        <item name="editIndicator">@drawable/ic_player_edit</item>
+        <item name="lyricsIndicator">@drawable/ic_player_lyrics_white</item>
+        <item name="editIndicator">@drawable/ic_player_edit_white</item>
         <item name="textViewColor">@android:color/white</item>
         <item name="driverBackgroundColor">@color/background_driver_dark</item>
         <item name="searchBackgroundColor">@color/default_black_color</item>

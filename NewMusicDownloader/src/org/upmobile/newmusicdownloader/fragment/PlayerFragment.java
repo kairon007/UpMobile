@@ -431,7 +431,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
-			editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
+			editTag.setIcon(R.drawable.ic_player_edit_grey);
 			break;
 		case R.id.showButton:
 			showInLibrary();
@@ -455,7 +455,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		if (playerLyricsFrame.getVisibility() == View.VISIBLE) {
 			playerLyricsFrame.setVisibility(View.GONE);
 		}
-        editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
+        editTag.setIcon(R.drawable.ic_player_edit_grey);
 		isUseAlbumCover = true;
 	}
 
@@ -512,7 +512,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerLyricsView.setText("");
 		}
 		if (playerLyricsFrame.getVisibility() == View.GONE) {
-            showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);
+            showLyrics.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.lyricsIndicator));
             playerLyricsFrame.setVisibility(View.VISIBLE);
 			final int [] location = new int[2];
 			playerLyricsView.getLocationOnScreen(location);
@@ -541,21 +541,21 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			lyricsFetcher.startSerach();
             progressLyrics.setVisibility(View.VISIBLE);
 		} else {
-            showLyrics.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.lyricsIndicator));
+            showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);
             playerLyricsFrame.setVisibility(View.GONE);
 		}
 	}
 
 	private void showEditTagDialog() {
 		if (playerEditTagDialog.getVisibility() == View.VISIBLE) {
-            editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
+            editTag.setIcon(R.drawable.ic_player_edit_grey);
 			Util.hideKeyboard(getActivity(), parentView);
 			playerEditTagDialog.setVisibility(View.GONE);
 			if (playerTagsCheckBox.isClickable() && playerTagsCheckBox.isEnabled()) {
 				playerTagsCheckBox.setChecked(true);
 			}
 		} else {
-            editTag.setIcon(R.drawable.ic_player_edit_grey);
+            editTag.setIcon(Util.getResIdFromAttribute(getActivity(), R.attr.editIndicator));
             playerEditTagDialog.setVisibility(View.VISIBLE);
 			playerTagsArtist.setText(song.getArtist());
 			playerTagsTitle.setText(song.getTitle());

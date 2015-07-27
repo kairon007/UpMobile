@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/action_show_lyrics"
-        android:icon="?attr/lyricsIndicator"
+        android:icon="@drawable/ic_player_lyrics_grey"
         android:title="@string/download_dialog_show_lyrics"
         app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_edit_tag"
-        android:icon="?attr/editIndicator"
+        android:icon="@drawable/ic_player_edit_grey"
         android:title="@string/edit_mp3"
         app:showAsAction="ifRoom"/>
 
