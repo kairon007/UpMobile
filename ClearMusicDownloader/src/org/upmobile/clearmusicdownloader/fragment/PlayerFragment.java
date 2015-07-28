@@ -2,7 +2,10 @@ package org.upmobile.clearmusicdownloader.fragment;
 
 import android.app.DownloadManager;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -269,14 +272,24 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		cancelProgressTask();
 		initUpdater();
 		thatSongIsDownloaded(song);
+		getActivity().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 	}
 
+	BroadcastReceiver onComplete=new BroadcastReceiver() {
+
+		public void onReceive(Context context, Intent intent) {
+			hideDownloadedLabel();
+		}
+	};
+
 	private void hideDownloadedLabel() {
-		boolean show = ((MainActivity) getActivity()).isThisSongDownloaded(song) && song.getClass() != MusicData.class;
+		if (null == parentView || null == getActivity()) return;
+		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
+		boolean show = StateKeeper.DOWNLOADED == state;
 		((TextView) parentView.findViewById(R.id.downloadedText)).setText(R.string.has_been_downloaded);
 		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		showInLibrary.setVisibility(show ? View.VISIBLE : View.GONE);
-		download.setText(show ? R.string.download_anyway : R.string.btn_download);
+		download.setText(show ? R.string.download_anyway : R.string.download_dialog_download);
 	}
 
 	private void setKeyListener() {
@@ -315,6 +328,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 				clearCover((MusicData) song);
 			}
 		}
+		getActivity().unregisterReceiver(onComplete);
 		super.onPause();
 	}
 	
@@ -404,8 +418,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 			@Override
 			public void onScrollChanged(ScrollView who, int l, int t, int oldl, int oldt) {
-	        	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.player_artist_frame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.player_artist_frame).getHeight());
-	            ratio = (float) Math.min(Math.max(t, 0), headerHeight) / headerHeight;
+	        	final float headerHeight = ViewHelper.getY(parentView.findViewById(R.id.textFrame)) - (playerTitleBar.getHeight() - parentView.findViewById(R.id.textFrame).getHeight());
+	            ratio = Math.min(Math.max(t, 0), headerHeight) / headerHeight;
 	            final int newAlpha = (int) (ratio * 255);
 	            playerTitleBar.getBackground().setAlpha(newAlpha);
 	            Animation animationFadeIn = AnimationUtils.loadAnimation(getActivity(),R.anim.fadein);

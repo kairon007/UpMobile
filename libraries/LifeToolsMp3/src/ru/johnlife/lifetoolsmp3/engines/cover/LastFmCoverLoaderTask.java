@@ -54,8 +54,8 @@ public class LastFmCoverLoaderTask extends CoverLoaderTask {
         try {
             jsonObject = new JSONObject(readUrl(link));
         } catch (Exception e) {
-
             e.printStackTrace();
+            return null;
         }
         if (null == jsonObject || jsonObject.toString().length() < 800) return null;
         JSONObject track = null;

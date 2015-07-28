@@ -44,6 +44,7 @@ public class LibraryFragment extends Fragment {
 		AbstractSong abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
 		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());
 		act.setDraverEnabled(null == abstractSong ? true : false);
+		getArguments().putParcelable("KEY_SELECTED_SONG", null);
 		libraryView.onResume();
 	}
 	

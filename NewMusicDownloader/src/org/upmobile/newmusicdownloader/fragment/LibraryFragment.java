@@ -40,6 +40,7 @@ public class LibraryFragment extends Fragment {
 			activity.showMiniPlayer(true);
 			setHasOptionsMenu(true);
 		}
+		getArguments().putParcelable("KEY_SELECTED_SONG", null);
 		libraryView.onResume();
 		super.onResume();
 	}

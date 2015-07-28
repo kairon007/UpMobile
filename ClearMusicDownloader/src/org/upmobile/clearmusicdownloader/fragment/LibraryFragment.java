@@ -69,6 +69,7 @@ public class LibraryFragment extends Fragment {
             });
         }
 		libraryView.onResume();
+		getArguments().putParcelable("KEY_SELECTED_SONG", null);
 		super.onResume();
 	}
 	

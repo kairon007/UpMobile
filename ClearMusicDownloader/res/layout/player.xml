@@ -9,6 +9,19 @@
     tools:context="org.upmobile.clearmusicdownloader.activity.MainActivity"
     tools:ignore="contentDescription">
 
+    <com.special.utils.UICircularImage xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/player_cover"
+        android:layout_width="256dp"
+        android:layout_height="352dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/def_cover_circle_web"
+        app:line_color="@android:color/white" />
+
     <com.special.utils.UIParallaxScroll
         android:id="@+id/scroller"
         android:layout_width="match_parent"
@@ -24,8 +37,8 @@
 
             <View
                 android:id="@+id/cover_empty_view"
-                android:layout_width="256dp"
-                android:layout_height="256dp"
+                android:layout_width="match_parent"
+                android:layout_height="352dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="8dp" />
 
@@ -34,123 +47,133 @@
                 style="@style/CheckBoxAppTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@id/cover_empty_view"
-                android:layout_below="@id/cover_empty_view"
                 android:checked="true"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:layout_above="@+id/textFrame"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
 
-            <LinearLayout
-                android:id="@+id/player_artist_frame"
+            <FrameLayout
+                android:id="@+id/textFrame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/use_cover"
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
+                android:background="#50dbdbdb"
+                android:layout_below="@+id/cover_empty_view">
 
-                <TextView
-                    android:id="@+id/player_artist"
+                <LinearLayout
+                    android:id="@+id/player_artist_frame"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/textsize_xlarge" />
-
-                <FrameLayout
-                    android:id="@+id/player_edit_artist"
-                    android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/button_selector_inverse_light">
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:gravity="left"
+                    android:orientation="horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                    <TextView
+                        android:id="@+id/player_artist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:alpha="0.7"
-                        android:src="@drawable/ic_player_edit" />
-                </FrameLayout>
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_xlarge" />
 
-                <EditText
-                    android:id="@+id/player_artist_edit_view"
-                    style="@style/EditTextAppTheme"
+                    <FrameLayout
+                        android:id="@+id/player_edit_artist"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/button_selector_inverse_light">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:alpha="0.7"
+                            android:src="@drawable/ic_player_edit" />
+                    </FrameLayout>
+
+                    <EditText
+                        android:id="@+id/player_artist_edit_view"
+                        style="@style/EditTextAppTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="sans-serif-light"
+                        android:imeOptions="actionDone"
+                        android:inputType="textNoSuggestions"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_xlarge"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/player_title_frame"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="sans-serif-light"
-                    android:imeOptions="actionDone"
-                    android:inputType="textNoSuggestions"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/textsize_xlarge"
-                    android:visibility="gone" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/player_title_frame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/player_artist_frame"
-                android:layout_centerHorizontal="true"
-                android:orientation="horizontal"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp">
-
-                <TextView
-                    android:id="@+id/player_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="sans-serif-light"
-                    android:gravity="center"
-                    android:singleLine="true"
-                    android:textColor="@color/white_transparent"
-                    android:textSize="@dimen/textsize_medium_small" />
-
-                <FrameLayout
-                    android:id="@+id/player_edit_title"
-                    android:layout_width="48dp"
                     android:layout_height="48dp"
-                    android:background="@drawable/button_selector_inverse_light">
+                    android:layout_marginTop="48dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp">
 
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
+                    <TextView
+                        android:id="@+id/player_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:alpha="0.7"
-                        android:src="@drawable/ic_player_edit" />
-                </FrameLayout>
+                        android:layout_weight="1"
+                        android:fontFamily="sans-serif-light"
+                        android:gravity="center"
+                        android:singleLine="true"
+                        android:textColor="@color/white_transparent"
+                        android:textSize="@dimen/textsize_medium_small" />
 
-                <EditText
-                    android:id="@+id/player_title_edit_view"
-                    style="@style/EditTextAppTheme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:focusableInTouchMode="true"
-                    android:fontFamily="sans-serif-light"
-                    android:imeOptions="actionDone"
-                    android:inputType="textNoSuggestions"
-                    android:singleLine="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="@dimen/textsize_medium_small"
-                    android:visibility="gone">
+                    <FrameLayout
+                        android:id="@+id/player_edit_title"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/button_selector_inverse_light">
 
-                    <requestFocus />
-                </EditText>
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center"
+                            android:alpha="0.7"
+                            android:src="@drawable/ic_player_edit" />
+                    </FrameLayout>
 
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/player_title_edit_view"
+                        style="@style/EditTextAppTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:focusableInTouchMode="true"
+                        android:fontFamily="sans-serif-light"
+                        android:imeOptions="actionDone"
+                        android:inputType="textNoSuggestions"
+                        android:singleLine="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="@dimen/textsize_medium_small"
+                        android:visibility="gone">
+
+                        <requestFocus />
+                    </EditText>
+
+                </LinearLayout>
+
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/player_statistics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/player_title_frame"
+                android:layout_below="@id/textFrame"
                 android:background="@android:color/white"
                 android:orientation="horizontal"
                 android:padding="4dp">
@@ -237,23 +260,23 @@
                 android:background="@android:color/white"
                 android:gravity="center_horizontal"
                 android:singleLine="true"
-                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="@string/has_been_downloaded"
+                android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/theme_color" />
 
             <ProgressBar
                 android:id="@+id/downloadProgress"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/downloadedText"
+                android:background="@android:color/white"
+                android:indeterminate="true"
                 android:max="100"
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
-                android:background="@android:color/white"
-                android:indeterminate="true"
-                android:visibility="gone"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:progressDrawable="@drawable/progress" />
+                android:progressDrawable="@drawable/progress"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/button"
@@ -380,18 +403,5 @@
             </LinearLayout>
         </FrameLayout>
     </RelativeLayout>
-
-    <com.special.utils.UICircularImage xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/player_cover"
-        android:layout_width="256dp"
-        android:layout_height="256dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
-        android:src="@drawable/def_cover_circle_web"
-        app:line_color="@android:color/white"
-        app:line_color_press="@android:color/white"
-        app:line_width="1dp"
-        app:padding="0dp" />
 
 </RelativeLayout>

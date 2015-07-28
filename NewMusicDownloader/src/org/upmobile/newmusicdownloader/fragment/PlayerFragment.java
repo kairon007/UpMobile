@@ -288,7 +288,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		((TextView) parentView.findViewById(R.id.downloadedText)).setText(R.string.has_been_downloaded);
 		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		showInLibrary.setVisibility(show ? View.VISIBLE : View.GONE);
-		btnDownload.setText(show ? R.string.download_anyway : R.string.btn_download);
+		btnDownload.setText(show ? R.string.download_anyway : R.string.download_dialog_download);
 	}
 
 	@Override

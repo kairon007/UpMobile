@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -351,35 +350,36 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                 adapter.notifyDataSetChanged();
             }
             if (null != comment) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (final MusicData data : adapter.getAll()) {
-                            Log.d("logd", "run : " + comment + " - " + data.getComment());
-                            if (null != data && null != data.getComment() && data.getComment().trim().equalsIgnoreCase(comment.trim())) {
-                                ((Activity) getContext()).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        listView.setSelection(adapter.getPosition(data));
-                                        final Animation flash = AnimationUtils.loadAnimation(getContext(), R.anim.flash);
-                                        getViewByPosition(adapter.getPosition(data), listView).postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getViewByPosition(adapter.getPosition(data), listView).setAnimation(flash);
-                                                flash.start();
-                                            }
-                                        }, 100);
-                                    }
-                                });
-                                comment = null;
-                                return;
+                synchronized (lock) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (final MusicData data : adapter.getAll()) {
+                                if (null != data && null != data.getComment() && data.getComment().equalsIgnoreCase(comment)) {
+                                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            listView.setSelection(adapter.getPosition(data));
+                                            final Animation flash = AnimationUtils.loadAnimation(getContext(), R.anim.flash);
+                                            getViewByPosition(adapter.getPosition(data), listView).postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getViewByPosition(adapter.getPosition(data), listView).setAnimation(flash);
+                                                    flash.start();
+                                                }
+                                            }, 100);
+                                        }
+                                    });
+                                    comment = null;
+                                    return;
+                                }
                             }
+                            comment = null;
                         }
-                        comment = null;
-                    }
-                }).start();
+                    }).start();
+                }
+                hideProgress(view);
             }
-            hideProgress(view);
         }
         return true;
     }

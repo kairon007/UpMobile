@@ -315,7 +315,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		boolean show = isThisSongDownloaded() && song.getClass() != MusicData.class;
 		scrollView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		((View) showInLib.getParent()).setVisibility(show ? View.VISIBLE : View.GONE);
-		download.setText(show ? R.string.download_anyway : R.string.btn_download);
+		download.setText(show ? R.string.download_anyway : R.string.download_dialog_download);
 	}
 
 	@Override
