@@ -552,11 +552,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setDownloadButtonState(true);
 			play.setClickable(true);
 			play.toggle(true);
-			getCover(song);
 			setElementsView(0);
 			showDownloadedLabel();
-			playerProgress.setIndeterminate(true);
-			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		}
 
 		@Override
@@ -565,11 +562,14 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setDownloadButtonState(true);
 			download.setProgress(0);
 			song = current;
+			getCover(song);
 			showLyrics();
 			setCoverToZoomView(null);
 			setElementsView(0);
 			thatSongIsDownloaded(current);
 			showDownloadedLabel();
+			playerProgress.setIndeterminate(true);
+			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));
 		}
 
 		@Override

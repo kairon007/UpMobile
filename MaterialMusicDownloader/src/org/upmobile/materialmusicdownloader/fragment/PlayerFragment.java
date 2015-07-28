@@ -189,6 +189,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			showLyrics();
 			getCover(song);
 			thatSongIsDownloaded(current);
+			playerProgress.setIndeterminate(true);
 			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
 			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
 			showDownloadedLabel();

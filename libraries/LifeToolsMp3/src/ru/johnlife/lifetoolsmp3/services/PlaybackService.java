@@ -411,6 +411,10 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 				}
 				break;
 			case MSG_SHIFT:
+				if (check(SMODE_PREPARED) || check(SMODE_START_PREPARE)) {
+					player.reset();
+					offMode(SMODE_PREPARED);
+				}
 				AbstractSong songShift = (AbstractSong) msg.obj;
 				helper(State.UPDATE, songShift);
 				if (enabledRepeat()) {

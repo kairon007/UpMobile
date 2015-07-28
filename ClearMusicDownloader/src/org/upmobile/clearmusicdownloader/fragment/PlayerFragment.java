@@ -202,6 +202,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			showLyrics(song);
 			hideDownloadedLabel();
 			thatSongIsDownloaded(s);
+			play.setVisibility(View.GONE);
+			playProgress.setVisibility(View.VISIBLE);
+			playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		}
 
 		@Override
