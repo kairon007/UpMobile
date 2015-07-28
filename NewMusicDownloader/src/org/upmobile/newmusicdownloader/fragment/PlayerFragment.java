@@ -542,6 +542,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playerLyricsFrame.setVisibility(View.GONE);
 		}
         editTag.setIcon(R.drawable.ic_player_edit_grey);
+		showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);
 		isUseAlbumCover = true;
 	}
 
