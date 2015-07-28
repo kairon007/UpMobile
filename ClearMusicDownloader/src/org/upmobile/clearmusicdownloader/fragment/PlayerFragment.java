@@ -266,13 +266,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			playProgress.setVisibility(View.VISIBLE);
 			playProgress.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.rotate));
 		}
-		hideDownloadedLabel();
 		playerProgress.setEnabled(prepared);
 		downloadButtonState(!player.isGettingURl());
 		cancelProgressTask();
 		initUpdater();
 		thatSongIsDownloaded(song);
 		getActivity().registerReceiver(onComplete, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+		hideDownloadedLabel();
 	}
 
 	BroadcastReceiver onComplete=new BroadcastReceiver() {
@@ -984,7 +984,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void success(String url) {
 				if (isDestroy) return;
-				int[] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED};
+				int[] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED, DownloadManager.STATUS_SUCCESSFUL};
 				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 				for (int statusDownload : statuses) {
 					Cursor cursor = manager.query(new DownloadManager.Query().setFilterByStatus(statusDownload));

@@ -63,7 +63,7 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 public class PlayerFragment  extends Fragment implements OnClickListener, OnSeekBarChangeListener, OnStatePlayerListener, PlaybackService.OnErrorListener{
 
 	private static final String ANDROID_MEDIA_EXTRA_VOLUME_STREAM_VALUE = "android.media.EXTRA_VOLUME_STREAM_VALUE";
-	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_ashgdqweywgdhcjsvhuhqjwg	qwfdsfsdvsCHANGED_ACTION";
+	private static final String ANDROID_MEDIA_VOLUME_CHANGED_ACTION = "android.media.VOLUME_CHANGED_ACTION";
 	private AbstractSong song;
 	private AudioManager audio;
 	private ProgressUpdaterTask progressUpdater;
@@ -811,7 +811,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			@Override
 			public void success(String url) {
 				if (isDestroy) return;
-				int[] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED};
+				int[] statuses = {DownloadManager.STATUS_RUNNING, DownloadManager.STATUS_PENDING, DownloadManager.STATUS_PAUSED, DownloadManager.STATUS_SUCCESSFUL};
 				DownloadManager manager = (DownloadManager) getActivity().getSystemService(Context.DOWNLOAD_SERVICE);
 				for (int statusDownload : statuses) {
 					Cursor cursor = manager.query(new DownloadManager.Query().setFilterByStatus(statusDownload));
