@@ -511,21 +511,25 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		playerProgress.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			@Override
-			public void onStopTrackingTouch(SeekBar seekBar) {}
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				try {
+					int progress = seekBar.getProgress();
+					seekBar.setSecondaryProgress(0);
+					seekBar.setSecondaryProgress(Math.max(progress, (int) (playerProgress.getMax() * percent)));
+					player.seekTo(progress);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
 
 			@Override
-			public void onStartTrackingTouch(SeekBar seekBar) {}
+			public void onStartTrackingTouch(SeekBar seekBar) {
+			}
 
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 				if (fromUser) {
-					try {
-						seekBar.setSecondaryProgress(0);
-						seekBar.setSecondaryProgress(Math.max(progress, (int) (playerProgress.getMax() * percent)));
-						player.seekTo(progress);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 				}
 			}
 

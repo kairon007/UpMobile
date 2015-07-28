@@ -58,19 +58,21 @@ public final class Util {
 	    }
 		return durationLong;
 	}
+
 	public static String getFormatedStrDuration(long l) {
-		if (l > Integer.MAX_VALUE)
+		if (l > Integer.MAX_VALUE) {
 			return "> 20 days";
-			int duration = (int) l;
-			duration /= 1000;
-			int min = duration / 60;
-			int sec = duration % 60;
-			int h = min / 60;
-			min = min % 60;
-			if (h>0) {
-				return String.format(Locale.getDefault(), "%d:%02d:%02d", h, min, sec);
-			}
-			return String.format(Locale.getDefault(), "%d:%02d", min, sec);
+		}
+		int duration = (int) l;
+		duration /= 1000;
+		int min = duration / 60;
+		int sec = duration % 60;
+		int h = min / 60;
+		min = min % 60;
+		if (h > 0) {
+			return String.format(Locale.getDefault(), "%d:%02d:%02d", h, min, sec);
+		}
+		return String.format(Locale.getDefault(), "%d:%02d", min, sec);
 	}
 	
 	public static Bitmap resizeToSmall(Bitmap original) {

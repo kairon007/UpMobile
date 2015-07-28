@@ -280,6 +280,11 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 			@Override
 			public void onStopTrackingTouch(DiscreteSeekBar seekBar) {
+				try {
+					player.seekTo(seekBar.getProgress());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 
 			@Override
@@ -288,15 +293,8 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 
 			@Override
 			public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-				if (fromUser) {
-					try {
-						player.seekTo(value);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					if (!player.isPlaying()) {
-						playerCurrTime.setText(Util.getFormatedStrDuration(player.getCurrentPosition()));
-					}
+				if (fromUser && !player.isPlaying()) {
+					playerCurrTime.setText(Util.getFormatedStrDuration(player.getCurrentPosition()));
 				}
 			}
 		});

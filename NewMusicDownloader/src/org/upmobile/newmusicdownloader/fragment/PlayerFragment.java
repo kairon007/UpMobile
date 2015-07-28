@@ -80,8 +80,6 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private CheckBox playerTagsCheckBox;
 	private ImageButton play;
 	private View wait;
-	private ImageButton previous;
-	private ImageButton forward;
 	private ImageButton shuffle;
 	private ImageButton repeat;
 	private ImageButton stop;
@@ -394,8 +392,8 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void init(final View view) {
 		play = (ImageButton) view.findViewById(R.id.playpause);
 		wait = view.findViewById(R.id.player_wait_song);
-		previous = (ImageButton) view.findViewById(R.id.prev);
-		forward = (ImageButton) view.findViewById(R.id.next);
+		ImageButton previous = (ImageButton) view.findViewById(R.id.prev);
+		ImageButton forward = (ImageButton) view.findViewById(R.id.next);
 		shuffle = (ImageButton) view.findViewById(R.id.shuffle);
 		repeat = (ImageButton) view.findViewById(R.id.repeat);
 		stop = (ImageButton) view.findViewById(R.id.stop);
@@ -456,7 +454,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		playerArtist.setText(song.getArtist());
 		playerTitle.setText(song.getTitle());
 		if (!playerTagsCheckBox.isChecked()) {
-			if (song.getClass() != MusicData.class) ((RemoteSong) song).setHasCover(false); 
+			if (song.getClass() != MusicData.class) {
+				((RemoteSong) song).setHasCover(false);
+			}
 			playerCover.setImageResource(R.drawable.no_cover_art_big);
 			checkBoxState(false);
 		}
@@ -483,25 +483,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			hideOpenViews();
 			break;
 		case R.id.repeat:
-			if (player.offOnRepeat()){
-				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeatOn));
-			} else {
-				repeat.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaRepeat));
-			}
+			repeat.setImageResource(getResIdFromAttribute(getActivity(),
+					player.offOnRepeat() ? R.attr.mediaRepeatOn : R.attr.mediaRepeat));
 			break;
 		case R.id.shuffleParent:
-			if (player.offOnShuffle()) {
-				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffleOn));
-			} else {
-				shuffle.setImageResource(getResIdFromAttribute(getActivity(), R.attr.mediaShuffle));
-			}
+			shuffle.setImageResource(getResIdFromAttribute(getActivity(),
+					player.offOnShuffle() ? R.attr.mediaShuffleOn : R.attr.mediaShuffle));
 			if (player.enabledShuffleAll()) {
 				shuffleMode.setVisibility(View.VISIBLE);
-				if (player.enabledShuffleAuto()) {
-					shuffleMode.setText("A");
-				} else {
-					shuffleMode.setText("M");
-				}
+				shuffleMode.setText(player.enabledShuffleAuto() ? "A" : "M");
 			} else {
 				shuffleMode.setVisibility(View.INVISIBLE);
 			}
@@ -567,21 +557,15 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-		switch (seekBar.getId()) {
-		case R.id.progress_volume:
-			if (fromUser) {
+		if (fromUser) {
+			switch (seekBar.getId()) {
+			case R.id.progress_volume:
 				audio.setStreamVolume(AudioManager.STREAM_MUSIC, progress, AudioManager.FLAG_REMOVE_SOUND_AND_VIBRATE);
+				break;
+			case R.id.progress_track:
+				playerCurrTime.setText(Util.getFormatedStrDuration(progress));
+				break;
 			}
-			break;
-		case R.id.progress_track:
-			if (fromUser) {
-				try {
-					player.seekTo(progress);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			break;
 		}
 	}
 
@@ -591,6 +575,13 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
+		if (seekBar.getId() == R.id.progress_track) {
+			try {
+				player.seekTo(seekBar.getProgress());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	private void showLyrics() {

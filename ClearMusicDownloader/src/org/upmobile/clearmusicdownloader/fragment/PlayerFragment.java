@@ -711,11 +711,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 		if (fromUser) {
-			try {
-				player.seekTo(progress);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			playerCurrTime.setText(Util.getFormatedStrDuration(progress));
 		}
 	}
 
@@ -725,6 +721,11 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
+		try {
+			player.seekTo(seekBar.getProgress());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	
