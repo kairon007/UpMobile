@@ -1021,15 +1021,13 @@ public class PlaybackService  extends Service implements Constants, OnCompletion
 			offMode(SMODE_NOTIFICATION);
 		}
 	}
-	
+
 	private void showMessage(Object o) {
-		if (o.getClass() == String.class) {
-			if (activityContext instanceof BaseMiniPlayerActivity) {
-				((BaseMiniPlayerActivity)activityContext).showMessage((String) o);
-			}
-		} else if (o.getClass() == Integer.class) {
-			if (activityContext instanceof BaseMiniPlayerActivity) {
-				((BaseMiniPlayerActivity)activityContext).showMessage((Integer) o);
+		if (activityContext instanceof BaseMiniPlayerActivity) {
+			if (o.getClass() == String.class) {
+				((BaseMiniPlayerActivity) activityContext).showMessage((String) o);
+			} else if (o.getClass() == Integer.class) {
+				((BaseMiniPlayerActivity) activityContext).showMessage((Integer) o);
 			}
 		}
 	}

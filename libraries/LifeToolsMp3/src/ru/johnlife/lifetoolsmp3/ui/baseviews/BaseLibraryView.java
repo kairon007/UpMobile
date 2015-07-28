@@ -378,8 +378,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                         }
                     }).start();
                 }
-                hideProgress(view);
             }
+            hideProgress(view);
         }
         return true;
     }
