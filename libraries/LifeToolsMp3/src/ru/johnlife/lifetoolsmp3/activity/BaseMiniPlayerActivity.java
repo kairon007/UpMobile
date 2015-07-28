@@ -72,7 +72,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			if (miniPlayer.getVisibility() == View.GONE || miniPlayer.getVisibility() == View.INVISIBLE) {
 				setData(s);
 			} else {
-				showMiniPlayer(true, false);
+				showMiniPlayer(true, true);
 			}
 		}
 
@@ -97,11 +97,11 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			showProgress(false);
 			showPlayerElement(true);
 			setPlayPauseMini(false);
-			if (!currentFragmentIsPlayer && s.getClass() == MusicData.class) {
-				boolean oldIsPrepared = isMiniPlayerPrepared;
-				isMiniPlayerPrepared = true;
-				showMiniPlayer(isShown, oldIsPrepared);
-			}
+//			if (!currentFragmentIsPlayer && s.getClass() == MusicData.class) {
+//				boolean oldIsPrepared = isMiniPlayerPrepared;
+//				isMiniPlayerPrepared = true;
+//				showMiniPlayer(isShown, oldIsPrepared);
+//			}
 		}
 		
 		@Override
@@ -472,7 +472,7 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 		this.song = song;
 		isShown = show;
 		service.play(song);
-		if (song.getClass() != MusicData.class) {
+		if (!currentFragmentIsPlayer) {
 			boolean oldIsPrepared = isMiniPlayerPrepared;
 			isMiniPlayerPrepared = true;
 			showMiniPlayer(isShown, oldIsPrepared);
