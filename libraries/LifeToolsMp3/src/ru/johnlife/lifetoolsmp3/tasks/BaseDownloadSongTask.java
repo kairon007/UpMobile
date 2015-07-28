@@ -70,6 +70,7 @@ public class BaseDownloadSongTask implements View.OnClickListener {
 
     private Context context;
     private InfoListener infolistener;
+    private static final Object lock = new Object();
 
     private DownloadCache.Item cacheItem;
     protected RemoteSong downloadingSong;
@@ -398,87 +399,93 @@ public class BaseDownloadSongTask implements View.OnClickListener {
     }
 
     private void insertToMediaStore(final RemoteSong song, final String pathToFile) {
-        StateKeeper.getInstance().putSongInfo(song.getComment(), pathToFile, StateKeeper.DOWNLOADED);
-        ContentResolver resolver = context.getContentResolver();
-        int seconds = 0;
-        long ms = 0;
-        File musicFile = null;
-        try {
-            musicFile = new File(pathToFile);
-            seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
-            ms = seconds * 1000;
-        } catch (Exception e) {
-            e.printStackTrace();
+        synchronized (lock) {
+            StateKeeper.getInstance().putSongInfo(song.getComment(), pathToFile, StateKeeper.DOWNLOADED);
+            ContentResolver resolver = context.getContentResolver();
+            int seconds = 0;
+            long ms = 0;
+            File musicFile = null;
+            try {
+                musicFile = new File(pathToFile);
+                seconds = AudioFileIO.read(musicFile).getAudioHeader().getTrackLength();
+                ms = seconds * 1000;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            ContentValues songValues = new ContentValues();
+            songValues.put(MediaColumns.DATA, pathToFile);
+            songValues.put(AudioColumns.ALBUM, song.getAlbum());
+            songValues.put(AudioColumns.ARTIST, song.getArtist());
+            songValues.put(MediaColumns.TITLE, song.getTitle());
+            songValues.put(AudioColumns.DURATION, ms);
+            songValues.put(AudioColumns.IS_MUSIC, 1);
+            deleteMP3FromMediaStore(pathToFile);
+            Uri uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
+            if (null == uri) {
+                Log.d(getClass().getSimpleName(), "Insert into MediaStore was failed");
+                return;
+            }
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
         }
-        ContentValues songValues = new ContentValues();
-        songValues.put(MediaColumns.DATA, pathToFile);
-        songValues.put(AudioColumns.ALBUM, song.getAlbum());
-        songValues.put(AudioColumns.ARTIST, song.getArtist());
-        songValues.put(MediaColumns.TITLE, song.getTitle());
-        songValues.put(AudioColumns.DURATION, ms);
-        songValues.put(AudioColumns.IS_MUSIC, 1);
-        deleteMP3FromMediaStore(pathToFile);
-        Uri uri = resolver.insert(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, songValues);
-        if (null == uri) {
-            Log.d(getClass().getSimpleName(), "Insert into MediaStore was failed");
-            return;
-        }
-        context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(musicFile)));
     }
 
-    private boolean setMetadataToFile(final File src, final boolean useCover, RemoteSong song) {
-        src_set = null;
-        try {
-            src_set = new MyID3().read(src);
-        } catch (Exception exception) {
-            Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
-        }
-        if (null == src_set) {
-            insertToMediaStore(song, src.getAbsolutePath());
-            return false;
-        }
+    private boolean setMetadataToFile(final File src, final boolean useCover, final RemoteSong song) {
+        synchronized (lock) {
+            src_set = null;
+            try {
+                src_set = new MyID3().read(src);
+            } catch (Exception exception) {
+                Log.d(getClass().getSimpleName(), "Unable to read music metadata from file. " + exception);
+            }
+            if (null == src_set) {
+                insertToMediaStore(song, src.getAbsolutePath());
+                return false;
+            }
+            StateKeeper.getInstance().putSongInfo(song.getComment(), src.getPath(), StateKeeper.DOWNLOADED);
+            if (useCover) {
+                song.getCover(new RemoteSong.OnBitmapReadyListener() {
 
-        if (useCover) {
-            downloadingSong.getCover(new RemoteSong.OnBitmapReadyListener() {
-
-                @Override
-                public void onBitmapReady(Bitmap bmp) {
-                    write(src, bmp, downloadingSong, src_set);
-                }
-            });
-        } else {
-            write(src, null, downloadingSong, src_set);
+                    @Override
+                    public void onBitmapReady(Bitmap bmp) {
+                        write(src, bmp, song, src_set);
+                    }
+                });
+            } else {
+                write(src, null, song, src_set);
+            }
+            return true;
         }
-        return true;
     }
 
     private void write(File src, Bitmap cover, RemoteSong song, MusicMetadataSet src_set) {
-        MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
-        metadata.clear();
-        metadata.setSongTitle(song.getTitle().trim());
-        metadata.setArtist(song.getArtist().trim());
-        metadata.setComment(song.getComment());
-        if (null != cover) {
-            ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
-            cover.compress(CompressFormat.JPEG, 85, out);
-            metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
-        } else {
-            RenameTask.deleteCoverFromFile(src);
-        }
-        File dst = new File(src.getParentFile(), src.getName() + "-1");
-        boolean isRename = false;
-        try {
-            new MyID3().write(src, dst, src_set, metadata);
-            isRename = dst.renameTo(src);
-        } catch (Exception e) {
-            insertToMediaStore(song, src.getPath());
-            Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
-        } finally {
-            if (!isRename) {
-                dst.delete();
+        synchronized (lock) {
+            MusicMetadata metadata = (MusicMetadata) src_set.getSimplified();
+            metadata.clear();
+            metadata.setSongTitle(song.getTitle().trim());
+            metadata.setArtist(song.getArtist().trim());
+            metadata.setComment(song.getComment());
+            if (null != cover) {
+                ByteArrayOutputStream out = new ByteArrayOutputStream(80000);
+                cover.compress(CompressFormat.JPEG, 85, out);
+                metadata.addPicture(new ImageData(out.toByteArray(), "image/jpeg", "cover", 3));
+            } else {
+                RenameTask.deleteCoverFromFile(src);
             }
+            File dst = new File(src.getParentFile(), src.getName() + "-1");
+            boolean isRename = false;
+            try {
+                new MyID3().write(src, dst, src_set, metadata);
+                isRename = dst.renameTo(src);
+            } catch (Exception e) {
+                insertToMediaStore(song, src.getPath());
+                Log.e(getClass().getSimpleName(), "Unable to write music metadata from file. " + e);
+            } finally {
+                if (!isRename) {
+                    dst.delete();
+                }
+            }
+            insertToMediaStore(song, src.getPath());
         }
-        insertToMediaStore(song, src.getPath());
     }
 
     private final class UpdateTimerTask extends TimerTask {

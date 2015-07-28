@@ -44,7 +44,7 @@ public class HelperService extends IntentService implements Constants {
 					if (DownloadManager.STATUS_SUCCESSFUL == status) {
 						BaseDownloadSongTask.writeDownloadSong(song, this);
 						songs.remove(song);
-						count--;
+						count = count - 1;
 					}
 				}
 			}
