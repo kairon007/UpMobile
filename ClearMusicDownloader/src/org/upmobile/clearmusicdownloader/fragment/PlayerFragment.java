@@ -258,7 +258,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		activity.getResideMenu().addIgnoredView(playerEtArtist);
 		activity.showMiniPlayer(false);
 		setKeyListener();
-		showLyrics(song);
+		if (playerLyricsView.getText().toString().isEmpty()) {
+			showLyrics(song);
+		}
 		getCover(song);
 		startImageAnimation();
 		setElementsView(player.getCurrentPosition());
@@ -761,7 +763,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			
 		};
 		lyricsFetcher = new SearchLyrics(fetchedListener, song.getTitle(), song.getArtist());
-		lyricsFetcher.startSerach();
+		lyricsFetcher.startSearch();
 		currLyricsFetchedId = fetchedListener.hashCode();
 	}
 	

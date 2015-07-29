@@ -616,7 +616,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 					}
 				}
 			}, song.getArtist(), song.getTitle());
-			lyricsFetcher.startSerach();
+			lyricsFetcher.startSearch();
             progressLyrics.setVisibility(View.VISIBLE);
 		} else {
             showLyrics.setIcon(R.drawable.ic_player_lyrics_grey);

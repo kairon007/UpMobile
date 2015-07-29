@@ -36,7 +36,7 @@ public class SearchLyrics implements OnEnginesListener {
 		this.title = title;
 	}
 	
-	public void startSerach() {
+	public void startSearch() {
 		searchTask = getTask();
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
         	searchTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -57,7 +57,7 @@ public class SearchLyrics implements OnEnginesListener {
 		if (found) {
 			fetchedListener.onLyricsFetched(true, lyrics);
 		} else if (enginesIndex < engines.length) {
-			startSerach();
+			startSearch();
 		} else {
 			fetchedListener.onLyricsFetched(false, "");
 		}

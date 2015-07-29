@@ -414,7 +414,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	public void setCover(Bitmap bmp) {
-		Log.d("logd", "setCover : " + bmp);
 		if (null == defaultCover) {
 			String cover = getString(R.string.font_musics);
 			defaultCover = getDefaultBitmapCover(64, 62, 60, cover);

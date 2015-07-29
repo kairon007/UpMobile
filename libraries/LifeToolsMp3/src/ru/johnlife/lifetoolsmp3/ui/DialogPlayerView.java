@@ -279,7 +279,7 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 					}
 				}
 			}, strArtist,strTitle);
-			lyricsFetcher.startSerach();
+			lyricsFetcher.startSearch();
 		} else {
 			progressLayout.setVisibility(View.GONE);
 			if (lyrics.equals("")) {

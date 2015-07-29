@@ -439,12 +439,12 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		}
 		changePlayPauseView(prepared && player.isPlaying());
 		playerProgress.postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				playerProgress.setIndeterminate(!prepared);
 			}
-			
+
 		}, 1000);
 		setElementsView(player.getCurrentPosition());
 		showLyrics();
@@ -913,7 +913,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			}
 		};
 		lyricsFetcher = new SearchLyrics(fetchedListener, song.getArtist(), song.getTitle());
-		lyricsFetcher.startSerach();
+		lyricsFetcher.startSearch();
 		checkIdLyrics = fetchedListener.hashCode();
 	}
 

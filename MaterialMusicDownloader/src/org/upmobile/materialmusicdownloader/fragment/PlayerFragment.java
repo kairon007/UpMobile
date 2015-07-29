@@ -290,7 +290,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		setCoverToZoomView(null);
 		getCover(song);
 		setImageButton();
-		showLyrics();
+		if (playerLyricsView.getText().toString().isEmpty()) {
+			showLyrics();
+		}
 		setElementsView(player.getCurrentPosition(), song);
 		boolean prepared = player.isPrepared();
 		playerProgress.setIndeterminate(prepared);
@@ -826,7 +828,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			}
 		};
 		lyricsFetcher = new SearchLyrics(fetchedListener,song.getArtist(),song.getTitle());
-		lyricsFetcher.startSerach();
+		lyricsFetcher.startSearch();
 		checkIdLyrics = fetchedListener.hashCode();
 	}
 

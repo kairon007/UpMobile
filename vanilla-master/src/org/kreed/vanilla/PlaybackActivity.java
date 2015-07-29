@@ -322,7 +322,7 @@ public abstract class PlaybackActivity extends Activity
 					}
 				}
 			}, song.artist, song.title);
-			lyricsFetcher.startSerach();
+			lyricsFetcher.startSearch();
 		} else {
 			Toast toast = Toast.makeText(getApplicationContext(), R.string.not_selected_song, Toast.LENGTH_SHORT);
 			toast.show();
