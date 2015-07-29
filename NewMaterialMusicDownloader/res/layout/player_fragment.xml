@@ -7,17 +7,12 @@
     android:gravity="center_horizontal"
     android:orientation="vertical" >
 
-    <FrameLayout
+    <ImageView
+        android:id="@+id/scrollable_cover"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/scrollable_cover"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_gravity="center_horizontal"
-            android:scaleType="centerInside" />
-    </FrameLayout>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:scaleType="fitCenter" />
 
     <ru.johnlife.uilibrary.widget.layouts.NotifyingScrollView
         android:id="@+id/scroll_view"

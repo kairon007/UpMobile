@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -427,7 +428,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		play.setOnClickListener(this);
 		btnDownload.setOnClickListener(this);
 		stop.setOnClickListener(this);
-		(view.findViewById(R.id.shuffleParent)).setOnClickListener(this);
+		view.findViewById(R.id.shuffleParent).setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -464,7 +465,16 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			player.update(song.getTitle(), song.getArtist(), null);
 		}
 	}
-	
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		DisplayMetrics metrics = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		int height = metrics.heightPixels;
+		playerCover.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, (int) (height * 0.6)));
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
