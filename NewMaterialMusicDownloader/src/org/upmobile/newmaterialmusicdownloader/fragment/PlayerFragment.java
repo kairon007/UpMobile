@@ -562,9 +562,9 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 			setDownloadButtonState(true);
 			download.setProgress(0);
 			song = current;
+			setCoverToZoomView(null);
 			getCover(song);
 			showLyrics();
-			setCoverToZoomView(null);
 			setElementsView(0);
 			thatSongIsDownloaded(current);
 			showDownloadedLabel();
