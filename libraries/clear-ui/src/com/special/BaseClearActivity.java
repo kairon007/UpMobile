@@ -146,7 +146,13 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		if (targetFragment.getClass() == getFragments()[LIBRARY_FRAGMENT].getClass()) {
 			Bundle b = new Bundle();
 			b.putParcelable("KEY_SELECTED_SONG", song);
-			targetFragment.setArguments(b);
+			try {
+				targetFragment.setArguments(b);
+			} catch (Throwable e) {
+				if (null != targetFragment.getArguments()) {
+					targetFragment.getArguments().putParcelable("KEY_SELECTED_SONG", song);
+				}
+			}
 		}
 		if (isAnimate && isAnimationEnabled()) {
 			transaction.setCustomAnimations(R.anim.fragment_slide_in_up,

@@ -49,7 +49,10 @@ public class LibraryFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-        song = getArguments().getParcelable("KEY_SELECTED_SONG");
+		Bundle arguments = getArguments();
+		if (null != arguments) {
+			song = arguments.getParcelable("KEY_SELECTED_SONG");
+		}
         libraryView.highlightSong(null == song ? null : song.getComment());
         if (null != song) {
 			((MainActivity) getActivity()).setTvTitle(getResources().getStringArray(R.array.titles)[Constants.LIBRARY_FRAGMENT]);
@@ -69,7 +72,9 @@ public class LibraryFragment extends Fragment {
             });
         }
 		libraryView.onResume();
-		getArguments().putParcelable("KEY_SELECTED_SONG", null);
+		if (null != arguments) {
+			arguments.putParcelable("KEY_SELECTED_SONG", null);
+		}
 		super.onResume();
 	}
 	

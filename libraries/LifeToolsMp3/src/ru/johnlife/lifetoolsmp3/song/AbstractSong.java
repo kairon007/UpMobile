@@ -1,45 +1,46 @@
 package ru.johnlife.lifetoolsmp3.song;
 
-import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import android.graphics.Bitmap;
 import android.os.Parcelable;
 
+import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
+
 public interface AbstractSong extends Parcelable, Cloneable {
 	
-	public static final String EMPTY_COMMENT = "in_data_comment_is_empty";
-	public static final String EMPTY_PATH = "comment_does_not_get_path";
+	String EMPTY_COMMENT = "in_data_comment_is_empty";
+	String EMPTY_PATH = "comment_does_not_get_path";
 	
-	public String getPath();
+	String getPath();
 
-	public String getTitle();
+	String getTitle();
 
-	public String getArtist();
+	String getArtist();
 	
-	public String getAlbum();
+	String getAlbum();
 	
-	public Bitmap getCover();
+	Bitmap getCover();
 
-	public boolean isHasCover();
+	boolean isHasCover();
 	
-	public long getId();
+	long getId();
 
-	public long getDuration();
+	long getDuration();
 	
-	public boolean getDownloadUrl(DownloadUrlListener listener);
+	boolean getDownloadUrl(DownloadUrlListener listener);
 	
-	public String getDownloadUrl();
+	String getDownloadUrl();
 	
-	public String getComment();
+	String getComment();
 	
-	public void setArtist(String artist);
+	void setArtist(String artist);
 	
-	public void setTitle(String title);
+	void setTitle(String title);
 	
-	public void setAlbum(String album);
+	void setAlbum(String album);
 	
-	public void setPath(String path);
+	void setPath(String path);
 	
-	public AbstractSong cloneSong() throws CloneNotSupportedException;
+	AbstractSong cloneSong() throws CloneNotSupportedException;
 
-	public AbstractSpecial getSpecial();
+	AbstractSpecial getSpecial();
 }
