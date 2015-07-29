@@ -262,7 +262,9 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 			showLyrics(song);
 		}
 		getCover(song);
-		startImageAnimation();
+		if ((parentView.findViewById(R.id.scroller)).getScrollY() == 0) {
+			startImageAnimation();
+		}
 		setElementsView(player.getCurrentPosition());
 		boolean prepared = player.isPrepared();
 		changePlayPauseView(!(prepared && player.isPlaying()));
