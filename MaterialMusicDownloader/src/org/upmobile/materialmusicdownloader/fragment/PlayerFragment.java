@@ -271,7 +271,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		MainActivity activity = ((MainActivity) getActivity());
 		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
-		activity.setVisibleSearchView(false);
+		activity.setVisibleSearchView(getClass().getSimpleName());
 		setHasOptionsMenu(true);
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
 		if (song.getClass() != MusicData.class) {
@@ -295,7 +295,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 		setElementsView(player.getCurrentPosition(), song);
 		boolean prepared = player.isPrepared();
-		playerProgress.setIndeterminate(prepared);
+		playerProgress.setIndeterminate(!prepared);
 		if (prepared) {
 			changePlayPauseView(!player.isPlaying());
 			playerProgress.setMax((int) (song.getDuration() == 0 ? player.getDuration() : song.getDuration()));

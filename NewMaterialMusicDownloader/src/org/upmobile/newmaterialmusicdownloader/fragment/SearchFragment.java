@@ -29,7 +29,7 @@ public class SearchFragment extends Fragment implements Constants{
 	public void onResume() {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.searchFragment());
-		act.setDraverEnabled(true);
+		act.setDrawerEnabled(true);
 		act.setTitle(R.string.tab_search);
 		act.invalidateOptionsMenu();
 		act.showToolbarShadow(false);

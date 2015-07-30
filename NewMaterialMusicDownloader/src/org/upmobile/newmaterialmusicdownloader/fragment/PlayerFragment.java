@@ -409,7 +409,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	public void onResume() {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
-		act.setDraverEnabled(false);
+		act.setDrawerEnabled(false);
 		act.setTitle(R.string.tab_now_plaing);
 		act.invalidateOptionsMenu();
 		act.setToolbarOverlay(true);

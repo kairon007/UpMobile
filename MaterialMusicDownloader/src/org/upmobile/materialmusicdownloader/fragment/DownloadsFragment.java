@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import ru.johnlife.lifetoolsmp3.Constants;
+
 public class DownloadsFragment extends Fragment implements BaseMaterialFragment {
 	
 	private DownloadsView downloadsView;
@@ -31,10 +33,10 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 	public void onResume() {
 		downloadsView.onResume();
 		MainActivity activity = (MainActivity) getActivity();
-		activity.setSelectedItem(1);
+		activity.setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
-		activity.setVisibleSearchView(false);
+		activity.setVisibleSearchView(getClass().getSimpleName());
 		super.onResume();
 	}
 

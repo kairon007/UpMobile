@@ -28,7 +28,7 @@ public class PlaylistFragment extends Fragment implements BaseMaterialFragment, 
 		activity.setSelectedItem(PLAYLIST_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
-		activity.setVisibleSearchView(true);
+		activity.setVisibleSearchView(getClass().getSimpleName());
 		playlistView.onResume();
 		super.onResume();
 	}

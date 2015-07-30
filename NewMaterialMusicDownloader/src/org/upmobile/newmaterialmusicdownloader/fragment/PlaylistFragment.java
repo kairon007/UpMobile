@@ -36,7 +36,7 @@ public class PlaylistFragment extends Fragment {
 	public void onResume() {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.playlistFragment());
-		act.setDraverEnabled(true);
+		act.setDrawerEnabled(true);
 		act.setTitle(R.string.tab_playlist);
 		act.invalidateOptionsMenu();
 		act.showToolbarShadow(true);

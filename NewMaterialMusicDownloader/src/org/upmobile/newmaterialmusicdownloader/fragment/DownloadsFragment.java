@@ -32,7 +32,7 @@ public class DownloadsFragment extends Fragment{
 		downloadsView.onResume();
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.downloadFragment());
-		act.setDraverEnabled(true);
+		act.setDrawerEnabled(true);
 		act.setTitle(R.string.tab_downloads);
 		act.invalidateOptionsMenu();
 		act.showToolbarShadow(true);

@@ -67,7 +67,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
 	private boolean isVisibleSearchView = false;
-	private boolean isOpenFromDraver = false;
+	private boolean isOpenFromDrawer = false;
 	private boolean isDrawerOpen = false;
 	private SearchView searchView;
 	private View floatBtnContainer;
@@ -92,7 +92,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 			@Override
 			public void onClick(View v) {
-				if (!isOpenFromDraver) {
+				if (!isOpenFromDrawer) {
 					onBackPressed();
 				} else {
 					drawerFragment.openDrawer();
@@ -180,7 +180,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else if (null != player && player.isVisible()) {
 			showMiniPlayer(service.isEnqueueToStream());
 			getFragmentManager().popBackStack();
-			isOpenFromDraver = true;
+			isOpenFromDrawer = true;
 			setPlayerFragmentVisible(false);
 		} else {
 			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
@@ -228,7 +228,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	public void changeFragment(int fragmentId, boolean fromDraver, AbstractSong song) {
 		if (getCurrentFragmentId() == fragmentId) return;
-		isOpenFromDraver = fromDraver;
+		isOpenFromDrawer = fromDraver;
 		if (ManagerFragmentId.playerFragment() != fragmentId) {
 			setPlayerFragmentVisible(false);
 			showMiniPlayer(null != service && service.isEnqueueToStream());
@@ -286,8 +286,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}).start();
 	}
 
-	public void setDraverEnabled(boolean isVisibleDraver) {
-		boolean value = isVisibleDraver || isOpenFromDraver;
+	public void setDrawerEnabled(boolean isVisibleDrawer) {
+		boolean value = isVisibleDrawer || isOpenFromDrawer;
 		drawerFragment.setDrawableLockMode(value);
 	}
 

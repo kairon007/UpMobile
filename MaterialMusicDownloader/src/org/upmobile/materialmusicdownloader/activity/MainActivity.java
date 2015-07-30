@@ -62,7 +62,7 @@ import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class MainActivity extends BaseMiniPlayerActivity implements FolderSelectCallback, NavigationDrawerCallbacks, Constants {
 
-	private int currentFragmentID;
+	private int currentFragmentId = -1;
 	private CharSequence mTitle;
 	private String query = null;
 	private SearchView searchView;
@@ -108,17 +108,17 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	private void configCurrentId (BaseMaterialFragment baseMaterialFragment) {
 		if (baseMaterialFragment.getClass() == SearchFragment.class) {
-			currentFragmentID = SEARCH_FRAGMENT;
+			currentFragmentId = SEARCH_FRAGMENT;
 		} else if (baseMaterialFragment.getClass() == DownloadsFragment.class){
-			currentFragmentID = DOWNLOADS_FRAGMENT;
+			currentFragmentId = DOWNLOADS_FRAGMENT;
 		} else if (baseMaterialFragment.getClass() == LibraryFragment.class){
-			currentFragmentID = LIBRARY_FRAGMENT;
+			currentFragmentId = LIBRARY_FRAGMENT;
 		}else if (baseMaterialFragment.getClass() == PlaylistFragment.class){
-			currentFragmentID = PLAYLIST_FRAGMENT;
+			currentFragmentId = PLAYLIST_FRAGMENT;
 		} else if (baseMaterialFragment.getClass() == PlayerFragment.class){
-			currentFragmentID = PLAYER_FRAGMENT;
+			currentFragmentId = PLAYER_FRAGMENT;
 		} else {
-			currentFragmentID = SEARCH_FRAGMENT;
+			currentFragmentId = SEARCH_FRAGMENT;
 		}
 	}
 
@@ -154,8 +154,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	protected String getPreviousFragmentName(int position) {
 		if (getFragmentManager().getBackStackEntryCount() < position) return SearchFragment.class.getSimpleName();
 		FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - position);
-		String previousFragmentName = backEntry.getName();
-		return previousFragmentName;
+		return backEntry.getName();
 	}
 
 	@Override
@@ -313,51 +312,21 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	public void onBackPressed() {
-		if (getPreviousFragmentName(2).equals(SearchFragment.class.getSimpleName())) {
-			getSupportActionBar().setElevation(0);
-		}
-		hadClosedDraver = navigationDrawerFragment.isDrawerOpen();
-		if (hadClosedDraver) {
-			navigationDrawerFragment.closeDrawer();
-		}
-		if (hadClosedDraver) {
-			hadClosedDraver = false;
-			return;
-		}
-		boolean isDraverClose = isDraverClosed();
+		setVisibleSearchView(getPreviousFragmentName(2));
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
-		isEnabledFilter = false;
-		currentFragmentIsPlayer = false;
-		if (null != player && player.isVisible()) {
-			if (isDraverClose) {
+		if (navigationDrawerFragment.isVisible()) {
+			navigationDrawerFragment.closeDrawer();
+		} else if (null != player && player.isVisible()) {
+			showMiniPlayer(service.isEnqueueToStream());
+			getFragmentManager().popBackStack();
+			setPlayerFragmentVisible(false);
+		} else {
+			if (PLAYER_FRAGMENT == getCurrentFragmentId()) {
 				service.stopPressed();
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
-			} else {
-				showMiniPlayer(service.isEnqueueToStream());
-				getFragmentManager().popBackStack();
-			}
-		} else if (currentFragmentID == LIBRARY_FRAGMENT) {
-			if (!navigationDrawerFragment.isDrawerIndicatorEnabled()) {
-				getFragmentManager().popBackStack();
-				showMiniPlayer(false);
-				return;
-			}
-			Class<? extends AbstractSong> current = PlaybackService.get(this).getPlayingSong().getClass();
-			Fragment fragment;
-			if (current == MusicData.class) {
-				fragment = new LibraryFragment();
-				currentFragmentID = LIBRARY_FRAGMENT;
-			} else {
-				setVisibleSearchView(false);
-				fragment = new SearchFragment();
-				currentFragmentID = SEARCH_FRAGMENT;
-			}
-			getFragmentManager().beginTransaction().replace(R.id.content_frame, fragment, fragment.getClass().getSimpleName()).commit();
-		} else {
-			if (null != service && isMiniPlayerPrepared()) {
+			} else if (null != service && isMiniPlayerPrepared()) {
 				service.stopPressed();
-				showPlayerElement(false);
 			} else {
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
@@ -588,9 +557,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		if (null != navigationDrawerFragment) {
 			navigationDrawerFragment.setSelectedItem(position);
 		}
+		setCurrentFragmentId(position);
 	}
 
-	public void setVisibleSearchView(boolean flag) {
+	public void setVisibleSearchView(String fragmentName) {
+		boolean flag = (fragmentName.equals(LibraryFragment.class.getSimpleName()))
+				|| (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
 		if (flag != isVisibleSearchView) {
 			invalidateOptionsMenu();
 		}
@@ -654,4 +626,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		navigationDrawerFragment.setTitle(mTitle);
 	}
 
+	public int getCurrentFragmentId() {	return currentFragmentId; }
+
+	public void setCurrentFragmentId(int currentFragmentId) {
+		this.currentFragmentId = currentFragmentId;
+	}
 }
