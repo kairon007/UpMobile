@@ -93,8 +93,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private View contentView;
 	private View headView;
 	private ImageView coverView;
-	private ImageView fakeCoverView;
 	private View playerContent;
+	private PullToZoomScrollViewEx scrollView;
 
 	private ActionProcessButton download;
 	private RippleView ciRippleView;
@@ -217,17 +217,16 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			});
 		}
 	};
-	private PullToZoomScrollViewEx scrollView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
+		scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
 		loadViewForCode();
 		isDestroy = false;
-		scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
 		player = PlaybackService.get(getActivity());
 		song = player.getPlayingSong();
-		init(playerContent);
+		init();
 		setListeners();
 		initHeaderSize();
 		showInfoMessage = MaterialMusicDownloaderApp.getSharedPreferences().getBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, true);
@@ -238,7 +237,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		DisplayMetrics localDisplayMetrics = new DisplayMetrics();
 		getActivity().getWindowManager().getDefaultDisplay().getMetrics(localDisplayMetrics);
 		int mScreenWidth = localDisplayMetrics.widthPixels;
-		int outWidth = (int) (9.0F * (mScreenWidth / 16.0F));
+		int orientation = getActivity().getResources().getConfiguration().orientation;
+		int outWidth = (int) ((orientation == Configuration.ORIENTATION_PORTRAIT ? 10.0F : 4.0F) * mScreenWidth / 16.0F);
 		LinearLayout.LayoutParams localObject = new LinearLayout.LayoutParams(mScreenWidth, outWidth);
 		String cover =  getResources().getString(R.string.font_musics);
 		defaultCover = ((MainActivity) getActivity()).getDefaultBitmapCover(outWidth, outWidth, outWidth - 16, cover);
@@ -474,33 +474,32 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		}
 	}
 
-	private void init(final View view) {
-		play = (TextView) view.findViewById(R.id.playpause);
-		previous = (TextView) view.findViewById(R.id.prev);
-		forward = (TextView) view.findViewById(R.id.next);
-		shuffle = (TextView) view.findViewById(R.id.shuffle);
-		repeat = (TextView) view.findViewById(R.id.repeat);
-		download = (ActionProcessButton) view.findViewById(R.id.download);
+	private void init() {
+		play = (TextView) playerContent.findViewById(R.id.playpause);
+		previous = (TextView) playerContent.findViewById(R.id.prev);
+		forward = (TextView) playerContent.findViewById(R.id.next);
+		shuffle = (TextView) playerContent.findViewById(R.id.shuffle);
+		repeat = (TextView) playerContent.findViewById(R.id.repeat);
+		download = (ActionProcessButton) playerContent.findViewById(R.id.download);
 		showInLib = (ActionProcessButton) contentView.findViewById(R.id.showButton);
-		ciRippleView = (RippleView) view.findViewById(R.id.circularRipple);
-		playerProgress = (TrueSeekBar) view.findViewById(R.id.progress_track);
-		tvTitle = (TextView) view.findViewById(R.id.songName);
-		etTitle = (EditText) view.findViewById(R.id.songNameEdit);
-		tvArtist = (TextView) view.findViewById(R.id.artistName);
-		etArtist = (EditText) view.findViewById(R.id.artistNameEdit);
-		playerCurrTime = (TextView) view.findViewById(R.id.trackTime);
-		playerTotalTime = (TextView) view.findViewById(R.id.trackTotalTime);
-		playerLyricsView = (TextView) view.findViewById(R.id.lyrics_text);
-		cbUseCover = (CheckBox) view.findViewById(R.id.cbUseCover);
-		artistBox = (LinearLayout) view.findViewById(R.id.artistNameBox);
-		titleBox = (LinearLayout) view.findViewById(R.id.songNameBox);
+		ciRippleView = (RippleView) playerContent.findViewById(R.id.circularRipple);
+		playerProgress = (TrueSeekBar) playerContent.findViewById(R.id.progress_track);
+		tvTitle = (TextView) playerContent.findViewById(R.id.songName);
+		etTitle = (EditText) playerContent.findViewById(R.id.songNameEdit);
+		tvArtist = (TextView) playerContent.findViewById(R.id.artistName);
+		etArtist = (EditText) playerContent.findViewById(R.id.artistNameEdit);
+		playerCurrTime = (TextView) playerContent.findViewById(R.id.trackTime);
+		playerTotalTime = (TextView) playerContent.findViewById(R.id.trackTotalTime);
+		playerLyricsView = (TextView) playerContent.findViewById(R.id.lyrics_text);
+		cbUseCover = (CheckBox) playerContent.findViewById(R.id.cbUseCover);
+		artistBox = (LinearLayout) playerContent.findViewById(R.id.artistNameBox);
+		titleBox = (LinearLayout) playerContent.findViewById(R.id.songNameBox);
 		shuffleMode = (TextView) contentView.findViewById(R.id.shuffleMode);
 		undo = new UndoBar(getActivity());
 	}
 
 	private void setListeners() {
 		play.setOnClickListener(this);
-//		shuffle.setOnClickListener(this);
 		repeat.setOnClickListener(this);
 		previous.setOnClickListener(this);
 		forward.setOnClickListener(this);
@@ -886,8 +885,6 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 							setCoverToZoomView(bmp);
 							player.updatePictureNotification(bmp);
 							setCheckBoxState(true);
-						} else {
-
 						}
 						cbUseCover.setOnCheckedChangeListener(PlayerFragment.this);
 					}
@@ -921,19 +918,19 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 	
 	private void forceDownload() {
-		((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
-			
+		song.getDownloadUrl(new DownloadUrlListener() {
+
 			@Override
 			public void success(String url) {
 				if (!url.startsWith("http")) return;
 				((RemoteSong) song).setDownloadUrl(url);
 				downloadListener.onClick(contentView);
 			}
-			
+
 			@Override
 			public void error(String error) {
-				((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-					
+				getActivity().runOnUiThread(new Runnable() {
+
 					@Override
 					public void run() {
 						((MainActivity) getActivity()).showMessage(R.string.download_failed);
@@ -949,7 +946,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		public void run() {
 			hasPost = false;
 			downloadListener.onClick(contentView);
-			((RemoteSong) song).getDownloadUrl(new DownloadUrlListener() {
+			song.getDownloadUrl(new DownloadUrlListener() {
 
 				@Override
 				public void success(String url) {
@@ -1078,8 +1075,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public void error(final String error) {
-		((MainActivity) getActivity()).runOnUiThread(new Runnable() {
-			
+		getActivity().runOnUiThread(new Runnable() {
+
 			@Override
 			public void run() {
 				((MainActivity) getActivity()).showMessage(error);
@@ -1092,20 +1089,20 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		initHeaderSize();
 		setCoverToZoomView(bitmap);
 		contentView.invalidate();
+		initHeaderSize();
 		super.onConfigurationChanged(newConfig);
 	}
 	
     private void loadViewForCode() {
-        PullToZoomScrollViewEx scrollView = (PullToZoomScrollViewEx) contentView.findViewById(R.id.scroll_view);
-        headView = LayoutInflater.from(getActivity()).inflate(R.layout.player_header_view, null, false);
-        coverView = (ImageView) LayoutInflater.from(getActivity()).inflate(R.layout.player_cover, null, false);
-        playerContent = LayoutInflater.from(getActivity()).inflate(R.layout.player_fragment_content, null, false);
+		LayoutInflater inflater = LayoutInflater.from(getActivity());
+		headView = inflater.inflate(R.layout.player_header_view, null, false);
+        coverView = (ImageView) inflater.inflate(R.layout.player_cover, null, false);
+        playerContent = inflater.inflate(R.layout.player_fragment_content, null, false);
         scrollView.setHeaderView(headView);
         scrollView.setZoomView(coverView);
         scrollView.setScrollContentView(playerContent);
     }
-	
+
 }
