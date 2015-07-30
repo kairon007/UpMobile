@@ -23,6 +23,7 @@ import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -81,7 +82,7 @@ public class PlaylistView extends BasePlaylistView{
 	@Override
 	protected Bitmap getDefaultCover() {
 		String cover =  getContext().getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
 	}
 
 	@Override
@@ -192,7 +193,7 @@ public class PlaylistView extends BasePlaylistView{
 			swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 
 				@Override
-				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
+				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
 					for (int position : reverseSortedPositions) {
 						try {
 							AbstractSong data = (AbstractSong) adapter.getItem(position);
@@ -212,8 +213,8 @@ public class PlaylistView extends BasePlaylistView{
 					}
 				}
 			});
-			swipeUndoAdapter.setAbsListView((DynamicListView) listView);
-			((DynamicListView) listView).setAdapter(swipeUndoAdapter);
+			swipeUndoAdapter.setAbsListView(listView);
+			listView.setAdapter(swipeUndoAdapter);
 			((DynamicListView) listView).enableSimpleSwipeUndo();
 		} catch (Throwable e) {
 			Log.d(getClass().getSimpleName(), "Exception: " + e);

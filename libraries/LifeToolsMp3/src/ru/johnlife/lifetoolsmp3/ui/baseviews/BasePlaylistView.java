@@ -64,14 +64,6 @@ public abstract class BasePlaylistView extends View {
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
 
-	public final String[] PROJECTION_MUSIC = { 
-			MediaStore.Audio.Media._ID, 
-			MediaStore.Audio.Media.DATA, 
-			MediaStore.Audio.Media.TITLE,
-			MediaStore.Audio.Media.ARTIST, 
-			MediaStore.Audio.Media.DURATION, 
-			MediaStore.Audio.Media.ALBUM, };
-	
 	protected abstract Bitmap getDefaultCover();
 	
 	protected abstract String getDirectory();
@@ -208,7 +200,7 @@ public abstract class BasePlaylistView extends View {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				forceDelete();
 				ArrayList<AbstractSong> playlists = getAllItems();
-				AbstractSong abstractSong = playlists .get(position);
+				AbstractSong abstractSong = playlists.get(position);
 				if (abstractSong.getClass() == PlaylistData.class) {
 					ArrayList<MusicData> songs = ((PlaylistData) abstractSong).getSongs();
 					if (null == songs || songs.size() == 0) {

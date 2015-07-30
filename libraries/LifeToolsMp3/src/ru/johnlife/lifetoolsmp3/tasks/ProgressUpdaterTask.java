@@ -99,17 +99,17 @@ public class ProgressUpdaterTask extends AsyncTask<Long, Integer, String> {
 		super.onPreExecute();
 	}
 
-	public static interface ProgressUpdaterListener {
+	public interface ProgressUpdaterListener {
 
-		public void onProgressUpdate(Integer... values);
+		void onProgressUpdate(Integer... values);
 
-		public void onCancelled();
+		void onCancelled();
 
-		public void onPostExecute(String params);
+		void onPostExecute(String params);
 
-		public void onPreExecute();
+		void onPreExecute();
 		
-		public boolean canceled = false;
+		boolean canceled = false;
 
 	}
 
