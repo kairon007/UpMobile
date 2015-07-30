@@ -12,7 +12,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.SimpleSwipeUndoAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,7 +21,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	private final int DELAY = 3000;
 	private CanNotifyListener listener;
-	private ArrayList<DismissTimers> timers = new ArrayList<>();
+	private ArrayList<DismissTimers> timers = new ArrayList<DismissTimers>();
 	private ArrayList<AbstractSong> songs = new ArrayList<>();
 	private BaseAdapter adapter;
 	
@@ -37,61 +36,62 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	}
 	
 	@Override
-	public void onUndoShown(View view, int position, Object o) {
+	public void onUndoShown(View view, int position) {
 		if (null != listener) {
 			listener.canNotify(false);
 		}
-		startTimer(position, o);
+		startTimer(position);
 		AbstractSong song = (AbstractSong) adapter.getItem(position);
 		if (!songs.contains(song)) songs.add(song);
-		super.onUndoShown(view, position, o);
+		super.onUndoShown(view, position);
 	}
 	
 	@Override
-	public void onDismiss(View view, int position, Object o) {
+	public void onDismiss(View view, int position) {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
-		stopTimer(position, o);
-		super.onDismiss(view, position, o);
+		stopTimer(position);
+		super.onDismiss(view, position);
 	}
 	
 	@Override
-	public void onDismiss(ViewGroup listView, int[] reverseSortedPositions, HashSet<Object> removed) {
+	public void onDismiss(ViewGroup listView, int[] reverseSortedPositions, ArrayList<Object> removed) {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
 		for (int position : reverseSortedPositions) {
-			stopTimer(position, getItem(position));
+			stopTimer(position);
 		}
 		super.onDismiss(listView, reverseSortedPositions, removed);
 	}
 	
 	@Override
-	public void onUndo(View view, int position, Object o) {
+	public void onUndo(View view, int position) {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
-		stopTimer(position, o);
-		super.onUndo(view, position, o);
+		stopTimer(position);
+		super.onUndo(view, position);
 	}
 	
 	public void setCanNotifyListener(CanNotifyListener listener) {
 		this.listener = listener;
 	}
 
-	private void startTimer(int position, Object o) {
+	private void startTimer(int position) {
 		if (null == getItem(position)) return;
-		timers.add(new DismissTimers(o, position).startTimer());
+		timers.add(new DismissTimers(getItem(position), position).startTimer());
 	}
 	
-	private void stopTimer(int position, Object o) {
+	private void stopTimer(int position) {
+		Object tag = getItem(position);
 		for (DismissTimers timer : timers) {
-			if (null == o) {
+			if (null == tag) {
 				notifyDataSetChanged();
 				return;
 			}
-			if (timer.equals(o)) {
+			if (timer.equals(tag)) {
 				timer.cancel();
 				timers.remove(timer);
 				break;
@@ -131,7 +131,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 							}
 							if (position != -1) {
 								try {
-									dismiss(position, tag);
+									dismiss(position);
 								} catch (Exception e) {
 									e.printStackTrace();
 								}
@@ -169,10 +169,10 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	public void forceDelete() {
 		try {
-			ArrayList<DismissTimers> removed = new ArrayList<>();
+			ArrayList<DismissTimers> removed = new ArrayList<DismissTimers>();
 			for (DismissTimers timer : timers) {
 				int position = timer.getPosition();
-				dismiss(position, timer.getTag());
+				dismiss(position);
 				removed.add(timer);
 				try {
 					timer.cancel();
