@@ -59,7 +59,7 @@ public class MusicData {
 		songAlbum = cursor.getString(5);
 	}
 
-	public MusicData(File musicFile) {trololo
+	public MusicData(File musicFile) {
 		fileUri = musicFile.getAbsolutePath();
 		try {
 			MusicMetadataSet src_set = new MyID3().read(musicFile);
