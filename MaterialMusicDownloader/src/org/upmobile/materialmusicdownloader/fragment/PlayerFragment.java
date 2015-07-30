@@ -73,6 +73,7 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.buttons.CheckBox;
 import ru.johnlife.uilibrary.widget.buttons.processbutton.iml.ActionProcessButton;
 import ru.johnlife.uilibrary.widget.customviews.RippleView;
+import ru.johnlife.uilibrary.widget.form.smoothprogressbar.SmoothProgressBar;
 import ru.johnlife.uilibrary.widget.layouts.pulltozoomview.PullToZoomScrollViewEx;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.AdvancedUndoListener;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController.UndoBar;
@@ -129,6 +130,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	private TrueSeekBar playerProgress;
 	private Bitmap defaultCover;
 	private ActionProcessButton showInLib;
+	private SmoothProgressBar progressLyrics;
+	private View dividerLine;
 
 	private int checkIdCover;
 	private int checkIdLyrics;
@@ -190,8 +193,9 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			getCover(song);
 			thatSongIsDownloaded(current);
 			playerProgress.setIndeterminate(true);
-			contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
-			contentView.findViewById(R.id.lyrics_text).setVisibility(View.GONE);
+			progressLyrics.setVisibility(View.VISIBLE);
+			dividerLine.setVisibility(View.GONE);
+			playerLyricsView.setVisibility(View.GONE);
 			showDownloadedLabel();
 		}
 
@@ -217,7 +221,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 			});
 		}
 	};
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle state) {
 		contentView = inflater.inflate(R.layout.player_fragment, container, false);
@@ -495,6 +499,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 		artistBox = (LinearLayout) playerContent.findViewById(R.id.artistNameBox);
 		titleBox = (LinearLayout) playerContent.findViewById(R.id.songNameBox);
 		shuffleMode = (TextView) contentView.findViewById(R.id.shuffleMode);
+		progressLyrics = (SmoothProgressBar) contentView.findViewById(R.id.lyrics_progress);
+		dividerLine = contentView.findViewById(R.id.divider_line);
 		undo = new UndoBar(getActivity());
 	}
 
@@ -805,6 +811,8 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 	}
 
 	private void showLyrics() {
+		progressLyrics.setVisibility(View.VISIBLE);
+		dividerLine.setVisibility(View.GONE);
 		if (null != lyricsFetcher) {
 			lyricsFetcher.cancelSearch();
 			playerLyricsView.setText("");
@@ -813,11 +821,10 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 			@Override
 			public void onLyricsFetched(boolean foundLyrics, String lyrics) {
-				if (hashCode() != checkIdLyrics) {
-					return;
-				}
-				contentView.findViewById(R.id.lyrics_progress).setVisibility(View.GONE);
-				contentView.findViewById(R.id.lyrics_text).setVisibility(View.VISIBLE);
+				if (hashCode() != checkIdLyrics) return;
+				progressLyrics.setVisibility(View.GONE);
+				dividerLine.setVisibility(View.VISIBLE);
+				playerLyricsView.setVisibility(View.VISIBLE);
 				if (foundLyrics) {
 					playerLyricsView.setText(Html.fromHtml(lyrics));
 				} else {

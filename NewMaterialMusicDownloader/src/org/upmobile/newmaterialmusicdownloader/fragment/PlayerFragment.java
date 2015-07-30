@@ -888,6 +888,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	private void showLyrics() {
 		if (lastArtist.equals(song.getArtist()) && lastTitle.equals(song.getTitle()) && !playerLyricsView.getText().toString().isEmpty()) return;
 		contentView.findViewById(R.id.lyrics_progress).setVisibility(View.VISIBLE);
+		contentView.findViewById(R.id.divider_line).setVisibility(View.GONE);
 		playerLyricsView.setVisibility(View.GONE);
 		lastArtist = song.getArtist();
 		lastTitle = song.getTitle();
@@ -903,6 +904,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 					return;
 				}
 				contentView.findViewById(R.id.lyrics_progress).setVisibility(View.GONE);
+				contentView.findViewById(R.id.divider_line).setVisibility(View.VISIBLE);
 				contentView.findViewById(R.id.lyrics_text).setVisibility(View.VISIBLE);
 				if (foundLyrics) {
 					playerLyricsView.setText(Html.fromHtml(lyrics));

@@ -163,5 +163,5 @@
 	    <item name="android:textViewStyle">@style/TextViewStyle.Simple</item>
         <item name="android:editTextStyle">@style/EditTextStyle.Simple</item>
 	</style>
-	
+
 </resources>

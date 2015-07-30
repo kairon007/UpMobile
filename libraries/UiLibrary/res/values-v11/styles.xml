@@ -20,4 +20,5 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
+    <style name="SPB" parent="android:Widget.Holo.ProgressBar.Horizontal"></style>
 </resources>

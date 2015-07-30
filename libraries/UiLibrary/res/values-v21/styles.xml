@@ -19,4 +19,5 @@
         <item name="md_btn_negative_selector">@drawable/md_btn_selector_ripple_dark</item>
     </style>
 
+    <style name="SPB" parent="android:Widget.Material.ProgressBar.Horizontal"></style>
 </resources>

@@ -16,4 +16,11 @@
     <color name="main_color_background">#ffe6e6e6</color>
     <color name="main_color_background_first">#ffeeeeee</color>
 
+    <!-- smooth progress bar colors-->
+    <array name="spb_colors">
+        <item>@color/main_color_500</item>
+        <item>@color/main_color_accent</item>
+    </array>
+    <!-- end -->
+
 </resources>
