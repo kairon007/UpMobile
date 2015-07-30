@@ -16,7 +16,7 @@ import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -72,9 +72,9 @@ public class LibraryView extends BaseLibraryView implements Constants {
 		swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 			
 	        @Override
-	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-	            for (int position : reverseSortedPositions) {
-	            	MusicData data = ((MusicData) adapter.getItem(position));
+	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
+	            for (Object o : removed) {
+					MusicData data = (MusicData) o;
 					if (null == data) return;
 	            	data.reset(getContext());
 	            	isUserDeleted = true;
@@ -88,8 +88,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	        }
 	        
 	    });
-		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
-		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		swipeUndoAdapter.setAbsListView(listView);
+		listView.setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
 	

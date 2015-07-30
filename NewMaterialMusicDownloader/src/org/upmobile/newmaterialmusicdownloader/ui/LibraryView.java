@@ -15,7 +15,7 @@ import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -67,9 +67,9 @@ public class LibraryView extends BaseLibraryView {
             swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 
                 @Override
-                public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-                    for (int position : reverseSortedPositions) {
-                        MusicData data = ((MusicData) adapter.getItem(position));
+                public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
+					for (Object o : removed) {
+						MusicData data = (MusicData) o;
 					    if (null == data) return;
                         isUserDeleted = true;
                         PlaybackService.get(getContext()).remove(data);

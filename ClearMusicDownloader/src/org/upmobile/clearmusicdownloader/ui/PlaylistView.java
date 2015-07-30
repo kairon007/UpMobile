@@ -18,12 +18,11 @@ import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.PlaylistAdapter;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
 import ru.johnlife.lifetoolsmp3.ui.baseviews.BasePlaylistView;
@@ -82,10 +81,9 @@ public class PlaylistView extends BasePlaylistView {
 			swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 
 				@Override
-				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-					for (int position : reverseSortedPositions) {
+				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
+					for (Object data : removed) {
 						try {
-							AbstractSong data = (AbstractSong) adapter.getItem(position);
 							if (null == data || !swipeUndoAdapter.getSongs().contains(data)) return;
 							if (data.getClass() == MusicData.class) {
 								removeData(getPlaylistBySong((MusicData) data), (MusicData) data);

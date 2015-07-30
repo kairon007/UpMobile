@@ -23,6 +23,7 @@ import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
@@ -192,10 +193,9 @@ public class PlaylistView extends BasePlaylistView{
 			swipeUndoAdapter = new CustomSwipeUndoAdapter(adapter, getContext(), new OnDismissCallback() {
 
 				@Override
-				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
-					for (int position : reverseSortedPositions) {
+				public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
+					for (Object data : removed) {
 						try {
-							AbstractSong data = (AbstractSong) adapter.getItem(position);
 							if (null == data || !swipeUndoAdapter.getSongs().contains(data)) return;
 							if (data.getClass() == MusicData.class) {
 								removeData(getPlaylistBySong((MusicData) data), (MusicData) data);
@@ -212,8 +212,8 @@ public class PlaylistView extends BasePlaylistView{
 					}
 				}
 			});
-			swipeUndoAdapter.setAbsListView((DynamicListView) listView);
-			((DynamicListView) listView).setAdapter(swipeUndoAdapter);
+			swipeUndoAdapter.setAbsListView(listView);
+			listView.setAdapter(swipeUndoAdapter);
 			((DynamicListView) listView).enableSimpleSwipeUndo();
 		} catch (Throwable e) {
 			Log.d(getClass().getSimpleName(), "Exception: " + e);
