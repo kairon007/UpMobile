@@ -23,6 +23,7 @@ import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.PlaylistData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter {
 
@@ -64,7 +65,8 @@ public class PlaylistAdapter extends BasePlaylistsAdapter implements UndoAdapter
 	@Override
 	protected Bitmap getDefaultCover() {
 		String cover =  getContext().getResources().getString(R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64),
+				Util.dpToPx(getContext(),62), Util.dpToPx(getContext(),60), cover);
 	}
 	
 	@Override

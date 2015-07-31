@@ -18,6 +18,7 @@ import ru.johnlife.lifetoolsmp3.engines.BaseSettings;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class SearchAdapter extends BaseSearchAdapter {
 
@@ -71,7 +72,8 @@ public class SearchAdapter extends BaseSearchAdapter {
 			setDownloadLable(lableStatus);
 			showPlayingIndicator(hasPlayingSong);
 			String coverString =  context.getResources().getString(R.string.font_musics);
-			cover.setImageBitmap(((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, coverString));
+			cover.setImageBitmap(((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64),
+					Util.dpToPx(getContext(),62), Util.dpToPx(getContext(),60), coverString));
 			super.hold(item, position);
 		}
 		

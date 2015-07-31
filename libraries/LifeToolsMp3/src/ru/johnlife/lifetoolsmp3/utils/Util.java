@@ -197,12 +197,12 @@ public final class Util {
 	
 	public static int dpToPx(Context context, int dp) {
 	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return Math.round(dp * ((float)displayMetrics.densityDpi / (float)DisplayMetrics.DENSITY_DEFAULT));
 	}
 	
 	public static int pxToDp(Context context, int px) {
 	    DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        return Math.round(px / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return Math.round(px / ((float)displayMetrics.densityDpi / (float)DisplayMetrics.DENSITY_DEFAULT));
 	}
 	
 	public static Bitmap textViewToBitmap(View view, int width, int height, int pR, int pT){

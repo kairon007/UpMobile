@@ -82,7 +82,8 @@ public class PlaylistView extends BasePlaylistView{
 	@Override
 	protected Bitmap getDefaultCover() {
 		String cover =  getContext().getResources().getString(org.upmobile.materialmusicdownloader.R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60,cover);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64),
+				Util.dpToPx(getContext(),62), Util.dpToPx(getContext(),60), cover);
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import org.upmobile.materialmusicdownloader.activity.MainActivity;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseDownloadsAdapter;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
+import ru.johnlife.lifetoolsmp3.utils.Util;
+
 import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -61,7 +63,8 @@ public class DownloadsAdapter extends BaseDownloadsAdapter implements UndoAdapte
 	@Override
 	protected Bitmap getDefaultBitmap() {
 		String cover =  getContext().getResources().getString(R.string.font_musics);
-		return ((MainActivity) getContext()).getDefaultBitmapCover(64, 62, 60, cover);
+		return ((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64),
+				Util.dpToPx(getContext(),62), Util.dpToPx(getContext(),60), cover);
 	}
 	
 	@Override

@@ -312,6 +312,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	@Override
 	public void onBackPressed() {
 		setVisibleSearchView(getPreviousFragmentName(2));
+		if (getPreviousFragmentName(2).equals(SearchFragment.class.getSimpleName())) {
+			getSupportActionBar().setElevation(0);
+		}
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (navigationDrawerFragment.isVisible()) {
 			navigationDrawerFragment.closeDrawer();
@@ -365,20 +368,25 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		textPaint.getTextBounds(image, 0, image.length(), bounds);
 		int height = bounds.height();
 		int width = bounds.width();
-		if (height < property && width < property) {
-			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, property) + 1f);
+		boolean defaultIsLarger = true;
+		while (height < property && width < property) {
+			defaultIsLarger = false;
+			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) + 1f);
 			bounds = new Rect();
 			textPaint = textCover.getPaint();
 			textPaint.getTextBounds(image, 0, image.length(), bounds);
 			height = bounds.height();
 			width = bounds.width();
-		} else {
-			textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, property) - 1f);
-			bounds = new Rect();
-			textPaint = textCover.getPaint();
-			textPaint.getTextBounds(image, 0, image.length(), bounds);
-			height = bounds.height();
-			width = bounds.width();
+		}
+		if (defaultIsLarger) {
+			while (height > property && width > property) {
+				textCover.setTextSize(TypedValue.COMPLEX_UNIT_SP, Util.pixelsToSp(this, textCover.getTextSize()) - 1f);
+				bounds = new Rect();
+				textPaint = textCover.getPaint();
+				textPaint.getTextBounds(image, 0, image.length(), bounds);
+				height = bounds.height();
+				width = bounds.width();
+			}
 		}
 		return Util.textViewToBitmap(textCover, outWidth, outHeight);
 	}
@@ -387,7 +395,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	public void setCover(Bitmap bmp) {
 		if (null == defaultCover) {
 			String cover = getString(R.string.font_musics);
-			defaultCover = getDefaultBitmapCover(64, 62, 60, cover);
+			defaultCover = getDefaultBitmapCover(Util.dpToPx(this,64), Util.dpToPx(this,62), Util.dpToPx(this,60), cover);
 		}
 		if (null ==  bmp) {
 			bmp = defaultCover;
@@ -398,13 +406,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	protected void setPlayPauseMini(boolean playPayse) {
-		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), playPayse ? getString(R.string.font_pause_mini) : getString(R.string.font_play_mini));
+		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 48), Util.dpToPx(this, 48), Util.dpToPx(this, 44), playPayse ? getString(R.string.font_pause_mini) : getString(R.string.font_play_mini));
 		((ImageView) findViewById(R.id.mini_player_play_pause)).setImageBitmap(bmp);
 	}
 
 	@Override
 	protected void setImageDownloadButton() {
-		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 46), Util.dpToPx(this, 46), Util.dpToPx(this, 45), getString(R.string.font_download_button));
+		Bitmap bmp = getDefaultBitmapCover(Util.dpToPx(this, 48), Util.dpToPx(this, 48), Util.dpToPx(this, 44), getString(R.string.font_download_button));
 		((ImageView) findViewById(R.id.mini_player_download)).setImageBitmap(bmp);
 	}
 
