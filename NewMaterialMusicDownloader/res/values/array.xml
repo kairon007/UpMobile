@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="spb_colors">
+        <item>@color/material_accent</item>
+        <item>@color/material_primary</item>
+    </array>
+    <array name="spb_colors_brown">
+        <item>@color/brown_material_accent</item>
+        <item>@color/brown_material_primary</item>
+    </array>
+    <array name="spb_colors_orange">
+        <item>@color/orange_material_accent</item>
+        <item>@color/orange_material_primary</item>
+    </array>
+    <array name="spb_colors_green">
+        <item>@color/green_material_accent</item>
+        <item>@color/green_material_primary</item>
+    </array>
+    <array name="spb_colors_black">
+        <item>@color/black_material_accent</item>
+        <item>@color/black_material_primary</item>
+    </array>
+
+</resources>
