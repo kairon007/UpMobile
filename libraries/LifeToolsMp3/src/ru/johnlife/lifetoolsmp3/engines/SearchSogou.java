@@ -43,14 +43,9 @@ public class SearchSogou extends SearchWithPages {
 					.timeout(20000)
 					.get();
 			if (null == doc) return null;
-			Elements songs;
-			try {
-				songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
-			} catch (Exception e) {
-				return null;
-			}
+			Elements songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
 			//This eliminates the first row which is not a song element
-			if (null == songs || songs.isEmpty()) return null;
+			if (songs.isEmpty()) return null;
 			songs.remove(0);
 
 			for (Element song : songs) {

@@ -271,7 +271,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 							adapter.add(song);
 						}
 					}
-					if (adapter.getCount() < 15 && !(adapter.getCount() > 20)&& taskIterator.hasNext()) {
+					if (adapter.getCount() < 25 && taskIterator.hasNext()) {
 						getNextResults(false);
 					}
 				} catch (Exception e) {
@@ -660,7 +660,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	}
 
 	public ArrayList<String> getDMCABlacklistedItems(String remoteSetting) {
-		ArrayList<String> searchEngines = new ArrayList<String>();
+		ArrayList<String> searchEngines = new ArrayList<>();
 		try {
 			SharedPreferences prefs = MusicApp.getSharedPreferences();
 			String remoteSettingSearchEngines = prefs.getString(remoteSetting, null);

@@ -59,7 +59,7 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	}
 
 	private void updatePlaybackArray() {
-		ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
+		ArrayList<AbstractSong> list = new ArrayList<>();
 		for (AbstractSong abstractSong : getAdapter().getAll()) {
 			try {
 				list.add(abstractSong.cloneSong());
@@ -165,7 +165,7 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 	@Override
 	public BaseSearchAdapter getAdapter() {
 		if (null == adapter) {
-			new NullPointerException("Adapter must not be null");
+			//Adapter must not be null
 			return adapter = new SearchAdapter(getContext(), R.layout.row_online_search);
 		}
 		return adapter;
