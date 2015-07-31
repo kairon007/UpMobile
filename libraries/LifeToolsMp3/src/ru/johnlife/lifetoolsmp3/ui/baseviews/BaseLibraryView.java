@@ -349,8 +349,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             } else {
                 adapter.notifyDataSetChanged();
             }
+            hideProgress(view);
             if (null != comment) {
                 synchronized (lock) {
+                    showProgress(view);
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -359,6 +361,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                                     ((Activity) getContext()).runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
+                                            hideProgress(view);
                                             listView.setSelection(adapter.getPosition(data));
                                             final Animation flash = AnimationUtils.loadAnimation(getContext(), R.anim.flash);
                                             getViewByPosition(adapter.getPosition(data), listView).postDelayed(new Runnable() {
@@ -370,6 +373,12 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                                             }, 100);
                                         }
                                     });
+                                    ((Activity) getContext()).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            hideProgress(view);
+                                        }
+                                    });
                                     comment = null;
                                     return;
                                 }
@@ -379,7 +388,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                     }).start();
                 }
             }
-            hideProgress(view);
         }
         return true;
     }
