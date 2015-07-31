@@ -53,33 +53,37 @@ public class MainActivity extends BaseClearActivity implements Constants {
     private SearchView searchView;
     private String query;
 	private boolean useCoverHelper = true;
-	private String folder_path = ClearMusicDownloaderApp.getDirectory();
-	private FileObserver fileObserver = new FileObserver(folder_path) {
-
-		@Override
-		public void onEvent(int event, String path) {
-			if (event == FileObserver.DELETE_SELF) {
-				File file = new File(folder_path);
-				file.mkdirs();
-				Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-				getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + " LIKE '" + folder_path + "%'", null);
-				getContentResolver().notifyChange(uri, null);
-			}
-		}
-	};
+	FileObserver fileObserver;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
-		File file = new File(folder_path);
+		File file = new File(ClearMusicDownloaderApp.getDirectory());
 		if (!file.exists()) {
 			file.mkdirs();
 		}
+		initObserver(ClearMusicDownloaderApp.getDirectory());
 		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
 		initSearchView();
 		
 //		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
+	}
+
+	private void initObserver(String path) {
+		fileObserver = new FileObserver(path) {
+
+			@Override
+			public void onEvent(int event, String path) {
+				if (event == FileObserver.DELETE_SELF) {
+					File file = new File(path);
+					file.mkdirs();
+					Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+					getContentResolver().delete(uri, MediaStore.MediaColumns.DATA + " LIKE '" + path + "%'", null);
+					getContentResolver().notifyChange(uri, null);
+				}
+			}
+		};
 	}
 	
 	@Override
@@ -284,12 +288,17 @@ public class MainActivity extends BaseClearActivity implements Constants {
 
 			@Override
 			public void onChosenDir(String chDir) {
+				fileObserver.stopWatching();
 				File file = new File(chDir);
 				Editor editor = sp.edit();
 				editor.putString(PREF_DIRECTORY, chDir);
 				editor.putString(PREF_DIRECTORY_PREFIX, File.separator + file.getAbsoluteFile().getName() + File.separator);
 				editor.apply();
 				reDrawMenu();
+				StateKeeper.getInstance().initSongHolder(chDir);
+				StateKeeper.getInstance().notifyLable(true);
+				initObserver(chDir);
+				fileObserver.startWatching();
 			}
 		});
 		directoryChooserDialog.chooseDirectory();

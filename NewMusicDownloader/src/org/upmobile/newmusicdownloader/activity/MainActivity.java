@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -53,26 +52,13 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, OnQueryTextListener, Constants {
 
-	private final String folderPath = Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
 	private SearchView searchView;
 	private MenuItem searchItem;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
 	private boolean isVisibleSearchView = false;
 	private boolean buttonBackEnabled = false;
-
-	private FileObserver fileObserver = new FileObserver(folderPath) {
-
-		@Override
-		public void onEvent(int event, String path) {
-			if (event == FileObserver.DELETE_SELF) {
-				File file = new File(folderPath);
-				file.mkdirs();
-				getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + folderPath + "%'", null);
-				getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
-			}
-		}
-	};
+	private FileObserver fileObserver;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -82,8 +68,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		getSupportActionBar().setElevation(0);
         navigationDrawerFragment = (NavigationDrawerFragment)getFragmentManager().findFragmentById(R.id.navigation_drawer);
         navigationDrawerFragment.setUp(R.id.navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout));
-		File file = new File(folderPath);
+		File file = new File(NewMusicDownloaderApp.getDirectory());
 		if (!file.exists()) file.mkdirs();
+		initObserver(NewMusicDownloaderApp.getDirectory());
 		fileObserver.startWatching();
 		int resId = getResources().getIdentifier("action_bar_title", "id", "android");
 		View v1 = findViewById(resId);
@@ -91,6 +78,21 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			((View) v1.getParent().getParent().getParent().getParent()).setBackgroundColor(getResources().getColor(Util.getResIdFromAttribute(this, R.attr.actionBarTitleBg)));
 		}
 //		Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
+	}
+
+	private void initObserver(String path) {
+		fileObserver = new FileObserver(path) {
+
+			@Override
+			public void onEvent(int event, String path) {
+				if (event == FileObserver.DELETE_SELF) {
+					File file = new File(path);
+					file.mkdirs();
+					getContentResolver().delete(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MediaStore.MediaColumns.DATA + " LIKE '" + path + "%'", null);
+					getContentResolver().notifyChange(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null);
+				}
+			}
+		};
 	}
 	
 	
@@ -216,6 +218,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				
 				@Override
 				public void onChosenDir(String chDir) {
+					fileObserver.stopWatching();
 					File file = new File(chDir);
 					Editor editor = sp.edit();
 					editor.putString(PREF_DIRECTORY, chDir);
@@ -224,6 +227,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					if (null != navigationDrawerFragment && null != service) {
 						navigationDrawerFragment.setAdapter(service.isPlaying());
 					}
+					StateKeeper.getInstance().initSongHolder(chDir);
+					StateKeeper.getInstance().notifyLable(true);
+					fileObserver.startWatching();
 				}
 			});
 			directoryChooserDialog.chooseDirectory();
