@@ -182,6 +182,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			getFragmentManager().popBackStack();
 			isOpenFromDrawer = true;
 			setPlayerFragmentVisible(false);
+		} else if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId() && !drawerFragment.isDrawerIndicatorEnabled()) {
+			showMiniPlayer(false);
+			getFragmentManager().popBackStack();
 		} else {
 			if (ManagerFragmentId.playerFragment() == getCurrentFragmentId()) {
 				service.stopPressed();

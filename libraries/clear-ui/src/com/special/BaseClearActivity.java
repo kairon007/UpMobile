@@ -149,6 +149,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			try {
 				targetFragment.setArguments(b);
 			} catch (Throwable e) {
+				e.printStackTrace();
 				if (null != targetFragment.getArguments()) {
 					targetFragment.getArguments().putParcelable("KEY_SELECTED_SONG", song);
 				}
@@ -189,7 +190,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			tvTitle.setText(title);
 			manageSearchView(lastFragmentName);
 			showMiniPlayer(service.isEnqueueToStream());
-		} else if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[LIBRARY_FRAGMENT].getClass().getSimpleName()) && lastOpenedFragment.getArguments().getParcelable("KEY_SELECTED_SONG") != null) {
+		} else if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[LIBRARY_FRAGMENT].getClass().getSimpleName()) && ((Boolean) leftMenu.getTag()) == true) {
 			getFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();
@@ -199,6 +200,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			manageSearchView(lastFragmentName);
 			titleBar.setOnClickListener(this);
 			leftMenu.setOnClickListener(this);
+			leftMenu.setTag(false);
 			leftMenu.setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebar_menu_selector));
 			showMiniPlayer(false);
 		} else {

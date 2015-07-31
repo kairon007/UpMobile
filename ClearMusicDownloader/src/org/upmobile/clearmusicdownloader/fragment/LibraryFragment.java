@@ -56,6 +56,7 @@ public class LibraryFragment extends Fragment {
         libraryView.highlightSong(null == song ? null : song.getComment());
         if (null != song) {
 			((MainActivity) getActivity()).setTvTitle(getResources().getStringArray(R.array.titles)[Constants.LIBRARY_FRAGMENT]);
+			getActivity().findViewById(R.id.title_bar_left_menu).setTag(true);
 			getActivity().findViewById(R.id.title_bar_left_menu).setBackgroundDrawable(getResources().getDrawable(R.drawable.titlebar_back_selector));
             ((MainActivity) getActivity()).showMiniPlayer(true);
             getActivity().findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {

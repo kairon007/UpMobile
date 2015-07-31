@@ -292,7 +292,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 	private void hideDownloadedLabel() {
 		if (null == parentView || null == getActivity()) return;
 		int state = StateKeeper.getInstance().checkSongInfo(song.getComment());
-		boolean show = StateKeeper.DOWNLOADED == state;
+		boolean show = StateKeeper.DOWNLOADED == state && song.getClass() != MusicData.class;
 		((TextView) parentView.findViewById(R.id.downloadedText)).setText(R.string.has_been_downloaded);
 		parentView.findViewById(R.id.downloadedText).setVisibility(show ? View.VISIBLE : View.GONE);
 		showInLibrary.setVisibility(show ? View.VISIBLE : View.GONE);

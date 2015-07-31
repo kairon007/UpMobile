@@ -20,7 +20,6 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -321,7 +320,10 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 			getFragmentManager().popBackStack();
 			setPlayerFragmentVisible(false);
 		} else {
-			if (PLAYER_FRAGMENT == getCurrentFragmentId()) {
+			if (LIBRARY_FRAGMENT == getCurrentFragmentId() && !navigationDrawerFragment.isDrawerIndicatorEnabled()) {
+				showMiniPlayer(false);
+				getFragmentManager().popBackStack();
+			} else if (PLAYER_FRAGMENT == getCurrentFragmentId()) {
 				service.stopPressed();
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
