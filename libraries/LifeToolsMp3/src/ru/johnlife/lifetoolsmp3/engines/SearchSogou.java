@@ -1,15 +1,15 @@
 package ru.johnlife.lifetoolsmp3.engines;
 
-import java.io.IOException;
-import java.net.URLEncoder;
+import android.util.Log;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.net.URLEncoder;
+
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import android.util.Log;
 
 
 /**
@@ -29,10 +29,6 @@ public class SearchSogou extends SearchWithPages {
 	private static int MIN_CHINESE = 13312;
 	
 	/* CONSTRUCTOR */
-	/**
-	 * This is the constructor used to search only.
-	 * @param con - the Cotext of the activity
-	 */
 	public SearchSogou(FinishedParsingSongs dInterface, String songName) {
 		super(dInterface, songName);
 	}
@@ -47,9 +43,14 @@ public class SearchSogou extends SearchWithPages {
 					.timeout(20000)
 					.get();
 			if (null == doc) return null;
-			Elements songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
-			if (songs.isEmpty()) return null;
+			Elements songs;
+			try {
+				songs = doc.body().select("div[id=otherResult]").first().select("div[class=music_list]").select("tr");
+			} catch (Exception e) {
+				return null;
+			}
 			//This eliminates the first row which is not a song element
+			if (null == songs || songs.isEmpty()) return null;
 			songs.remove(0);
 
 			for (Element song : songs) {
