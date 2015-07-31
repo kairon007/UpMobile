@@ -37,7 +37,9 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 
+import ru.johnlife.lifetoolsmp3.Constants;
 import ru.johnlife.lifetoolsmp3.R;
+import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.engines.lyric.OnLyricsFetchedListener;
 import ru.johnlife.lifetoolsmp3.engines.lyric.SearchLyrics;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
@@ -82,6 +84,7 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 	private boolean buttonVisible = false;
 	private boolean spinnerVisible = true;
 	private boolean isDefaultCover = true;
+	boolean showInfoMessage = true;
 
 	OnShowListener dialogShowListener = new OnShowListener() {
 
@@ -117,6 +120,7 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 		keeper.setCurrentPlayersId(mediaPlayer.hashCode());
 		mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		initView(view);
+		showInfoMessage = MusicApp.getSharedPreferences().getBoolean(Constants.PREF_SHOW_INFO_MESSAGE, true);
 	}
 	
 	public void initView(final View view) {
@@ -310,6 +314,12 @@ public class DialogPlayerView extends AsyncTask<String, Void, Boolean> {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
+				if (showInfoMessage) {
+					Toast toast = Toast.makeText(view.getContext(), view.getContext().getResources().getString(R.string.changes_relevant_when_downloading), Toast.LENGTH_LONG);
+					toast.show();
+					MusicApp.getSharedPreferences().edit().putBoolean(ru.johnlife.lifetoolsmp3.Constants.PREF_SHOW_INFO_MESSAGE, false).apply();
+					showInfoMessage = false;
+				}
 				if(keeper.checkState(StateKeeper.MANIPULATE_TEXT_OPTION)) {
 					downloadSong.setArtistName(editor.getNewArtistName());
 					downloadSong.setSongTitle(editor.getNewSongTitle());
