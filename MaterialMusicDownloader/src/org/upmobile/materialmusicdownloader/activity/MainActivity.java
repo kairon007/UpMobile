@@ -182,7 +182,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
 		} else if (position <= LIBRARY_FRAGMENT) {
-			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
+			showMiniPlayer(null != service && service.isEnqueueToStream());
 		}
 		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : position != SETTINGS_FRAGMENT && position != 6 ? 16 : 0);
 		currentFragmentIsPlayer = false;
@@ -319,6 +319,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		if (navigationDrawerFragment.isVisible()) {
 			navigationDrawerFragment.closeDrawer();
 		} else if (null != player && player.isVisible()) {
+			currentFragmentIsPlayer = false;
 			showMiniPlayer(service.isEnqueueToStream());
 			getFragmentManager().popBackStack();
 			setPlayerFragmentVisible(false);
@@ -331,6 +332,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 				stopService(new Intent(this, PlaybackService.class));
 				finish();
 			} else if (null != service && isMiniPlayerPrepared()) {
+				currentFragmentIsPlayer = false;
 				service.stopPressed();
 			} else {
 				stopService(new Intent(this, PlaybackService.class));
@@ -429,7 +431,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		Editor editor = sp.edit();
 		editor.putString(PREF_DIRECTORY, folder.getAbsolutePath());
 		editor.putString(PREF_DIRECTORY_PREFIX, File.separator + folder.getAbsoluteFile().getName() + File.separator);
-		editor.commit();
+		editor.apply();
 		showPlayerElement(PlaybackService.get(this).isPlaying());
 		new Thread(new Runnable() {
 

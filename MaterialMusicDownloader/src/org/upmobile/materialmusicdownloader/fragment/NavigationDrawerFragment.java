@@ -41,8 +41,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     private NavigationDrawerCallbacks mCallbacks;
     private OnNavigationDrawerState drawerState;
     private android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    private List<BaseMaterialFragment> mFragments;
-   
+
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerListView;
     private DrawerAdapter mAdapter;
@@ -57,7 +56,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     public NavigationDrawerFragment() { }
     
     public interface OnNavigationDrawerState {
-    	public void onDrawerOpen();
+    	void onDrawerOpen();
     }
 
     @Override
@@ -99,22 +98,23 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         return mDrawerListView;
     }
     
-	private ArrayList<BaseMaterialFragment> getFragments() {
-		ArrayList<BaseMaterialFragment> fragments = new ArrayList<BaseMaterialFragment>();
+	private ArrayList<BaseMaterialFragment> getFragments(boolean addPlayer) {
+		ArrayList<BaseMaterialFragment> fragments = new ArrayList<>();
 		fragments.add(new SearchFragment());
 		fragments.add(new DownloadsFragment());
 		fragments.add(new PlaylistFragment());
 		fragments.add(new LibraryFragment());
-		fragments.add(new PlayerFragment());
+        if (addPlayer) {
+            fragments.add(new PlayerFragment());
+        }
 		return fragments;
 	}
 
 	public void setAdapter(boolean isNowPlaying) {
-		mDrawerItems = new ArrayList<DrawerItem>();
-		mFragments = getFragments();
+		mDrawerItems = new ArrayList<>();
+        List<BaseMaterialFragment> mFragments = getFragments(isNowPlaying);
 		int lenght = mFragments.size();
 		for(int i=0; i<lenght; i++) {
-			if (!isNowPlaying && (i == lenght - 1)) break;
 			BaseMaterialFragment fragment = mFragments.get(i);
 			mDrawerItems.add(new DrawerItem(fragment.getDrawerIcon(), fragment.getDrawerTitle(), fragment.getDrawerTag(), DrawerItem.Types.TYPE_MENU));
 		}
@@ -245,11 +245,8 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if ( mDrawerToggle.onOptionsItemSelected(item)) {
-			return true;
-		}
-        return super.onOptionsItemSelected(item);
-	}
+        return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
+    }
 
     private ActionBar getActionBar() {
         return ((MainActivity) getActivity()).getSupportActionBar();
@@ -266,7 +263,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */
