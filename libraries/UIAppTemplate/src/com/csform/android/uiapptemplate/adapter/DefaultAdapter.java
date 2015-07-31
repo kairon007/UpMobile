@@ -2,6 +2,7 @@ package com.csform.android.uiapptemplate.adapter;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -111,7 +112,7 @@ public class DefaultAdapter extends BaseAdapter implements Swappable, UndoAdapte
 
 	@Override
 	public void onDismiss(@NonNull final ViewGroup listView,
-			@NonNull final int[] reverseSortedPositions, ArrayList<Object> removed) {
+			@NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
 		for (int position : reverseSortedPositions) {
 			remove(position);
 		}
