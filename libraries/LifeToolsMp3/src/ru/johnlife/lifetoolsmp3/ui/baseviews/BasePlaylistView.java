@@ -307,9 +307,9 @@ public abstract class BasePlaylistView extends View {
 						return;
 					}
 				}
+				collapseSearchView();
 				createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), dialoglayout);
-				collapseSearchView();
 				dialog.cancel();
 			}
 		});

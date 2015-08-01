@@ -76,9 +76,9 @@ public class PlaylistView extends BasePlaylistView {
 						return;
 					}
 				}
+				collapseSearchView();
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
-				collapseSearchView();
 				dialog.cancel();
 			}
 
