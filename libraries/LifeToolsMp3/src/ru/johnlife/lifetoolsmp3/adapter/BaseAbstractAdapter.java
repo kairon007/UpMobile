@@ -229,8 +229,8 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		@SuppressWarnings("unchecked")
 		@Override
 		protected void publishResults(CharSequence constraint, final FilterResults results) {
+			if (null == results.values) return;
 			items = (ArrayList<T>) results.values;
-			if (null == items) return;
 			if (results.count == 0) {
             	notifyDataSetInvalidated();
             } else {
