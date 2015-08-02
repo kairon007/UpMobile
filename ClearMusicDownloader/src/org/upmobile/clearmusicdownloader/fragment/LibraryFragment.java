@@ -44,6 +44,7 @@ public class LibraryFragment extends Fragment {
 	}
 	
 	public void clearFilter() {
+		libraryView.getMessageView(getView()).setText(R.string.library_empty);
 		libraryView.clearFilter();
 	}
 	

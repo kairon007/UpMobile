@@ -67,6 +67,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	}
 	
 	public void clearFilter() {
+		libraryView.getMessageView(getView()).setText(R.string.library_empty);
 		libraryView.clearFilter();
 	}
 

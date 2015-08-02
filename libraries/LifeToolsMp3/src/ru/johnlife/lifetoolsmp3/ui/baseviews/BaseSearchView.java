@@ -334,14 +334,14 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		adapter.clear();
 		listView.setEmptyView(message);
 		listView.setOnScrollListener(new OnScrollListener() {
-			
+
 			int lastScroll = getScrollListView();
 			int maxScroll = spEnginesChoiserScroll.getLayoutParams().height;
-			
+
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
 			}
-			
+
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 				if (firstVisibleItem + visibleItemCount == totalItemCount - 1 && adapter.getCount() > 0) {
@@ -364,7 +364,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 					}
 				}
 			}
-			
+
 		});
 		searchField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			
@@ -397,11 +397,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.clear) {
-			Util.hideKeyboard(getContext(), view);
 			searchField.setText(null);
 			setMessage(getResources().getString(R.string.search_your_results_appear_here));
 			getNextResults(true);
 			adapter.clear();
+			lastSearchString = "";
 			keeper.activateOptions(StateKeeper.SEARCH_STOP_OPTION);
 			keeper.deactivateOptions(StateKeeper.SEARCH_EXE_OPTION);
 			hideBaseProgress();
@@ -639,9 +639,9 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	}
 	
 	public void trySearch() {
-		Util.hideKeyboard(getContext(), view);
 		String searchString = searchField.getText().toString();
 		if (searchString.equals(lastSearchString) && message.getVisibility() != View.VISIBLE) return;
+		Util.hideKeyboard(getContext(), view);
 		lastSearchString = searchString;
 		if (isOffline(getContext())) {
 			message.setText(R.string.search_message_no_internet);
@@ -979,7 +979,7 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		lastSearchString = str;
 		searchField.setText(str);
 	}
-	
+
 	public int getClickPosition() {
 		return clickPosition;
 	}
