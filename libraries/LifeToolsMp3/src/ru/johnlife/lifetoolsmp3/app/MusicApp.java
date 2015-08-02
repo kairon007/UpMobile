@@ -5,7 +5,6 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Build.VERSION_CODES;
 import android.preference.PreferenceManager;
@@ -15,6 +14,8 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class MusicApp extends Application {
 	
@@ -39,11 +40,12 @@ public class MusicApp extends Application {
 		super.onCreate();
 		ImageLoaderConfiguration.Builder b = new ImageLoaderConfiguration.Builder(getApplicationContext());
 		if (Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {
-			b.taskExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-			 .taskExecutorForCachedImages(AsyncTask.THREAD_POOL_EXECUTOR);
+			b.taskExecutor(Util.THREAD_POOL_EXECUTOR)
+			 .taskExecutorForCachedImages(Util.THREAD_POOL_EXECUTOR);
+		} else {
+	    	b.threadPoolSize(7);
 		}
-	    b.threadPoolSize(7)
-	        .defaultDisplayImageOptions(defaultImageOptions)
+		b.defaultDisplayImageOptions(defaultImageOptions)
 	        .memoryCache(new LruMemoryCache(20 * 1024 * 1024))
 	        .discCacheFileCount(500);
 	    ImageLoader.getInstance().init(b.build());

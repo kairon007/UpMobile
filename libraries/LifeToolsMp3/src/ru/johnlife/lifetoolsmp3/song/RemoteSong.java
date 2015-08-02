@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.song;
 
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -14,6 +13,7 @@ import java.util.List;
 import ru.johnlife.lifetoolsmp3.engines.cover.CoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.LastFmCoverLoaderTask;
 import ru.johnlife.lifetoolsmp3.engines.cover.MuzicBrainzCoverLoaderTask;
+import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class RemoteSong extends Song implements CoverLoaderTask.OnCoverTaskListener {
 
@@ -155,7 +155,7 @@ public class RemoteSong extends Song implements CoverLoaderTask.OnCoverTaskListe
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            coverLoaderTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            coverLoaderTask.executeOnExecutor(Util.THREAD_POOL_EXECUTOR);
         } else {
             coverLoaderTask.execute();
         }
