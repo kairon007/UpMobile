@@ -502,7 +502,7 @@ public class UndoBarController extends LinearLayout {
         mShowing = true;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && currentMessage.translucent != 0) {
             if (currentMessage.translucent == 1 || mNavBarAvailable) {
-                setPadding(0, 0, 0, getNavigationBarHeight(getContext()));
+                setPadding(0, 0, 0, getNavigationBarHeight(getContext()) + getPaddingBottom());
             }
         }
     }
@@ -675,6 +675,10 @@ public class UndoBarController extends LinearLayout {
          * @return
          */
         public UndoBarController show(boolean anim) {
+            return show(anim, 0, 0, 0, 0);
+        }
+
+        public UndoBarController show(boolean anim, int paddingLeft, int paddingTop, int paddingRight, int paddingBottom) {
             if (listener == null && style == null) {
                 style = MESSAGESTYLE;
             }
@@ -687,6 +691,7 @@ public class UndoBarController extends LinearLayout {
             }
             immediate = !anim;
             UndoBarController bar = UndoBarController.getBar(activity, this);
+            bar.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom);
             Message msg = new Message(style, message, duration, undoToken, translucent, colorDrawable, noIcon, immediate);
             if (bar.mShowing)
                 bar.addMessage(msg);

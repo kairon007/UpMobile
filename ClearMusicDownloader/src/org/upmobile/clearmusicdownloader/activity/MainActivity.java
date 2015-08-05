@@ -214,7 +214,11 @@ public class MainActivity extends BaseClearActivity implements Constants {
 					});
 				}
 			});
-			undo.show();
+			if (getMiniPlayer().getVisibility() == View.VISIBLE) {
+				undo.show(true, 0, 0, 0, getMiniPlayer().getHeight());
+			} else {
+				undo.show();
+			}
 		} else {
 			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
 			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, id);

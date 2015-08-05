@@ -350,7 +350,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		undoBar.clear();
 		undoBar.message(message);
 		undoBar.style(UndoBarController.MESSAGESTYLE);
-		undoBar.show(false);
+		showUndoBar(undoBar, false);
+	}
+
+	private void showUndoBar(UndoBar undoBar, boolean anim) {
+		if (getMiniPlayer().getVisibility() == View.VISIBLE) {
+			undoBar.show(anim, 0, 0, 0, getMiniPlayer().getHeight());
+		} else {
+			undoBar.show(anim);
+		}
 	}
 
 	public void showMessage(int message) {
@@ -528,7 +536,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 					});
 				}
 			});
-			undo.show();
+			showUndoBar(undo, true);
 		} else {
 			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, 0, true);
 			downloadListener.setDownloadPath(getDirectory());

@@ -378,7 +378,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		DisplayMetrics metrics = getResources().getDisplayMetrics();
 		int width = Util.pxToDp(this, metrics.widthPixels);
 		if (ManagerFragmentId.playlistFragment() != currentFragmentId || width > 520) {// for folder values-w520dp
-			message.show(false);
+			showUndoBar(message, false);
 			return;
 		}
 		View floatBtn = findViewById(R.id.floatingButton);
@@ -400,7 +400,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				public void onClear(@NonNull Parcelable[] token) {
 				}
 			});
-			message.show(false);
+			showUndoBar(message, false);
 			int height = message.getHeightBar();
 			if (height < 48) {
 				height = 48;
@@ -410,7 +410,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			floatBtnContainer.setPadding(0, 0, 0, Util.dpToPx(this, height));
 			return;
 		}
-		message.show(false);
+		showUndoBar(message, false);
+	}
+
+	private void showUndoBar(UndoBar undoBar, boolean anim) {
+		if (getMiniPlayer().getVisibility() == View.VISIBLE) {
+			undoBar.show(anim, 0, 0, 0, getMiniPlayer().getHeight());
+		} else {
+			undoBar.show(anim);
+		}
 	}
 
 	public void showMessage(int message) {
@@ -556,7 +564,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					});
 				}
 			});
-			undo.show();
+			if (getMiniPlayer().getVisibility() == View.VISIBLE) {
+				undo.show(true, 0, 0, 0, getMiniPlayer().getHeight());
+			} else {
+				undo.show();
+			}
 		} else {
 			BaseDownloadListener downloadListener = new BaseDownloadListener(this, song, 0, true);
 			downloadListener.setDownloadPath(getDirectory());

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Parcelable;
+import android.view.View;
 
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
@@ -68,18 +69,25 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 							ArrayList<AbstractSong> list = new ArrayList<AbstractSong>();
 							list.add(song);
 							service.setArrayPlayback(list);
+						} else {
+							service.addArrayPlayback(song);
 						}
-						 else {
-								service.addArrayPlayback(song);
-							}
-							boolean inPlayerFragment = ((MainActivity) context).isPlayerFragment();
-							((BaseMiniPlayerActivity) context).startSong(song, !inPlayerFragment);
+						boolean inPlayerFragment = ((MainActivity) context).isPlayerFragment();
+						((BaseMiniPlayerActivity) context).startSong(song, !inPlayerFragment);
 					}
 				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
-				undoBar.show(false);
+				showUndoBar(undoBar, true);
 			}
 		});
+	}
+
+	private void showUndoBar(UndoBar undoBar, boolean anim) {
+		if (((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getVisibility() == View.VISIBLE) {
+			undoBar.show(anim, 0, 0, 0, ((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getHeight());
+		} else {
+			undoBar.show(anim);
+		}
 	}
 	
 	@Override
@@ -104,18 +112,19 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 			public void onUndo(Parcelable token) {
 				DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
 				manager.remove(currentDownloadId);
-				String str =  context.getResources().getString(R.string.download_started);
+				String str = context.getResources().getString(R.string.download_started);
 				if (message.startsWith(str)) {
 					((MainActivity) context).setupDownloadBtn();
 				}
-				if(!isEarlierDownloaded) StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
+				if (!isEarlierDownloaded)
+					StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
 			}
 		});
-		undoBar.show(false);
+		showUndoBar(undoBar, true);
 	}
 
 	@Override

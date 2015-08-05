@@ -571,6 +571,10 @@ public abstract class BaseMiniPlayerActivity extends AppCompatActivity implement
 			service.updatePictureNotification(bmp);
 		}
 	}
+
+	public View getMiniPlayer() {
+		return miniPlayer;
+	}
 	
 	public boolean isMiniPlayerPrepared() {
 		return isMiniPlayerPrepared;

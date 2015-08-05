@@ -5,6 +5,7 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
@@ -75,12 +76,20 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 						boolean inPlayerFragment = ManagerFragmentId.playerFragment() == ((MainActivity) context).getCurrentFragmentId();
 						((BaseMiniPlayerActivity) context).startSong(song, !inPlayerFragment);
 					}
-					
-	 			});
+
+				});
 				undoBar.style(new UndoBarStyle(R.drawable.ic_play, R.string.play));
-				undoBar.show(false);
+				showUndoBar(undoBar, false);
 			}
 		});
+	}
+
+	private void showUndoBar(UndoBar undoBar, boolean anim) {
+		if (((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getVisibility() == View.VISIBLE) {
+			undoBar.show(anim, 0, 0, 0, ((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getHeight());
+		} else {
+			undoBar.show(anim);
+		}
 	}
 	
 	@Override
@@ -110,14 +119,19 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 					((MainActivity) context).setupDownloadBtn();
 				}
 				Log.d("logd", "onUndo: " + isEarlierDownloaded);
-				if (!isEarlierDownloaded) StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
+				if (!isEarlierDownloaded)
+					StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
 				if (null != cancelDownload) {
 					cancelDownload.onCancel();
 				}
 			}
 		});
-		undoBar.show();
+		if (((BaseMiniPlayerActivity)context).getMiniPlayer().getVisibility() == View.VISIBLE) {
+			undoBar.show(true, 0, 0, 0, ((BaseMiniPlayerActivity)context).getMiniPlayer().getHeight());
+		} else {
+			undoBar.show();
+		}
 	}
 
 	@Override

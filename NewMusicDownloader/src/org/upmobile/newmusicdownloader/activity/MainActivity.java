@@ -364,6 +364,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 					v.setVisibility(View.GONE);
 				}
 			}, 3000);
+			if (getMiniPlayer().getVisibility() == View.VISIBLE) {
+				layoutParams.y = getMiniPlayer().getHeight();
+			}
 			manager.addView(v,layoutParams);
 		} else {
 			int id = song.getArtist().hashCode() * song.getTitle().hashCode() * (int) System.currentTimeMillis();
