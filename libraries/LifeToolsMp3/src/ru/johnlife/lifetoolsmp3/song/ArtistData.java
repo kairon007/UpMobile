@@ -171,7 +171,7 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
         selection.append(MediaStore.Audio.AudioColumns.IS_MUSIC + "=1");
         selection.append(" AND " + MediaStore.Audio.AudioColumns.TITLE + " != ''");
         selection.append(" AND " + MediaStore.Audio.AudioColumns.ARTIST_ID + "=" + id);
-        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null, MediaStore.Audio.AudioColumns.TITLE);
     }
 
     public ArrayList<MusicData> getSongsByArtist(Context context) {

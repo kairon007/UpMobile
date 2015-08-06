@@ -25,8 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
@@ -295,18 +293,12 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                 result.add(data);
             }
             cursor.close();
-            Collections.sort(result, new Comparator<ArtistData>() {
-                @Override
-                public int compare(ArtistData lhs, ArtistData rhs) {
-                    return lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
-                }
-            });
             ArrayList<AbstractSong> abstractSongArrayList = new ArrayList<AbstractSong>(result);
             for (AbstractSong data : result) {
                 ((ArtistData) data).getSongsByArtist(getContext());
                 if (expanded.contains(data.getTitle().trim())) {
                     ((ArtistData) data).setExpanded(true);
-                    abstractSongArrayList.addAll(result.indexOf(data) + 1, ((ArtistData) data).getArtistSongs());
+                    abstractSongArrayList.addAll(abstractSongArrayList.indexOf(data) + 1, ((ArtistData) data).getArtistSongs());
                 }
             }
             return abstractSongArrayList;
@@ -323,7 +315,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                     /* 0 */ BaseColumns._ID,
                     /* 1 */ MediaStore.Audio.ArtistColumns.ARTIST,
                     /* 2 */ MediaStore.Audio.ArtistColumns.NUMBER_OF_TRACKS
-                    }, null, null, MediaStore.Audio.Artists.DEFAULT_SORT_ORDER);
+                    }, null, null, MediaStore.Audio.Artists.ARTIST);
 
         }
         return cursor;

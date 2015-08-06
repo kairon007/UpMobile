@@ -345,7 +345,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             }
 //            String selection = MediaStore.MediaColumns.DATA + " LIKE '" + "" + "%" + "" + "%'";
             String selection = "(" + MediaStore.Audio.Media.IS_MUSIC + " != 0)";
-            cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
+            cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, MediaStore.Audio.Media.TITLE);
         }
         return cursor;
     }
