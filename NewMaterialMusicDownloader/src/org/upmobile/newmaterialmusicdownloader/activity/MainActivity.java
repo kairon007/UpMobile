@@ -676,8 +676,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 				library.forceDelete();
 			}
 			if (ManagerFragmentId.artistFragment() == getCurrentFragmentId()) {
-				LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-				library.forceDelete();
+				ArtistFragment fragment = (ArtistFragment) getFragmentManager().findFragmentByTag(ArtistFragment.class.getSimpleName());
+				fragment.forceDelete();
 			}
 		}
 	}
