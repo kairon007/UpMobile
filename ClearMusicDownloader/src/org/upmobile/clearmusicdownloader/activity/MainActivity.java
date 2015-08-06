@@ -28,6 +28,7 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.Nulldroid_Settings;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
+import org.upmobile.clearmusicdownloader.fragment.ArtistFragment;
 import org.upmobile.clearmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.clearmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.clearmusicdownloader.fragment.PlayerFragment;
@@ -239,7 +240,8 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		fragments[SEARCH_FRAGMENT] = new SearchFragment();
 		fragments[DOWNLOADS_FRAGMENT] = new DownloadsFragment();
 		fragments[PLAYLIST_FRAGMENT] = new PlaylistFragment();
-		fragments[LIBRARY_FRAGMENT] = new LibraryFragment();
+		fragments[SONGS_FRAGMENT] = new LibraryFragment();
+		fragments[ARTIST_FRAGMENT] = new ArtistFragment();
 		fragments[PLAYER_FRAGMENT] = new PlayerFragment();
 		fragments[SETTINGS_FRAGMENT] = new Fragment();
 		return fragments;
@@ -251,8 +253,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		items[SEARCH_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_search, R.string.tab_search, ResideMenuItem.Types.TYPE_MENU);
 		items[DOWNLOADS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_downloads, R.string.tab_downloads, ResideMenuItem.Types.TYPE_MENU);
 		items[PLAYLIST_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_playlist, R.string.tab_playlist, ResideMenuItem.Types.TYPE_MENU);
-		items[LIBRARY_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_library, ResideMenuItem.Types.TYPE_MENU);
-		items[PLAYER_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_plaing, ResideMenuItem.Types.TYPE_MENU);
+		items[SONGS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_library, R.string.tab_songs, ResideMenuItem.Types.TYPE_MENU);
+		items[ARTIST_FRAGMENT] = new ResideMenuItem(this, R.drawable.navigation_artist, R.string.tab_artists, ResideMenuItem.Types.TYPE_MENU);
+		items[PLAYER_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_player, R.string.tab_now_playing, ResideMenuItem.Types.TYPE_MENU);
 		items[SETTINGS_FRAGMENT] = new ResideMenuItem(this, R.drawable.ic_settings, R.string.tab_download_location, ClearMusicDownloaderApp.getDirectory(), ResideMenuItem.Types.TYPE_SETTINGS);
 		return items;
 	}

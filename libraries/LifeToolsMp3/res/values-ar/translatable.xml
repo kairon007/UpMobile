@@ -14,9 +14,8 @@
     <string name="rate_thanks">شكرا لك!</string>
     <string name="tab_search">البحث</string>
     <string name="tab_downloads">التحميلات</string>
-    <string name="tab_library">المكتبة</string>
     <string name="tab_playlist">قائمة التشغيل</string>
-    <string name="tab_now_plaing">اللعب الآن</string>
+    <string name="tab_now_playing">اللعب الآن</string>
     <string name="tab_settings">الإعدادات</string>
     <string name="tab_download_location">موقع التحميل</string>
     <string name="message_please_wait">يرجى الانتظار…</string>

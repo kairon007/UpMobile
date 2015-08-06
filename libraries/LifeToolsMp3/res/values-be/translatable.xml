@@ -14,9 +14,8 @@
     <string name="rate_thanks">Дзякуй!</string>
     <string name="tab_search">Пошук</string>
     <string name="tab_downloads">Загрузкі</string>
-    <string name="tab_library">Бібліятэка</string>
     <string name="tab_playlist">Плэйліст</string>
-    <string name="tab_now_plaing">Зараз грае</string>
+    <string name="tab_now_playing">Зараз грае</string>
     <string name="tab_settings">Налады</string>
     <string name="tab_download_location">Месцазнаходжанне загрузкі</string>
     <string name="message_please_wait">Чакайце...</string>

@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import org.upmobile.newmusicdownloader.activity.MainActivity;
 import org.upmobile.newmusicdownloader.adapter.PlaylistAdapter;
-import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.adapter.BasePlaylistsAdapter;
@@ -21,11 +20,6 @@ public class PlaylistView extends BasePlaylistView {
 
     public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
-	}
-
-	@Override
-	protected String getDirectory() {
-		return NewMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override

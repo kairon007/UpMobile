@@ -346,7 +346,7 @@ public class PlayerFragment  extends Fragment implements OnClickListener, OnSeek
 		activity.setSelectedItem(Constants.PLAYER_FRAGMENT);
 		activity.invalidateOptionsMenu();
 		activity.setDrawerEnabled(activity.isButtonBackEnabled());
-		activity.setTitle(R.string.tab_now_plaing);
+		activity.setTitle(R.string.tab_now_playing);
 		if (song.getClass() == MusicData.class) {
 			btnDownload.setVisibility(View.GONE);
 		} else {

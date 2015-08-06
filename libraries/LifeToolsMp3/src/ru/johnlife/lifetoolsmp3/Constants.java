@@ -4,16 +4,17 @@ public interface Constants {
 	
 	int NOTIFICATION_ID = 2101;
 
-	int COUNT_FRAGMENT = 6;
+	int COUNT_FRAGMENT = 7;
 	int SEARCH_FRAGMENT = 0;
 	int DOWNLOADS_FRAGMENT = 1;
 	int PLAYLIST_FRAGMENT = 2;
-	int LIBRARY_FRAGMENT = 3;
-	int PLAYER_FRAGMENT = 4;
-	int SETTINGS_FRAGMENT = 5;
+	int SONGS_FRAGMENT = 3;
+	int ARTIST_FRAGMENT = 4;
+	int PLAYER_FRAGMENT = 5;
+	int SETTINGS_FRAGMENT = 6;
 	
-	int FULL_DRAVER_SIZE = 7;
-	int LESS_DRAVER_SIZE = 6;
+	int FULL_DRAVER_SIZE = 8;
+	int LESS_DRAVER_SIZE = 7;
 
 	String MAIN_ACTION = "playbackservice.action.main";
 	String PLAY_ACTION = "playbackservice.action.play";

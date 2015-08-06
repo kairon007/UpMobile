@@ -20,7 +20,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.PlaylistAdapter;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +54,7 @@ public class PlaylistView extends BasePlaylistView{
 				EditText input = (EditText) dialog.findViewById(android.R.id.edit);
 				String newTitle =  input.getText().toString().trim();
 				for (AbstractSong data : getAllItems()) {
-					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
+					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().equals(newTitle)) {
 						showMessage(getContext(), R.string.playlist_already_exists);
 						return;
 					}
@@ -87,11 +86,6 @@ public class PlaylistView extends BasePlaylistView{
 	}
 
 	@Override
-	protected String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectoryPrefix();
-	}
-
-	@Override
 	protected int getLayoutId() {
 		return R.layout.playlist_view;
 	}
@@ -119,7 +113,7 @@ public class PlaylistView extends BasePlaylistView{
 		final ArrayList<String> playlistNames = new ArrayList<>();
 		for (AbstractSong abstractSong : getAllItems()) {
 			if(abstractSong.getClass() == PlaylistData.class) {
-				playlistNames.add(((PlaylistData) abstractSong).getName().replace(getDirectory(), ""));
+				playlistNames.add(((PlaylistData) abstractSong).getName());
 			}
 		}
 		builder = new MaterialDialog.Builder(getContext());

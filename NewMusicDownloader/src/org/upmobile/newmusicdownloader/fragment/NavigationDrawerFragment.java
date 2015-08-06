@@ -93,16 +93,18 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		if (null == getActivity()) {
 			return;
 		}
-		String library = getActivity().getString(R.string.tab_library);
+		String songs = getActivity().getString(R.string.tab_songs);
 		String download = getActivity().getString(R.string.tab_downloads);
 		String search = getActivity().getString(R.string.tab_search);
-		String nowPlaying = getActivity().getString(R.string.tab_now_plaing);
+		String nowPlaying = getActivity().getString(R.string.tab_now_playing);
 		String playlist = getActivity().getString(R.string.playlist);
+        String arttist = getActivity().getString(R.string.tab_artists);
 		ArrayList<DrawerItem> items = new ArrayList<DrawerItem>();
 		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationSearch), search, DrawerItem.Types.TYPE_MENU));
 		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationDownloads), download, DrawerItem.Types.TYPE_MENU));
 		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationPlaylist), playlist, DrawerItem.Types.TYPE_MENU));
-		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationLibrary), library, DrawerItem.Types.TYPE_MENU));
+		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationSongs), songs, DrawerItem.Types.TYPE_MENU));
+        items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationArtists), arttist, DrawerItem.Types.TYPE_MENU));
 		if (isNowPlaying) items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationPlayer), nowPlaying, DrawerItem.Types.TYPE_MENU));
 		items.add(new DrawerItem(getActivity().getResources().getString(R.string.tab_download_location), DrawerItem.Types.TYPE_SECTION));
 		items.add(new DrawerItem(Util.getResIdFromAttribute(getActivity(), R.attr.navigationSettings), NewMusicDownloaderApp.getDirectory(), DrawerItem.Types.TYPE_SETTING));

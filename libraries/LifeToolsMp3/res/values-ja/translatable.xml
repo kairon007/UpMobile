@@ -14,9 +14,8 @@
     <string name="rate_thanks">有り難うございます！</string>
     <string name="tab_search">検索</string>
     <string name="tab_downloads">ダウンロード</string>
-    <string name="tab_library">ライブラリ</string>
     <string name="tab_playlist">プレイリスト</string>
-    <string name="tab_now_plaing">プレイ中</string>
+    <string name="tab_now_playing">プレイ中</string>
     <string name="tab_settings">設定</string>
     <string name="tab_download_location">ダウンロード場所</string>
     <string name="message_please_wait">お待ちください…</string>

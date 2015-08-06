@@ -67,6 +67,16 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		}
 		return result;
 	}
+
+	public void add(ArrayList<T> array, int position) {
+		if (null != originalItems) {
+			originalItems.addAll(position, array);
+		}
+		items.addAll(position, array);
+		if (doNotifyData) {
+			notifyDataSetChanged();
+		}
+	}
 	
 	public void add(T item) {
 		if (null != originalItems) {
@@ -132,6 +142,16 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			originalItems.remove(index);
 		}
 		items.remove(index);
+		if (doNotifyData) {
+			notifyDataSetChanged();
+		}
+	}
+
+	public void remove(ArrayList<T> array) {
+		if (null != originalItems) {
+			originalItems.remove(array);
+		}
+		items.remove(array);
 		if (doNotifyData) {
 			notifyDataSetChanged();
 		}

@@ -14,9 +14,8 @@
     <string name="rate_thanks">Vă mulțumim!</string>
     <string name="tab_search">Căutare</string>
     <string name="tab_downloads">Descărcări</string>
-    <string name="tab_library">Bibliotecă</string>
     <string name="tab_playlist">Playlist</string>
-    <string name="tab_now_plaing">Acum joc</string>
+    <string name="tab_now_playing">Acum joc</string>
     <string name="tab_settings">Setări</string>
     <string name="tab_download_location">Descărcați locație</string>
     <string name="message_please_wait">Vă rugăm să așteptați...</string>

@@ -7,21 +7,22 @@ public class ManagerFragmentId{
 	
 	private static int searchFragment = 1;
 	private static int downloadFragment = 2;
-	private static int libraryFragment = 3;
+	private static int songFragment = 3;
+	private static int artistFragment = 4;
 	private static int playerFragment = -2;
-	private static int playlistFragment = 4;
-	private static int settingFragment = 6;
+	private static int playlistFragment = 5;
+	private static int settingFragment = 7;
 	
 	public static void switchMode (boolean m) {
 		mode = m;
 		if (mode) {
-			playerFragment = 4;
-			playlistFragment = 5;
-			settingFragment = 7;
+			playerFragment = 5;
+			playlistFragment = 6;
+			settingFragment = 8;
 		} else {
 			playerFragment = -2;
-			playlistFragment = 4;
-			settingFragment = 6;
+			playlistFragment = 5;
+			settingFragment = 7;
 		}
 	}
 
@@ -33,8 +34,12 @@ public class ManagerFragmentId{
 		return downloadFragment;
 	}
 
-	public static int libraryFragment() {
-		return libraryFragment;
+	public static int songFragment() {
+		return songFragment;
+	}
+
+	public static int artistFragment() {
+		return artistFragment;
 	}
 
 	public static int playerFragment() {

@@ -33,6 +33,7 @@ import org.upmobile.materialmusicdownloader.Nulldroid_Settings;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 import org.upmobile.materialmusicdownloader.font.MusicTextView;
+import org.upmobile.materialmusicdownloader.fragment.ArtistFragment;
 import org.upmobile.materialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.materialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.materialmusicdownloader.fragment.NavigationDrawerFragment;
@@ -111,11 +112,13 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		} else if (baseMaterialFragment.getClass() == DownloadsFragment.class){
 			currentFragmentId = DOWNLOADS_FRAGMENT;
 		} else if (baseMaterialFragment.getClass() == LibraryFragment.class){
-			currentFragmentId = LIBRARY_FRAGMENT;
+			currentFragmentId = SONGS_FRAGMENT;
 		}else if (baseMaterialFragment.getClass() == PlaylistFragment.class){
 			currentFragmentId = PLAYLIST_FRAGMENT;
 		} else if (baseMaterialFragment.getClass() == PlayerFragment.class){
 			currentFragmentId = PLAYER_FRAGMENT;
+		} else if (baseMaterialFragment.getClass() == ArtistFragment.class) {
+			currentFragmentId = ARTIST_FRAGMENT;
 		} else {
 			currentFragmentId = SEARCH_FRAGMENT;
 		}
@@ -176,44 +179,47 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
-		if (position == currentPosition && (position != SETTINGS_FRAGMENT && position != 6)) {
+		if (position == currentPosition && (position != SETTINGS_FRAGMENT && position != 7)) {
 			return;
 		}
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
-		} else if (position <= LIBRARY_FRAGMENT) {
+		} else if (position <= SONGS_FRAGMENT) {
 			showMiniPlayer(null != service && service.isEnqueueToStream());
 		}
 		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : position != SETTINGS_FRAGMENT && position != 6 ? 16 : 0);
 		currentFragmentIsPlayer = false;
 		switch (position) {
-		case SEARCH_FRAGMENT:
-			changeFragment(new SearchFragment(), false);
-			break;
-		case DOWNLOADS_FRAGMENT:
-			changeFragment(new DownloadsFragment(), false);
-			break;
-		case PLAYLIST_FRAGMENT:
-			changeFragment(new PlaylistFragment(), false);
-			break;
-		case LIBRARY_FRAGMENT:
-			changeFragment(new LibraryFragment(), false);
-			break;
-		case PLAYER_FRAGMENT:
-			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
-			String lastFragmentName = backEntry.getName();
-			currentFragmentIsPlayer = true;
-			BaseMaterialFragment fragment = new PlayerFragment();
-			if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
-				changeFragment(fragment, true);
-			}
-			break;
-		case SETTINGS_FRAGMENT:
-		case 6:
-			showDialog();
-			break;
-		default:
-			break;
+			case SEARCH_FRAGMENT:
+				changeFragment(new SearchFragment(), false);
+				break;
+			case DOWNLOADS_FRAGMENT:
+				changeFragment(new DownloadsFragment(), false);
+				break;
+			case PLAYLIST_FRAGMENT:
+				changeFragment(new PlaylistFragment(), false);
+				break;
+			case ARTIST_FRAGMENT:
+				changeFragment(new ArtistFragment(), false);
+				break;
+			case SONGS_FRAGMENT:
+				changeFragment(new LibraryFragment(), false);
+				break;
+			case PLAYER_FRAGMENT:
+				android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
+				String lastFragmentName = backEntry.getName();
+				currentFragmentIsPlayer = true;
+				BaseMaterialFragment fragment = new PlayerFragment();
+				if (!lastFragmentName.equals(fragment.getClass().getSimpleName())) {
+					changeFragment(fragment, true);
+				}
+				break;
+			case SETTINGS_FRAGMENT:
+			case 7:
+				showDialog();
+				break;
+			default:
+				break;
 		}
 		currentPosition = position;
 	}
@@ -251,7 +257,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					playlist.forceDelete();
 				}
-				if (LIBRARY_FRAGMENT == currentPosition) {
+				if (SONGS_FRAGMENT == currentPosition) {
 					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 					library.forceDelete();
 				}
@@ -267,7 +273,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					playlist.forceDelete();
 				}
-				if (LIBRARY_FRAGMENT == currentPosition) {
+				if (SONGS_FRAGMENT == currentPosition) {
 					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 					library.forceDelete();
 				}
@@ -324,7 +330,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 			getFragmentManager().popBackStack();
 			setPlayerFragmentVisible(false);
 		} else {
-			if (LIBRARY_FRAGMENT == getCurrentFragmentId() && !navigationDrawerFragment.isDrawerIndicatorEnabled()) {
+			if (SONGS_FRAGMENT == getCurrentFragmentId() && !navigationDrawerFragment.isDrawerIndicatorEnabled()) {
 				showMiniPlayer(false);
 				getFragmentManager().popBackStack();
 			} else if (PLAYER_FRAGMENT == getCurrentFragmentId()) {
@@ -457,6 +463,14 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		String lastFragmentName = getPreviousFragmentName(1);
 		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
 			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+			fragment.forceDelete();
+		}
+		if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
+			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
+			fragment.forceDelete();
+		}
+		if (lastFragmentName.equals(ArtistFragment.class.getSimpleName())) {
+			ArtistFragment fragment = (ArtistFragment) getFragmentManager().findFragmentByTag(ArtistFragment.class.getSimpleName());
 			fragment.forceDelete();
 		}
 	}

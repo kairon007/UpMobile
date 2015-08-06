@@ -30,6 +30,7 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 				AudioColumns.ARTIST,
 				AudioColumns.DURATION, 
 				AudioColumns.ALBUM,
+				AudioColumns.IS_MUSIC,
 	};
 
 	public static final int MODE_VISIBLITY = 0x00000001;

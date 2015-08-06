@@ -14,7 +14,6 @@ import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
 import org.upmobile.materialmusicdownloader.adapter.LibraryAdapter;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.HashSet;
 
@@ -44,11 +43,6 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	protected ListView getListView(View view) {
 		lView = (ListView) view.findViewById(R.id.list);
 		return lView;
-	}
-
-	@Override
-	protected String getFolderPath() {
-		return MaterialMusicDownloaderApp.getDirectory();
 	}
 
 	@Override

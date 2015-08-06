@@ -190,10 +190,10 @@ public class FragmentDrawer extends Fragment implements Constants {
 		int count = adapter.getItemCount();
 		if (!flag) {
 			if (count <= COUNT_FRAGMENT) return;
-			adapter.delete(3);
+			adapter.delete(4);
 		} else {
 			if (count > COUNT_FRAGMENT) return;
-			adapter.add(3, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_plaing), NavDrawerItem.Type.Primary));
+			adapter.add(4, new NavDrawerItem(R.drawable.ic_headset_grey, getResources().getString(R.string.tab_now_playing), NavDrawerItem.Type.Primary));
 		}
 	}
 	

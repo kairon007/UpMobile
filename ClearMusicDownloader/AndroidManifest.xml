@@ -112,6 +112,15 @@
 			android:configChanges="keyboardHidden|orientation|screenSize"
 			android:theme="@android:style/Theme.Translucent">
 		</activity>
+
+        <receiver android:name="ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView$SDReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            </intent-filter>
+        </receiver>
         
     </application>
 

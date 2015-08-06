@@ -104,6 +104,7 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
 		fragments.add(new DownloadsFragment());
 		fragments.add(new PlaylistFragment());
 		fragments.add(new LibraryFragment());
+        fragments.add(new ArtistFragment());
         if (addPlayer) {
             fragments.add(new PlayerFragment());
         }

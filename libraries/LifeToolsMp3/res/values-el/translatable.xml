@@ -14,9 +14,8 @@
     <string name="rate_thanks">Ευχαριστούμε!</string>
     <string name="tab_search">Αναζήτηση</string>
     <string name="tab_downloads">Λήψεις</string>
-    <string name="tab_library">Βιβλιοθήκη</string>
     <string name="tab_playlist">Playlist</string>
-    <string name="tab_now_plaing">Παίζει τώρα</string>
+    <string name="tab_now_playing">Παίζει τώρα</string>
     <string name="tab_settings">Ρυθμίσεις</string>
     <string name="tab_download_location">Κατεβάστε τοποθεσία</string>
     <string name="message_please_wait">Παρακαλούμε περιμένετε...</string>

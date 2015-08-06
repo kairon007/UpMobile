@@ -16,7 +16,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.PlaylistAdapter;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import java.util.HashSet;
 
@@ -35,11 +34,6 @@ public class PlaylistView extends BasePlaylistView {
 
 	public PlaylistView(LayoutInflater inflater) {
 		super(inflater);
-	}
-
-	@Override
-	protected String getDirectory() {
-		return ClearMusicDownloaderApp.getDirectoryPrefix();
 	}
 
 	@Override
@@ -109,7 +103,7 @@ public class PlaylistView extends BasePlaylistView {
 	}
 
 	@Override
-	protected void forceDelete() {
+	public void forceDelete() {
 		swipeUndoAdapter.forceDelete();
 	}
 

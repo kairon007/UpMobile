@@ -7,8 +7,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -64,18 +62,8 @@ public abstract class BasePlaylistView extends View {
 			MediaStore.Audio.Playlists._ID, 
 			MediaStore.Audio.Playlists.NAME, };
 
-	public final String[] PROJECTION_MUSIC = { 
-			MediaStore.Audio.Media._ID, 
-			MediaStore.Audio.Media.DATA, 
-			MediaStore.Audio.Media.TITLE,
-			MediaStore.Audio.Media.ARTIST, 
-			MediaStore.Audio.Media.DURATION, 
-			MediaStore.Audio.Media.ALBUM, };
-	
 	protected abstract Bitmap getDefaultCover();
 	
-	protected abstract String getDirectory();
-
 	protected abstract int getLayoutId();
 	
 	protected abstract BasePlaylistsAdapter getAdapter(Context context);
@@ -94,15 +82,6 @@ public abstract class BasePlaylistView extends View {
 	
 	protected abstract void forceDelete();
 	
-	private OnSharedPreferenceChangeListener sharedPreferenceListener = new OnSharedPreferenceChangeListener() {
-		
-		@Override
-		public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-			if (key.contains(PREF_DIRECTORY_PREFIX)) {
-				updatePlaylist();
-			}
-		}
-	};
 
 	public BasePlaylistView(LayoutInflater inflater) {
 		super(inflater.getContext());
@@ -114,12 +93,10 @@ public abstract class BasePlaylistView extends View {
 		if (activity.getFragmentManager().getBackStackEntryAt(activity.getFragmentManager().getBackStackEntryCount() - 1).getName().toLowerCase().contains(PLYLIST_TAG.toLowerCase())) {
 			setOpened();
 		}
-		MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sharedPreferenceListener);
 	}
 	
 	public void onPause () {
 		MusicApp.getSharedPreferences().edit().putStringSet(PREF_LAST_OPENED, getOpenedPlaylists()).apply();
-		MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sharedPreferenceListener);
 	}
 	
 	private void setOpened() {
@@ -277,7 +254,7 @@ public abstract class BasePlaylistView extends View {
 		final ArrayList<String> playlistNames = new ArrayList<>();
 		for (AbstractSong abstractSong : getAllItems()) {
 			if(abstractSong.getClass() == PlaylistData.class) {
-				playlistNames.add(((PlaylistData) abstractSong).getName().replace(getDirectory(), ""));
+				playlistNames.add(((PlaylistData) abstractSong).getName());
 			}
 		}
 		final View dialoglayout = LayoutInflater.from(getContext()).inflate(R.layout.playlist_create_new_dialog, null);
@@ -302,7 +279,7 @@ public abstract class BasePlaylistView extends View {
 					return;
 				}
 				for (AbstractSong data : getAllItems()) {
-					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().replace(getDirectory(), "").equals(newTitle)) {
+					if (data.getClass() == PlaylistData.class && ((PlaylistData) data).getName().equals(newTitle)) {
 						showMessage(getContext(), R.string.playlist_already_exists);
 						return;
 					}
@@ -374,7 +351,6 @@ public abstract class BasePlaylistView extends View {
 	}
 	
 	public void createPlaylist(ContentResolver resolver, String pName) {
-		pName = getDirectory() + pName;
 		try {
 			Uri uri = MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI;
 			ContentValues values = new ContentValues();
@@ -433,18 +409,15 @@ public abstract class BasePlaylistView extends View {
 			Cursor playlistCursor = myQuery(getContext(), MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, PROJECTION_PLAYLIST, null, null, MediaStore.Audio.Playlists.NAME);
 			PlaylistData playlistData = new PlaylistData();
 			if (null == playlistCursor || playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
+				playlistCursor.close();
 				return playlistDatas;
 			}
-			if (playlistCursor.getString(1).contains(getDirectory())) {
-				playlistData.populate(playlistCursor);
-				playlistDatas.add(playlistData);
-			}
+			playlistData.populate(playlistCursor);
+			playlistDatas.add(playlistData);
 			while (playlistCursor.moveToNext()) {
-				if (playlistCursor.getString(1).contains(getDirectory())) {
-					PlaylistData playlist = new PlaylistData();
-					playlist.populate(playlistCursor);
-					playlistDatas.add(playlist);
-				}
+				PlaylistData playlist = new PlaylistData();
+				playlist.populate(playlistCursor);
+				playlistDatas.add(playlist);
 			}
 			playlistCursor.close();
 		} catch (Exception e) {

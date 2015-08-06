@@ -14,7 +14,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 import org.upmobile.newmaterialmusicdownloader.Constants;
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import java.util.ArrayList;
 
@@ -90,12 +89,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return false;
 	}
 
-	@Override
-	protected String getDirectory() {
-		return NewMaterialApp.getDirectoryPrefix();
-	}
-	
-	
 	@Override
 	public void showMessage(Context context, int message) {
 		showMessage(context, context.getResources().getString(message));

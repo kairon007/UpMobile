@@ -14,9 +14,8 @@
     <string name="rate_thanks">Teşekkür ederiz!</string>
     <string name="tab_search">Ara</string>
     <string name="tab_downloads">İndirmeler</string>
-    <string name="tab_library">Kitaplık</string>
     <string name="tab_playlist">Playlist</string>
-    <string name="tab_now_plaing">Şimdi çalan</string>
+    <string name="tab_now_playing">Şimdi çalan</string>
     <string name="tab_settings">Ayarlar</string>
     <string name="tab_download_location">Indir konumu</string>
     <string name="message_please_wait">Lütfen Bekleyin...</string>

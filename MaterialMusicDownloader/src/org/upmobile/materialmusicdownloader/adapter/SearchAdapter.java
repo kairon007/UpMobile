@@ -1,6 +1,7 @@
 package org.upmobile.materialmusicdownloader.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,8 @@ import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public class SearchAdapter extends BaseSearchAdapter {
+
+	private Bitmap defaultCover;
 
 	public SearchAdapter(Context context, int resource) {
 		super(context, resource);
@@ -72,8 +75,8 @@ public class SearchAdapter extends BaseSearchAdapter {
 			setDownloadLable(lableStatus);
 			showPlayingIndicator(hasPlayingSong);
 			String coverString =  context.getResources().getString(R.string.font_musics);
-			cover.setImageBitmap(((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64),
-					Util.dpToPx(getContext(),62), Util.dpToPx(getContext(),60), coverString));
+			if (null == defaultCover) defaultCover = ((MainActivity) getContext()).getDefaultBitmapCover(Util.dpToPx(getContext(), 64), Util.dpToPx(getContext(), 62), Util.dpToPx(getContext(), 60), coverString);
+			cover.setImageBitmap(defaultCover);
 			super.hold(item, position);
 		}
 		

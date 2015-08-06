@@ -30,9 +30,9 @@ public class LibraryFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		MainActivity activity = (MainActivity) getActivity();
-		activity.setSelectedItem(Constants.LIBRARY_FRAGMENT);
+		activity.setSelectedItem(Constants.SONGS_FRAGMENT);
 		activity.setCurrentTag(getClass().getSimpleName());
-		activity.setTitle(R.string.tab_library);
+		activity.setTitle(R.string.tab_songs);
 		abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
 		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());
 		activity.setDrawerEnabled(null == abstractSong ? true : false);

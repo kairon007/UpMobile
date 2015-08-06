@@ -14,9 +14,8 @@
     <string name="rate_thanks">धन्यवाद!</string>
     <string name="tab_search">खोज</string>
     <string name="tab_downloads">डाउनलोड</string>
-    <string name="tab_library">लाइब्रेरी</string>
     <string name="tab_playlist">प्लेलिस्ट</string>
-    <string name="tab_now_plaing">अब खेल रहे हैं</string>
+    <string name="tab_now_playing">अब खेल रहे हैं</string>
     <string name="tab_settings">सेटिंग्स</string>
     <string name="tab_download_location">डाउनलोड स्थान</string>
     <string name="message_please_wait">कृपया प्रतीक्षा करें...</string>

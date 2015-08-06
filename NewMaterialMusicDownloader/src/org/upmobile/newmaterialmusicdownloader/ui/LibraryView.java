@@ -13,7 +13,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 
 import org.upmobile.newmaterialmusicdownloader.R;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
-import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 
 import java.util.HashSet;
 
@@ -56,11 +55,6 @@ public class LibraryView extends BaseLibraryView {
 		return message;
 	}
 
-	@Override
-	protected String getFolderPath() {
-		return NewMaterialApp.getDirectory();
-	}
-	
 	@Override
 	protected void animateListView(ListView listView, final BaseAbstractAdapter<MusicData> adapter) {
         try {

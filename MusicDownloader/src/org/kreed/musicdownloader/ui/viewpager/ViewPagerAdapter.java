@@ -22,9 +22,21 @@ package org.kreed.musicdownloader.ui.viewpager;
  * THE SOFTWARE.
  */
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.content.ContentResolver;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.preference.PreferenceManager;
+import android.provider.MediaStore;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 
 import org.kreed.musicdownloader.PrefKeys;
 import org.kreed.musicdownloader.R;
@@ -34,25 +46,11 @@ import org.kreed.musicdownloader.ui.tabs.DownloadsTab;
 import org.kreed.musicdownloader.ui.tabs.LibraryTab;
 import org.kreed.musicdownloader.ui.tabs.SearchViewTab;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import ru.johnlife.lifetoolsmp3.BaseConstants;
-import android.content.ContentResolver;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
-import android.provider.MediaStore;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
 /**
  * PagerAdapter that manages the library media ListViews.
@@ -69,7 +67,7 @@ public class ViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageCh
 	 * The human-readable title for each list. The positions correspond to the
 	 * MediaUtils ids, so e.g. TITLES[MediaUtils.TYPE_SONG] = R.string.songs
 	 */
-	public static final int[] TITLES = { R.string.tab_search, R.string.tab_downloads, R.string.tab_library };
+	public static final int[] TITLES = { R.string.tab_search, R.string.tab_downloads, R.string.tab_songs};
 	/**
 	 * Default tab order.
 	 */
@@ -118,8 +116,6 @@ public class ViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageCh
 	 * @param activity
 	 *            The MainActivity that will own this adapter. The activity will
 	 *            receive callbacks from the ListViews.
-	 * @param workerLooper
-	 *            A Looper running on a worker thread.
 	 */
 	public ViewPagerAdapter(MainActivity activity) {
 		mActivity = activity;

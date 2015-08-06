@@ -13,7 +13,6 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAd
 import org.upmobile.materialmusicdownloader.Constants;
 import org.upmobile.materialmusicdownloader.R;
 import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.app.MaterialMusicDownloaderApp;
 
 import java.util.ArrayList;
 
@@ -96,11 +95,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return false;
 	}
 
-	@Override
-	protected String getDirectory() {
-		return MaterialMusicDownloaderApp.getDirectoryPrefix();
-	}
-	
 	@Override
 	protected void showPlaylistsDialog(final ArrayList<PlaylistData> playlistDatas, final View v, String[] data) {
 		ArrayList<Integer> selectedPositions = new ArrayList<>();

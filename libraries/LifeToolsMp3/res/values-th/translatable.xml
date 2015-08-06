@@ -14,9 +14,7 @@
     <string name="rate_thanks">ขอบคุณ!</string>
     <string name="tab_search">ค้นหา</string>
     <string name="tab_downloads">ดาวน์โหลด</string>
-    <string name="tab_library">ไลบรารี</string>
-    <string name="tab_playlist">เพลย์ลิส</string>
-    <string name="tab_now_plaing">ตอนนี้เล่น</string>
+    <string name="tab_now_playing">ตอนนี้เล่น</string>
     <string name="tab_settings">การตั้งค่า</string>
     <string name="tab_download_location">ดาวน์โหลดสถานที่ตั้ง</string>
     <string name="message_please_wait">โปรดรอ...</string>

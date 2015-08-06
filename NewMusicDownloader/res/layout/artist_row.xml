@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp">
+
+
+    <LinearLayout
+        android:id="@+id/artisRowView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="center_vertical">
+
+            <RelativeLayout
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_gravity="left|center_vertical"
+                android:layout_marginLeft="8dp">
+
+                <TextView
+                    android:id="@+id/numberOfSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_gravity="center_horizontal|top"
+                    android:gravity="center"
+                    android:text="48"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <TextView
+                    android:id="@+id/textSongs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/numberOfSongs"
+                    android:layout_centerHorizontal="true"
+                    android:text="Songs"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+            </RelativeLayout>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/artistRowName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="2"
+            android:paddingLeft="8dp"
+            android:text="Linkin Park"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/musicRowView"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@drawable/selectable_item_bg"
+        android:descendantFocusability="blocksDescendants"
+        android:dividerPadding="4dp"
+        android:orientation="horizontal"
+        android:padding="4dp"
+        android:showDividers="middle"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center_vertical" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="8dp">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/titleLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="bottom"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size_title" />
+
+                <TextView
+                    android:id="@+id/artistLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/titleLine"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-thin"
+                    android:gravity="top"
+                    android:maxLines="1"
+                    android:textSize="@dimen/font_size_normal" />
+            </RelativeLayout>
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/chunkTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/font_size_title"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+            <!--<ImageView-->
+            <!--android:id="@+id/threeDot"-->
+            <!--android:layout_width="48dp"-->
+            <!--android:layout_height="48dp"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:background="@drawable/selectable_item_bg"-->
+            <!--android:focusable="false"-->
+            <!--android:focusableInTouchMode="false"-->
+            <!--android:scaleType="centerInside"-->
+            <!--android:src="@drawable/threedot"-->
+            <!--android:visibility="visible" />-->
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

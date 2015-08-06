@@ -1072,7 +1072,7 @@ public class PlayerFragment extends Fragment implements OnClickListener, BaseMat
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.tab_now_plaing;
+		return R.string.tab_now_playing;
 	}
 
 	@Override

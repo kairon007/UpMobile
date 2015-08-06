@@ -1,27 +1,25 @@
 package org.upmobile.clearmusicdownloader.adapters;
 
-import java.util.ArrayList;
-
-import org.upmobile.clearmusicdownloader.Constants;
-import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
-
-import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
-import ru.johnlife.lifetoolsmp3.song.AbstractSong;
-import ru.johnlife.lifetoolsmp3.song.MusicData;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.undo.UndoAdapter;
+
+import org.upmobile.clearmusicdownloader.Constants;
+import org.upmobile.clearmusicdownloader.R;
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
+
+import java.util.ArrayList;
+
+import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
+import ru.johnlife.lifetoolsmp3.song.MusicData;
 
 public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, Constants {
 	
@@ -78,11 +76,6 @@ public class LibraryAdapter extends BaseLibraryAdapter implements UndoAdapter, C
 		return false;
 	}
 
-	@Override
-	protected String getDirectory() {
-		return ClearMusicDownloaderApp.getDirectoryPrefix();
-	}
-	
 	@Override
 	public void showMessage(Context context, int message) {
 		showMessage(getContext(), getContext().getResources().getString(message));

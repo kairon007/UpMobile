@@ -29,7 +29,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 	@Override
 	public void onResume() {
 		MainActivity activity = ((MainActivity) getActivity());
-		activity.setSelectedItem(LIBRARY_FRAGMENT);
+		activity.setSelectedItem(SONGS_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setVisibleSearchView(getClass().getSimpleName());
 		abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
@@ -73,7 +73,7 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 
 	@Override
 	public int getDrawerTitle() {
-		return R.string.tab_library;
+		return R.string.tab_songs;
 	}
 
 	@Override

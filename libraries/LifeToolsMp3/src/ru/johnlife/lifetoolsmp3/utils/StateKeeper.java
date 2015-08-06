@@ -21,6 +21,7 @@ import java.util.Locale;
 import java.util.TreeMap;
 
 import ru.johnlife.lifetoolsmp3.engines.Engine;
+import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.song.Song;
@@ -41,6 +42,7 @@ public class StateKeeper {
 	private Iterator<Engine> taskIterator;
 	private ArrayList<Song> results = null;
 	private ArrayList<MusicData> libraryAdapterItems;
+	private ArrayList<AbstractSong> artistAdapterItems;
 	private DialogPlayerView dialogPlayerViewInstance;
 	private RemoteSong downloadSong;
 	private View viewItem;
@@ -488,7 +490,15 @@ public class StateKeeper {
 	public void setYouTubeNextPageToken(int position, String token) {
 		youTubeNextPageToken[position] = token;
 	}
-	
+
+	public ArrayList<AbstractSong> getArtistAdapterItems() {
+		return artistAdapterItems;
+	}
+
+	public void setArtistAdapterItems(ArrayList<AbstractSong> artistAdapterItems) {
+		this.artistAdapterItems = artistAdapterItems;
+	}
+
 	private class SongInfo {
 		
 		private String path;

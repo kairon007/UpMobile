@@ -48,7 +48,6 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 
 	protected PlaybackService service;
 	
-	protected abstract String getDirectory();
 	protected abstract Bitmap getDefaultCover();
 	protected abstract boolean showDeleteItemMenu();
 	protected abstract void startSong(AbstractSong abstractSong);
@@ -221,7 +220,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		ArrayList<PlaylistData> playlistDatas = getPlaylists();
 		String[] data = new String[playlistDatas.size()];
 		for (int i = 0; i < playlistDatas.size(); i++) {
-			data[i] = playlistDatas.get(i).getName().replace(getDirectory(), "");
+			data[i] = playlistDatas.get(i).getName();
 		}
 		if (playlistDatas.size() == 0) {
 			showMessage(getContext(), R.string.playlists_are_missing);
@@ -274,7 +273,7 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 		dialog = builder.create();
 		dialog.show();
 	}
-	
+
 	private ArrayList<PlaylistData> getPlaylists() {
 		ArrayList<PlaylistData> playlistDatas = null;
 		try {
@@ -284,16 +283,12 @@ public abstract class BaseLibraryAdapter extends BaseAbstractAdapter<MusicData> 
 			if (playlistCursor.getCount() == 0 || !playlistCursor.moveToFirst()) {
 				return playlistDatas;
 			}
-			if (playlistCursor.getString(1).contains(getDirectory())) {
-				playlistData.populate(playlistCursor);
-				playlistDatas.add(playlistData);
-			}
+			playlistData.populate(playlistCursor);
+			playlistDatas.add(playlistData);
 			while (playlistCursor.moveToNext()) {
-				if (playlistCursor.getString(1).contains(getDirectory())) {
-					PlaylistData playlist = new PlaylistData();
-					playlist.populate(playlistCursor);
-					playlistDatas.add(playlist);
-				}
+				PlaylistData playlist = new PlaylistData();
+				playlist.populate(playlistCursor);
+				playlistDatas.add(playlist);
 			}
 			playlistCursor.close();
 		} catch (Exception e) {

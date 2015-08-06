@@ -14,9 +14,8 @@
     <string name="rate_thanks">Terima kasih!</string>
     <string name="tab_search">Cari</string>
     <string name="tab_downloads">Muat Turun</string>
-    <string name="tab_library">Pustaka</string>
     <string name="tab_playlist">Senarai Main</string>
-    <string name="tab_now_plaing">Sekarang bermain</string>
+    <string name="tab_now_playing">Sekarang bermain</string>
     <string name="tab_settings">Tetapan</string>
     <string name="tab_download_location">Muat lokasi</string>
     <string name="message_please_wait">Sila Tunggu...</string>

@@ -14,9 +14,8 @@
     <string name="rate_thanks">Dankie!</string>
     <string name="tab_search">Soek</string>
     <string name="tab_downloads">Aflaaie</string>
-    <string name="tab_library">Biblioteek</string>
     <string name="tab_playlist">Playlist</string>
-    <string name="tab_now_plaing">Nou speel</string>
+    <string name="tab_now_playing">Nou speel</string>
     <string name="tab_settings">Instellings</string>
     <string name="tab_download_location">Download plek</string>
     <string name="message_please_wait">Wag asseblief...</string>

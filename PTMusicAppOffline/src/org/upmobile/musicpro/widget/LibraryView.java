@@ -1,12 +1,10 @@
 package org.upmobile.musicpro.widget;
 
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.upmobile.musicpro.Constants;
 import org.upmobile.musicpro.R;
 import org.upmobile.musicpro.adapter.LibraryAdapter;
 
@@ -29,12 +27,6 @@ public class LibraryView extends BaseLibraryView {
 	protected ListView getListView(View view) {
 		return (ListView) view.findViewById(R.id.lsvSongLibrary);
 	}
-
-	@Override
-	protected String getFolderPath() {
-		return Environment.getExternalStorageDirectory() + Constants.DIRECTORY_PREFIX;
-	}
-
 
 	@Override
 	protected int getLayoutId() {

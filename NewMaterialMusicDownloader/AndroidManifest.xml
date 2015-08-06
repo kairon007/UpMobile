@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.upmobile.newmaterialmusicdownloader"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -29,13 +29,13 @@
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:theme="@style/MaterialAppTheme.Brown" >
+        android:theme="@style/MaterialAppTheme.Brown">
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="screenSize|orientation"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="stateHidden|adjustPan" >
+            android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +45,7 @@
 
         <service
             android:name="ru.johnlife.lifetoolsmp3.services.PlaybackService"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="playbackservice.action.main" />
                 <action android:name="playbackservice.action.prev" />
@@ -54,22 +54,22 @@
             </intent-filter>
         </service>
 
-        <receiver android:name="ru.johnlife.lifetoolsmp3.MediaButtonReceiver" >
-            <intent-filter android:priority="998" >
+        <receiver android:name="ru.johnlife.lifetoolsmp3.MediaButtonReceiver">
+            <intent-filter android:priority="998">
                 <action android:name="android.intent.action.MEDIA_BUTTON" />
             </intent-filter>
         </receiver>
 
+        <receiver android:name="ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView$SDReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_REMOVED" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+                <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+            </intent-filter>
+        </receiver>
+
         <service android:name="ru.johnlife.lifetoolsmp3.services.HelperService" />
-        <service
-            android:name=".MyIntentService"
-            android:exported="false" >
-        </service>
-        <service
-            android:name=".MyService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
     </application>
 
 </manifest>

@@ -15,8 +15,7 @@
     <string name="tab_search">Vyhledávání</string>
     <string name="tab_playlist">Playlist</string>
     <string name="tab_downloads">Stahování</string>
-    <string name="tab_library">Knihovna</string>
-    <string name="tab_now_plaing">Právě hraje</string>
+    <string name="tab_now_playing">Právě hraje</string>
     <string name="tab_settings">Nastavení</string>
     <string name="tab_download_location">Stáhnout příjezdovou</string>
     <string name="message_please_wait">Čekejte, prosím...</string>

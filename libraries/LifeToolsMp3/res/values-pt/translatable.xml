@@ -14,9 +14,8 @@
     <string name="rate_thanks">Obrigado!</string>
     <string name="tab_search">Pesquisar</string>
     <string name="tab_downloads">Downloads</string>
-    <string name="tab_library">Biblioteca</string>
     <string name="tab_playlist">Playlist</string>
-    <string name="tab_now_plaing">Agora jogando</string>
+    <string name="tab_now_playing">Agora jogando</string>
     <string name="tab_settings">Definições</string>
     <string name="tab_download_location">Local de download</string>
     <string name="message_please_wait">Por favor, aguarde…</string>

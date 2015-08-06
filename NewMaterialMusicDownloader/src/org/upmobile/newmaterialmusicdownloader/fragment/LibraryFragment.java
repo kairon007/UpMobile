@@ -38,8 +38,8 @@ public class LibraryFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		MainActivity act = (MainActivity) getActivity();
-		act.setCurrentFragmentId(ManagerFragmentId.libraryFragment());
-		act.setTitle(R.string.tab_library);
+		act.setCurrentFragmentId(ManagerFragmentId.songFragment());
+		act.setTitle(R.string.tab_songs);
 		act.showToolbarShadow(true);
 		AbstractSong abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
 		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());

@@ -30,6 +30,7 @@ import org.upmobile.newmusicdownloader.Constants;
 import org.upmobile.newmusicdownloader.Nulldroid_Settings;
 import org.upmobile.newmusicdownloader.R;
 import org.upmobile.newmusicdownloader.app.NewMusicDownloaderApp;
+import org.upmobile.newmusicdownloader.fragment.ArtistFragment;
 import org.upmobile.newmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmusicdownloader.fragment.NavigationDrawerFragment;
@@ -188,7 +189,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		buttonBackEnabled = true;
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
-		} else if (position <= LIBRARY_FRAGMENT){
+		} else if (position <= SONGS_FRAGMENT){
 			showMiniPlayer(null != service && service.isEnqueueToStream());
 		}
 		switch (position) {
@@ -198,12 +199,15 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		case DOWNLOADS_FRAGMENT:
 	        changeFragment(new DownloadsFragment(), false);
 			break;
-		case LIBRARY_FRAGMENT:
+		case SONGS_FRAGMENT:
 	        changeFragment(new LibraryFragment(), false);
 			break;
 		case PLAYLIST_FRAGMENT:
 			changeFragment(new PlaylistFragment(), false);
 			break;
+			case ARTIST_FRAGMENT:
+				changeFragment(new ArtistFragment(), false);
+				break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 			String lastFragmentName = backEntry.getName();
@@ -212,7 +216,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		    }
 			break;
 		case SETTINGS_FRAGMENT:
-		case 6:
+		case 7:
 	        final SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 			DirectoryChooserDialog directoryChooserDialog = new DirectoryChooserDialog(this, new DirectoryChooserDialog.ChosenDirectoryListener() {
 				

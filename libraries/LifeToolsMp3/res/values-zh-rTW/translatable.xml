@@ -14,9 +14,8 @@
     <string name="rate_thanks">謝謝！</string>
     <string name="tab_search">搜索</string>
     <string name="tab_downloads">下載</string>
-    <string name="tab_library">音樂庫</string>
     <string name="tab_playlist">播放列表</string>
-    <string name="tab_now_plaing">現在玩</string>
+    <string name="tab_now_playing">現在玩</string>
     <string name="tab_settings"></string>
     <string name="tab_download_location">下載地址</string>
     <string name="message_please_wait">請等待...</string>

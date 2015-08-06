@@ -157,7 +157,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		}
 		if (position == PLAYER_FRAGMENT) {
 			showMiniPlayer(false);
-		} else if (position <= LIBRARY_FRAGMENT){
+		} else if (position <= SONGS_FRAGMENT){
 			showMiniPlayer(null != service ? service.isEnqueueToStream() : false);
 		}
 		getSupportActionBar().setElevation(position == SEARCH_FRAGMENT ? 0 : position != SETTINGS_FRAGMENT && position != 6 ? 16 : 0);
@@ -172,8 +172,8 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		case PLAYLIST_FRAGMENT:
 	        changeFragment(mFragments.get(PLAYLIST_FRAGMENT), false);
 			break;
-		case LIBRARY_FRAGMENT:
-	        changeFragment(mFragments.get(LIBRARY_FRAGMENT), false);
+		case SONGS_FRAGMENT:
+	        changeFragment(mFragments.get(SONGS_FRAGMENT), false);
 			break;
 		case PLAYER_FRAGMENT:
 			android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
@@ -185,7 +185,7 @@ public abstract class UIMainActivity extends BaseMiniPlayerActivity implements N
 		    }
 		    break;
 		case SETTINGS_FRAGMENT:
-		case 6:
+		case 7:
 			showDialog();
 			break;
 		default:

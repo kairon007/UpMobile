@@ -189,4 +189,9 @@ public abstract class BaseSearchAdapter extends BaseAbstractAdapter<Song>  {
 			duration.setVisibility(show ? View.VISIBLE : View.GONE);
 		}
 	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup p) {
+		return super.getView(position, convertView, p);
+	}
 }

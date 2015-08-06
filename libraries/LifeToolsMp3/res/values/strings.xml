@@ -91,22 +91,22 @@
 
     <!-- LeadBolt Settings -->
     <string name="int_enabled">1</string>
- <!-- Set this to 1 if you want Interstitials enabled -->
+    <!-- Set this to 1 if you want Interstitials enabled -->
     <string name="intapp_id">794426111</string>
- <!-- Interestitial App Id -->
+    <!-- Interestitial App Id -->
     <string name="banner_id">232645341</string>
- <!-- Banner App id -->
+    <!-- Banner App id -->
     <string name="ad_amount">3</string>
- <!-- How many searches & view songs before showing full screen ad. *NUMBERS ONLY, IF YOU WANT IT TO SHOW ALWAYS PUT 1* -->
+    <!-- How many searches & view songs before showing full screen ad. *NUMBERS ONLY, IF YOU WANT IT TO SHOW ALWAYS PUT 1* -->
 
 
     <!-- AUDIO SOURCE SETTINGS (1 for enabled, 0 for disabled) Try to keep about 3 enabled max -->
     <string name="enabled_hulkshare">1</string>
- <!-- Medium Recommend -->
+    <!-- Medium Recommend -->
     <string name="enabled_Zing">1</string>
- <!-- Highly Recommended -->
+    <!-- Highly Recommended -->
     <string name="enabled_mp3skull">1</string>
- <!-- Low Recommend -->
+    <!-- Low Recommend -->
 
 
     <!-- Language Settings Below -->
@@ -156,12 +156,18 @@
     <string name="playlist_already_exists">Playlist with the same name already exists</string>
 
     <!-- need translate -->
-     <string name="not_show_again">Do not show again</string>
-     <string name="changes_relevant_when_downloading">The changes will be relevant only when downloading songs</string>
-     <string name="repeat_list">Playback is started with the beginning of the list</string>
-     <string name="manual_shuffle">Manual shuffle mode on</string>
-     <string name="auto_shuffle">Auto shuffle mode on</string>
+    <string name="not_show_again">Do not show again</string>
+    <string name="changes_relevant_when_downloading">The changes will be relevant only when downloading songs</string>
+    <string name="repeat_list">Playback is started with the beginning of the list</string>
+    <string name="manual_shuffle">Manual shuffle mode on</string>
+    <string name="auto_shuffle">Auto shuffle mode on</string>
     <string name="download_anyway">Download anyway</string>
     <string name="has_been_downloaded">This song has been downloaded</string>
     <string name="view_in_library">View in Library</string>
+    <string name="tab_artists">Artists</string>
+    <string name="tab_songs">Songs</string>
+    <plurals name="songs">
+        <item quantity="one">song</item>
+        <item quantity="other">songs</item>
+    </plurals>
 </resources>

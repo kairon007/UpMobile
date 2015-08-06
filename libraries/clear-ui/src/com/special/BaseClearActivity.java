@@ -73,7 +73,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
         resideMenu.setHeaderView(findViewById(R.id.actionbar));
         setMenuListener(menuListener);
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip. 
-        resideMenu.setScaleValue(0.6f);
+        resideMenu.setScaleValue(0.4f);
         for (ResideMenuItem item : menuItems) {
         	item.setOnClickListener(this);
         	item.setBackgroundResource(R.drawable.button_selector_inverse_light);
@@ -143,7 +143,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 		lastOpenedFragment = targetFragment;
 		resideMenu.clearIgnoredViewList();
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
-		if (targetFragment.getClass() == getFragments()[LIBRARY_FRAGMENT].getClass()) {
+		if (targetFragment.getClass() == getFragments()[SONGS_FRAGMENT].getClass()) {
 			Bundle b = new Bundle();
 			b.putParcelable("KEY_SELECTED_SONG", song);
 			try {
@@ -190,7 +190,7 @@ public abstract class BaseClearActivity extends BaseMiniPlayerActivity implement
 			tvTitle.setText(title);
 			manageSearchView(lastFragmentName);
 			showMiniPlayer(service.isEnqueueToStream());
-		} else if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[LIBRARY_FRAGMENT].getClass().getSimpleName()) && ((Boolean) leftMenu.getTag()) == true) {
+		} else if (lastOpenedFragment.getClass().getSimpleName().equals(getFragments()[SONGS_FRAGMENT].getClass().getSimpleName()) && ((Boolean) leftMenu.getTag()) == true) {
 			getFragmentManager().popBackStack();
 			FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 2);
 			String lastFragmentName = backEntry.getName();

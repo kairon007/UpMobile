@@ -21,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,6 +37,7 @@ import org.upmobile.newmaterialmusicdownloader.application.NewMaterialApp;
 import org.upmobile.newmaterialmusicdownloader.data.NavDrawerItem;
 import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer;
 import org.upmobile.newmaterialmusicdownloader.drawer.FragmentDrawer.FragmentDrawerListener;
+import org.upmobile.newmaterialmusicdownloader.fragment.ArtistFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.DownloadsFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.LibraryFragment;
 import org.upmobile.newmaterialmusicdownloader.fragment.PlayerFragment;
@@ -127,7 +129,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					playlist.forceDelete();
 				}
-				if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+				if (ManagerFragmentId.songFragment() == getCurrentFragmentId()) {
 					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 					library.forceDelete();
 				}
@@ -140,7 +142,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
 					playlist.forceDelete();
 				}
-				if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+				if (ManagerFragmentId.songFragment() == getCurrentFragmentId()) {
 					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 					library.forceDelete();
 				}
@@ -182,7 +184,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 			getFragmentManager().popBackStack();
 			isOpenFromDrawer = true;
 			setPlayerFragmentVisible(false);
-		} else if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId() && !drawerFragment.isDrawerIndicatorEnabled()) {
+		} else if (ManagerFragmentId.songFragment() == getCurrentFragmentId() && !drawerFragment.isDrawerIndicatorEnabled()) {
 			showMiniPlayer(false);
 			getFragmentManager().popBackStack();
 		} else {
@@ -238,13 +240,16 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		Fragment selectedFragment;
+		Log.d("logd", "changeFragment : " + fragmentId + " - " + ManagerFragmentId.playlistFragment() + " - " + ManagerFragmentId.playerFragment());
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
 			selectedFragment = new DownloadsFragment();
 		} else if (fragmentId == ManagerFragmentId.playlistFragment()) {
 			selectedFragment = new PlaylistFragment();
-		} else if (fragmentId == ManagerFragmentId.libraryFragment()) {
+		} else if (fragmentId == ManagerFragmentId.artistFragment()) {
+			selectedFragment = new ArtistFragment();
+		} else if (fragmentId == ManagerFragmentId.songFragment()) {
 			Bundle b = new Bundle();
 			b.putParcelable("KEY_SELECTED_SONG", song);
 			LibraryFragment libraryFragment = new LibraryFragment();
@@ -259,7 +264,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else {
 			selectedFragment = new SearchFragment();
 		}
-        setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
+		Log.d("logd", "changeFragment : " + selectedFragment);
+		setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
         transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
     }
 	
@@ -625,7 +631,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		List<NavDrawerItem> data = new ArrayList<>();
 		data.add(new NavDrawerItem(R.drawable.ic_search_grey, getResources().getString(R.string.tab_search), NavDrawerItem.Type.Primary));
 		data.add(new NavDrawerItem(R.drawable.ic_file_download_grey, getResources().getString(R.string.tab_downloads), NavDrawerItem.Type.Primary));
-		data.add(new NavDrawerItem(R.drawable.ic_my_library_music_grey , getResources().getString(R.string.tab_library), NavDrawerItem.Type.Primary));
+		data.add(new NavDrawerItem(R.drawable.ic_my_library_music_grey , getResources().getString(R.string.tab_songs), NavDrawerItem.Type.Primary));
+		data.add(new NavDrawerItem(R.drawable.ic_person_grey , getResources().getString(R.string.tab_artists), NavDrawerItem.Type.Primary));
 		data.add(new NavDrawerItem(R.drawable.ic_queue_music_grey , getResources().getString(R.string.tab_playlist), NavDrawerItem.Type.Primary));
 		data.add(new NavDrawerItem(getResources().getString(R.string.tab_download_location), NavDrawerItem.Type.Secondary ));
 		data.add(new NavDrawerItem(R.drawable.ic_settings_applications_grey, NewMaterialApp.getDirectory(), NavDrawerItem.Type.Primary));
@@ -664,7 +671,11 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 					player.showIndicator();
 				}
 			}
-			if (ManagerFragmentId.libraryFragment() == getCurrentFragmentId()) {
+			if (ManagerFragmentId.songFragment() == getCurrentFragmentId()) {
+				LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
+				library.forceDelete();
+			}
+			if (ManagerFragmentId.artistFragment() == getCurrentFragmentId()) {
 				LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
 				library.forceDelete();
 			}

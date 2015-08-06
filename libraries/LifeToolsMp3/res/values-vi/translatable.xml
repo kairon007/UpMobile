@@ -14,9 +14,8 @@
     <string name="rate_thanks">Xin cảm ơn!</string>
     <string name="tab_search">Tìm kiếm</string>
     <string name="tab_downloads">Mục Tải xuống</string>
-    <string name="tab_library">Thư viện</string>
     <string name="tab_playlist">Danh sách phát</string>
-    <string name="tab_now_plaing">Bây giờ chơi</string>
+    <string name="tab_now_playing">Bây giờ chơi</string>
     <string name="tab_settings">Cài đặt</string>
     <string name="tab_download_location">địa điểm tải về</string>
     <string name="message_please_wait">Vui lòng Chờ ...</string>

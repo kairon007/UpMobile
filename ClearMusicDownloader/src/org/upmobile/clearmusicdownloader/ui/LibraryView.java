@@ -15,7 +15,6 @@ import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
 import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
-import org.upmobile.clearmusicdownloader.app.ClearMusicDownloaderApp;
 
 import java.util.HashSet;
 
@@ -45,11 +44,6 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	protected ListView getListView(View view) {
 		lView = (ListView) view.findViewById(R.id.list);
 		return lView;
-	}
-
-	@Override
-	protected String getFolderPath() {
-		return ClearMusicDownloaderApp.getDirectory();
 	}
 
 	@Override
@@ -85,8 +79,8 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	        }
 			
 	    });
-		swipeUndoAdapter.setAbsListView((DynamicListView)listView);
-		((DynamicListView)listView).setAdapter(swipeUndoAdapter);
+		swipeUndoAdapter.setAbsListView(listView);
+		listView.setAdapter(swipeUndoAdapter);
 		((DynamicListView)listView).enableSimpleSwipeUndo();
 	}
 	

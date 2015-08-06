@@ -14,9 +14,8 @@
     <string name="rate_thanks">    متشکریم!</string>
     <string name="tab_search">    جستجو</string>
     <string name="tab_downloads">    دانلودها</string>
-    <string name="tab_library">    فهرست</string>
     <string name="tab_playlist">لیست پخش</string>
-    <string name="tab_now_plaing">  در حال حاضر بازی</string>
+    <string name="tab_now_playing">  در حال حاضر بازی</string>
     <string name="tab_settings">تنظیمات</string>
     <string name="tab_download_location">دانلود مکان</string>
     <string name="message_please_wait">    لطفا صبر کنید...</string>

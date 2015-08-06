@@ -16,8 +16,8 @@
         <item>@string/tab_search</item>
         <item>@string/tab_downloads</item>
          <item>@string/tab_playlist</item>
-        <item>@string/tab_library</item>
-        <item>@string/tab_now_plaing</item>
+        <item>@string/tab_songs</item>
+        <item>@string/tab_now_playing</item>
     </string-array>
 
     <string name="error_retrieving_the_url">An error occurred while retrieving the url of the song. Try to download another song</string>
@@ -52,5 +52,6 @@
 	<string name="font_arrow_down">&#xe82f;</string>
 	<string name="font_download_button">&#xe82c;</string>
 	<string name="font_beat">&#xe835;</string>
+	<string name="font_user">&#xe826;</string>
 	
 </resources>

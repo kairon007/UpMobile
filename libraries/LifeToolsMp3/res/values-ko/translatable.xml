@@ -14,9 +14,8 @@
     <string name="rate_thanks">감사합니다!</string>
     <string name="tab_search">검색</string>
     <string name="tab_downloads">다운로드</string>
-    <string name="tab_library">라이브러리</string>
     <string name="tab_playlist">재생 목록</string>
-    <string name="tab_now_plaing">지금 재생 중</string>
+    <string name="tab_now_playing">지금 재생 중</string>
     <string name="tab_settings">설정</string>
     <string name="tab_download_location">다운로드 위치</string>
     <string name="message_please_wait">기다리세요...</string>

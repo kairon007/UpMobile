@@ -37,6 +37,19 @@ public class MusicApp extends Application {
 	@SuppressLint("NewApi") 
 	@Override
 	public void onCreate() {
+		//For debug mode
+//		StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+//				.detectDiskReads()
+//				.detectDiskWrites()
+//				.detectAll()   // or .detectAll() for all detectable problems
+//				.penaltyLog()
+//				.build());
+//		StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+//				.detectLeakedSqlLiteObjects()
+//				.detectLeakedClosableObjects()
+//				.penaltyLog()
+//				.penaltyDeath()
+//				.build());
 		super.onCreate();
 		ImageLoaderConfiguration.Builder b = new ImageLoaderConfiguration.Builder(getApplicationContext());
 		if (Build.VERSION.SDK_INT >= VERSION_CODES.HONEYCOMB) {

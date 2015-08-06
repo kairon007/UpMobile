@@ -50,7 +50,8 @@
         <item name="navigationSearch">@drawable/navigation_search</item>
         <item name="navigationDownloads">@drawable/navigation_downloads</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist</item>
-        <item name="navigationLibrary">@drawable/navigaion_library</item>
+        <item name="navigationSongs">@drawable/navigaion_library</item>
+        <item name="navigationArtists">@drawable/navigation_artist</item>
         <item name="navigationPlayer">@drawable/navigation_player</item>
         <item name="navigationSettings">@drawable/navigation_settings</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat</item>
@@ -99,7 +100,8 @@
         <item name="navigationSearch">@drawable/navigation_search_black</item>
         <item name="navigationDownloads">@drawable/navigation_downloads_black</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist_black</item>
-        <item name="navigationLibrary">@drawable/navigaion_library_black</item>
+        <item name="navigationSongs">@drawable/navigaion_library_black</item>
+        <item name="navigationArtists">@drawable/navigation_artist_black</item>
         <item name="navigationPlayer">@drawable/navigation_player_black</item>
         <item name="navigationSettings">@drawable/navigation_settings_black</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat_black</item>
@@ -145,7 +147,8 @@
         <item name="navigationSearch">@drawable/navigation_search_black</item>
         <item name="navigationDownloads">@drawable/navigation_downloads_black</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist_black</item>
-        <item name="navigationLibrary">@drawable/navigaion_library_black</item>
+        <item name="navigationArtists">@drawable/navigation_artist_black</item>
+        <item name="navigationSongs">@drawable/navigaion_library_black</item>
         <item name="navigationPlayer">@drawable/navigation_player_black</item>
         <item name="navigationSettings">@drawable/navigation_settings_black</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat</item>
@@ -190,7 +193,8 @@
         <item name="navigationSearch">@drawable/navigation_search_black</item>
         <item name="navigationDownloads">@drawable/navigation_downloads_black</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist_black</item>
-        <item name="navigationLibrary">@drawable/navigaion_library_black</item>
+        <item name="navigationSongs">@drawable/navigaion_library_black</item>
+        <item name="navigationArtists">@drawable/navigation_artist_black</item>
         <item name="navigationPlayer">@drawable/navigation_player_black</item>
         <item name="navigationSettings">@drawable/navigation_settings_black</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat</item>
@@ -236,7 +240,8 @@
         <item name="navigationSearch">@drawable/navigation_search_black</item>
         <item name="navigationDownloads">@drawable/navigation_downloads_black</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist_black</item>
-        <item name="navigationLibrary">@drawable/navigaion_library_black</item>
+        <item name="navigationSongs">@drawable/navigaion_library_black</item>
+        <item name="navigationArtists">@drawable/navigation_artist_black</item>
         <item name="navigationPlayer">@drawable/navigation_player_black</item>
         <item name="navigationSettings">@drawable/navigation_settings_black</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat_black</item>
@@ -282,7 +287,8 @@
         <item name="navigationSearch">@drawable/navigation_search_black</item>
         <item name="navigationDownloads">@drawable/navigation_downloads_black</item>
         <item name="navigationPlaylist">@drawable/navigation_playlist_black</item>
-        <item name="navigationLibrary">@drawable/navigaion_library_black</item>
+        <item name="navigationSongs">@drawable/navigaion_library_black</item>
+        <item name="navigationArtists">@drawable/navigation_artist_black</item>
         <item name="navigationPlayer">@drawable/navigation_player_black</item>
         <item name="navigationSettings">@drawable/navigation_settings_black</item>
         <item name="icDrawerCompat">@drawable/ic_drawer_compat</item>

@@ -12,8 +12,9 @@
         <item>@string/tab_search</item>
         <item>@string/tab_downloads</item>
         <item>@string/tab_playlist</item>
-        <item>@string/tab_library</item>
-        <item>@string/tab_now_plaing</item>
+        <item>@string/tab_songs</item>
+        <item>@string/tab_artists</item>
+        <item>@string/tab_now_playing</item>
         <item>@string/tab_settings</item>
     </string-array>
 

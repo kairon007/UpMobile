@@ -27,7 +27,8 @@
         <attr name="navigationSearch" format="reference" />
         <attr name="navigationDownloads" format="reference" />
         <attr name="navigationPlaylist" format="reference" />
-        <attr name="navigationLibrary" format="reference" />
+        <attr name="navigationSongs" format="reference" />
+        <attr name="navigationArtists" format="reference" />
         <attr name="navigationPlayer" format="reference" />
         <attr name="navigationSettings" format="reference" />
         <attr name="icDrawerCompat" format="reference" />

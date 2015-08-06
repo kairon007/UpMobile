@@ -375,7 +375,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 	}
 
 	private void showSongInLibrary() {
-		((MainActivity)getActivity()).changeFragment(ManagerFragmentId.libraryFragment(), false, song);
+		((MainActivity)getActivity()).changeFragment(ManagerFragmentId.songFragment(), false, song);
 	}
 
 	private boolean isThisSongDownloaded(AbstractSong song) {
@@ -410,7 +410,7 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
 		act.setDrawerEnabled(false);
-		act.setTitle(R.string.tab_now_plaing);
+		act.setTitle(R.string.tab_now_playing);
 		act.invalidateOptionsMenu();
 		act.setToolbarOverlay(true);
 		act.setToolbarAlpha(scrollView.getToolbarAlpha());

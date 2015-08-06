@@ -2,11 +2,14 @@ package ru.johnlife.lifetoolsmp3.ui.baseviews;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.AsyncTask.Status;
@@ -30,12 +33,13 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.BaseLibraryAdapter;
-import ru.johnlife.lifetoolsmp3.app.MusicApp;
 import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
@@ -45,9 +49,7 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 @SuppressLint("NewApi")
 public abstract class BaseLibraryView extends View implements Handler.Callback {
 
-    private static final String PREF_DIRECTORY_PREFIX = "pref.directory.prefix";
-
-    public static final int MSG_FILL_ADAPTER = 1;
+     public static final int MSG_FILL_ADAPTER = 1;
 
     private ViewGroup view;
     private BaseAbstractAdapter<MusicData> adapter;
@@ -59,6 +61,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     private CheckRemovedFiles checkRemovedFiles;
     private Cursor cursor;
     private PlaybackService service;
+    private SDReceiver sdReceiver;
+    private IntentFilter intentFilter;
 
     private ContentObserver observer = new ContentObserver(null) {
 
@@ -98,22 +102,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         StateKeeper.getInstance().setLibraryAdapterItems(list);
     }
 
-    private OnSharedPreferenceChangeListener sPrefListener = new OnSharedPreferenceChangeListener() {
-
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.contains(PREF_DIRECTORY_PREFIX)) {
-                if (View.VISIBLE == emptyMessage.getVisibility()) {
-                    emptyMessage.setVisibility(View.GONE);
-                } else {
-                    adapter.clear();
-                }
-                showProgress(view);
-                updateAdapter();
-            }
-        }
-    };
-
     protected boolean isUserDeleted = false;
 
     protected abstract BaseAbstractAdapter<MusicData> getAdapter();
@@ -122,24 +110,21 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 
     public abstract TextView getMessageView(View view);
 
-    protected abstract String getFolderPath();
-
     protected abstract int getLayoutId();
 
     protected abstract void forceDelete();
 
     public void onPause() {
         ((BaseLibraryAdapter) adapter).resetListener();
-        MusicApp.getSharedPreferences().unregisterOnSharedPreferenceChangeListener(sPrefListener);
         if (null != checkRemovedFiles) {
             checkRemovedFiles.cancel(true);
             checkRemovedFiles = null;
         }
         StateKeeper.getInstance().setLibraryFirstPosition(listView.getFirstVisiblePosition());
+        getContext().unregisterReceiver(sdReceiver);
     }
 
     public void onResume() {
-        MusicApp.getSharedPreferences().registerOnSharedPreferenceChangeListener(sPrefListener);
         ((BaseLibraryAdapter) adapter).setListener();
         checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
         if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
@@ -148,6 +133,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         } else {
             checkRemovedFiles.execute();
         }
+        getContext().registerReceiver(sdReceiver, intentFilter);
         updateAdapter();
     }
 
@@ -158,9 +144,33 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         return null;
     }
 
+    public class SDReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(Intent.ACTION_MEDIA_MOUNTED)
+                    || intent.getAction().equals(Intent.ACTION_MEDIA_REMOVED)
+                    || intent.getAction().equals(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
+                    || intent.getAction().equals(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
+                    || intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)
+                    || intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
+                updateAdapter();
+            }
+        }
+    };
+
     public BaseLibraryView(LayoutInflater inflater) {
         super(inflater.getContext());
         uiHandler = new Handler(this);
+        sdReceiver = new SDReceiver();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_MEDIA_MOUNTED);
+        intentFilter.addAction(Intent.ACTION_MEDIA_REMOVED);
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED);
+        intentFilter.addAction(UsbManager.ACTION_USB_DEVICE_DETACHED);
+        intentFilter.addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED);
+        intentFilter.addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED);
+        getContext().registerReceiver(sdReceiver, intentFilter);
         getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
         init(inflater);
         if (null != listView) {
@@ -301,10 +311,10 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     }
 
     protected ArrayList<MusicData> querySong() {
-        ArrayList<MusicData> result;
+        ArrayList<MusicData> result = result = new ArrayList<>();
         synchronized (lock) {
-            result = new ArrayList<>();
-            Cursor cursor = buildQuery(getContext().getContentResolver(), Util.addQuotesForSqlQuery(getFolderPath()));
+            Cursor cursor = buildQuery(getContext().getContentResolver());
+            if (null == cursor) return result;
             if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
                 cursor.close();
                 return result;
@@ -319,15 +329,22 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             }
             cursor.close();
         }
+        Collections.sort(result, new Comparator<MusicData>() {
+            @Override
+            public int compare(MusicData lhs, MusicData rhs) {
+                return lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
+            }
+        });
         return result;
     }
 
-    private Cursor buildQuery(ContentResolver resolver, String folderFilter) {
+    private Cursor buildQuery(ContentResolver resolver) {
         synchronized (lock) {
             if (null != cursor && !cursor.isClosed()) {
                 cursor.close();
             }
-            String selection = MediaStore.MediaColumns.DATA + " LIKE '" + folderFilter + "%" + "" + "%'";
+//            String selection = MediaStore.MediaColumns.DATA + " LIKE '" + "" + "%" + "" + "%'";
+            String selection = "(" + MediaStore.Audio.Media.IS_MUSIC + " != 0)";
             cursor = resolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, MusicData.FILLED_PROJECTION, selection, null, null);
         }
         return cursor;
