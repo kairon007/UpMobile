@@ -83,7 +83,7 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 	}
 
 	private void showUndoBar(UndoBar undoBar, boolean anim) {
-		if (((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getVisibility() == View.VISIBLE) {
+		if (null != ((BaseMiniPlayerActivity)getContext()).getMiniPlayer() && ((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getVisibility() == View.VISIBLE) {
 			undoBar.show(anim, 0, 0, 0, ((BaseMiniPlayerActivity)getContext()).getMiniPlayer().getHeight());
 		} else {
 			undoBar.show(anim);

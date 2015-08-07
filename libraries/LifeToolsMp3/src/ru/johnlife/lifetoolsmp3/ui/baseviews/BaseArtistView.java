@@ -331,6 +331,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                 allAdapter.removeAll(((ArtistData) data).getArtistSongs());
             }
             for (MusicData musicData : ((ArtistData) data).getArtistSongs()) {
+                StateKeeper.getInstance().removeSongInfo(musicData.getComment());
                 musicData.reset(getContext());
             }
             allAdapter.remove(data);
@@ -345,6 +346,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                     allAdapter.remove(a);
                 }
             }
+            StateKeeper.getInstance().removeSongInfo(data.getComment());
             ((MusicData) data).reset(getContext());
         }
         updateAdapter(allAdapter);

@@ -81,6 +81,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("logd", "onCreate : ---------------------------------------------");
 		setContentView(R.layout.activity_main);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbarShadow = findViewById(R.id.toolbar_shadow);
@@ -240,7 +241,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}
 		FragmentTransaction transaction = getFragmentManager().beginTransaction();
 		Fragment selectedFragment;
-		Log.d("logd", "changeFragment : " + fragmentId + " - " + ManagerFragmentId.playlistFragment() + " - " + ManagerFragmentId.playerFragment());
 		if (fragmentId == ManagerFragmentId.searchFragment()) {
 			selectedFragment = new SearchFragment();
 		} else if (fragmentId == ManagerFragmentId.downloadFragment()) {
@@ -264,7 +264,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else {
 			selectedFragment = new SearchFragment();
 		}
-		Log.d("logd", "changeFragment : " + selectedFragment);
 		setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
         transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
     }

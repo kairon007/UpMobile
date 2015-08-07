@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.View;
 
 import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
@@ -118,7 +117,6 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 				if (message.startsWith(str)) {
 					((MainActivity) context).setupDownloadBtn();
 				}
-				Log.d("logd", "onUndo: " + isEarlierDownloaded);
 				if (!isEarlierDownloaded)
 					StateKeeper.getInstance().removeSongInfo(downloadingSong.getComment());
 				DownloadCache.getInstanse().remove(downloadingSong);
@@ -127,7 +125,7 @@ public class BaseDownloadListener extends BaseDownloadSongTask {
 				}
 			}
 		});
-		if (((BaseMiniPlayerActivity)context).getMiniPlayer().getVisibility() == View.VISIBLE) {
+		if (null != ((BaseMiniPlayerActivity)context).getMiniPlayer() && ((BaseMiniPlayerActivity)context).getMiniPlayer().getVisibility() == View.VISIBLE) {
 			undoBar.show(true, 0, 0, 0, ((BaseMiniPlayerActivity)context).getMiniPlayer().getHeight());
 		} else {
 			undoBar.show();
