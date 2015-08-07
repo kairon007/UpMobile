@@ -53,7 +53,13 @@ public class OnlineSearchFragment extends BaseFragment{
 			getMainActivity().setVisibilityFooter();
 		}
 	}
-	
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		searchView.onResume();
+	}
+
 	@Override
 	public void onDetach() {
 		StateKeeper.getInstance().saveStateAdapter(searchView);

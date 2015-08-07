@@ -182,6 +182,7 @@ public class MainActivity extends Activity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		pagerAdapter.onResume();
 		if (page == 1 && null != textFilterDownload && !textFilterDownload.equals("")) {
 			mTextFilter.setText(textFilterDownload);
 		}

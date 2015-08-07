@@ -164,8 +164,9 @@ public class SearchView extends BaseSearchView implements Constants, PlaybackSer
 		}
 		
 	};
-
+	@Override
 	public void onResume() {
+		super.onResume();
 		new Thread(new Runnable() {
 			
 			@Override

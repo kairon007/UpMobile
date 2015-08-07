@@ -271,6 +271,7 @@ public class LibraryActivity extends PlaybackActivity implements TextWatcher, Vi
 	@Override
 	public void onResume() {
 		super.onResume();
+		mPagerAdapter.onResume();
 		Nulldroid_Advertisement.onResume(this);
 		updateEqualizerVisibility();
 	}

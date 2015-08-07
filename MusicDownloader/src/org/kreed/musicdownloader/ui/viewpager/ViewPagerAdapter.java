@@ -56,7 +56,7 @@ import ru.johnlife.lifetoolsmp3.BaseConstants;
  * PagerAdapter that manages the library media ListViews.
  */
 public class ViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageChangeListener {
-	
+
 	private static final String CURRENT_POSITION = "current_position_bundle";
 	/**
 	 * The number of unique list types. The number of visible lists may be
@@ -396,5 +396,9 @@ public class ViewPagerAdapter extends PagerAdapter implements ViewPager.OnPageCh
 	
 	public ListView getListView(){
 		return mLists[mCurrentPage];
+	}
+
+	public void onResume(){
+		if (null != searchView) searchView.onResume();
 	}
 }

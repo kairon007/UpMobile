@@ -1,15 +1,15 @@
 package org.upmobile.newmusicdownloader.fragment;
 
-import org.upmobile.newmusicdownloader.Constants;
-import org.upmobile.newmusicdownloader.R;
-import org.upmobile.newmusicdownloader.activity.MainActivity;
-import org.upmobile.newmusicdownloader.ui.SearchView;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.upmobile.newmusicdownloader.Constants;
+import org.upmobile.newmusicdownloader.R;
+import org.upmobile.newmusicdownloader.activity.MainActivity;
+import org.upmobile.newmusicdownloader.ui.SearchView;
 
 public class SearchFragment extends Fragment {
 
@@ -47,6 +47,7 @@ public class SearchFragment extends Fragment {
 		act.setSelectedItem(Constants.SEARCH_FRAGMENT);
 		act.setDrawerEnabled(true);
 		act.invalidateOptionsMenu();
+		searchView.onResume();
 		super.onResume();
 	}
 }

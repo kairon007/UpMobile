@@ -102,6 +102,12 @@ public class SearchBrowserActivity extends Activity {
 	}
 
 	@Override
+	protected void onResume() {
+		super.onResume();
+		if (null != searchView) searchView.onResume();
+	}
+
+	@Override
 	protected void onDestroy() {
 		/*
 		if (Settings.ENABLE_ADS) {

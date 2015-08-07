@@ -923,4 +923,8 @@ public class LibraryPagerAdapter extends PagerAdapter implements Handler.Callbac
 	public int[] getTabOrder() {
 		return mTabOrder;
 	}
+
+	public void onResume() {
+		if (null != searchView) searchView.onResume();
+	}
 }

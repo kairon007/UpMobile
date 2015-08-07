@@ -36,4 +36,10 @@ public class OnlineSearchFragment extends SherlockFragment {
 		StateKeeper.getInstance().saveStateAdapter(searchView);
 		super.onDestroyView();
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (null != searchView) searchView.onResume();
+	}
 }

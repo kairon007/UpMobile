@@ -1,13 +1,13 @@
 package org.upmobile.clearmusicdownloader.fragment;
 
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
-import org.upmobile.clearmusicdownloader.ui.SearchView;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.upmobile.clearmusicdownloader.activity.MainActivity;
+import org.upmobile.clearmusicdownloader.ui.SearchView;
 
 public class SearchFragment extends Fragment {
 	private SearchView searchView;
@@ -28,6 +28,7 @@ public class SearchFragment extends Fragment {
 			searchView.trySearch();
 			query = null;
 		}
+		searchView.onResume();
 		super.onResume();
 	}
 	

@@ -135,8 +135,10 @@ public class SearchView extends BaseSearchView implements PlaybackService.OnErro
 		}
 		
 	};
-	
+
+	@Override
 	public void onResume() {
+		super.onResume();
 		new Thread(new Runnable() {
 			
 			@Override

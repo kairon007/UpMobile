@@ -153,6 +153,8 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	private Spinner spEnginesChoiser;
 	protected ProgressDialog progressSecond;	// For PtMusicAppOffline
 	private View touchInterceptor;
+	private int lastScroll;
+	private int maxScroll;
 	
 	public void specialInit(View view) {}
 	
@@ -295,6 +297,11 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		return false;
 	}
 
+	public void onResume() {
+		spEnginesChoiserScroll.scrollTo(0, 0);
+		spEnginesChoiserScroll.scrollBy(0, 0);
+	}
+
 	private void init(LayoutInflater inflater) {
 		view = (ViewGroup) inflater.inflate(R.layout.search, null);
 		listView = getListView(view);
@@ -333,10 +340,9 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 		animateListView(false);
 		adapter.clear();
 		listView.setEmptyView(message);
+		lastScroll = getScrollListView();
+		maxScroll = spEnginesChoiserScroll.getLayoutParams().height;
 		listView.setOnScrollListener(new OnScrollListener() {
-
-			int lastScroll = getScrollListView();
-			int maxScroll = spEnginesChoiserScroll.getLayoutParams().height;
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -351,12 +357,15 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				lastScroll = getScrollListView();
 				int resultScroll = spEnginesChoiserScroll.getScrollY() + scrollBy;
 				if (resultScroll < 0) {
+					Log.d("logd", "onScroll : 0 :");
 					spEnginesChoiserScroll.scrollTo(0, 0);
 					showShadow(false);
 				} else if (resultScroll > maxScroll) {
+					Log.d("logd", "onScroll : 1 " + resultScroll);
 					showShadow(true);
 					spEnginesChoiserScroll.scrollTo(0, maxScroll);
 				} else {
+					Log.d("logd", "onScroll : 3 " + scrollBy);
 					spEnginesChoiserScroll.scrollBy(0, scrollBy);
 					if (0 != scrollBy) {
 						Util.hideKeyboard(getContext(), view);
