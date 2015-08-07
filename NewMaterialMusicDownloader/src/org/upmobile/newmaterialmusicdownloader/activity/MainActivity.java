@@ -15,17 +15,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.DrawerLayout.DrawerListener;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.upmobile.newmaterialmusicdownloader.BaseDownloadListener;
@@ -68,10 +61,8 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 
 	private int currentFragmentId = -1;
 	private int lastCheckPosition = 0;
-	private boolean isVisibleSearchView = false;
 	private boolean isOpenFromDrawer = false;
 	private boolean isDrawerOpen = false;
-	private SearchView searchView;
 	private View floatBtnContainer;
 	private Toolbar toolbar;
 	private View toolbarShadow;
@@ -81,7 +72,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
     @Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("logd", "onCreate : ---------------------------------------------");
 		setContentView(R.layout.activity_main);
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		toolbarShadow = findViewById(R.id.toolbar_shadow);
@@ -112,71 +102,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-		searchView = (SearchView) searchItem.getActionView();
-		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if (ManagerFragmentId.playlistFragment() == getCurrentFragmentId()) {
-					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					playlist.forceDelete();
-				}
-				if (ManagerFragmentId.songFragment() == getCurrentFragmentId()) {
-					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					library.forceDelete();
-				}
-			}
-		});
-		searchView.setOnSearchClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (ManagerFragmentId.playlistFragment() == getCurrentFragmentId()) {
-					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					playlist.forceDelete();
-				}
-				if (ManagerFragmentId.songFragment() == getCurrentFragmentId()) {
-					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					library.forceDelete();
-				}
-			}
-		});
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String q) {
-				searchView.clearFocus();
-				Util.hideKeyboard(MainActivity.this, searchView);
-				onQueryTextSubmitAct(q);
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				onQueryTextChangeAct(newText);
-				return false;
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
 	public void onBackPressed() {
-		setSearchViewVisibility(getPreviousFragmentName(2));
 		Fragment player = getFragmentManager().findFragmentByTag(PlayerFragment.class.getSimpleName());
 		if (drawerFragment.isVisible()) {
 			drawerFragment.closeDrawer();
@@ -264,7 +190,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		} else {
 			selectedFragment = new SearchFragment();
 		}
-		setSearchViewVisibility(selectedFragment.getClass().getSimpleName());
         transaction.replace(R.id.content_frame, selectedFragment, selectedFragment.getClass().getSimpleName()).addToBackStack(selectedFragment.getClass().getSimpleName()).setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
     }
 	
@@ -536,10 +461,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		return bitMap;
 	}
 
-	protected void setSearchViewVisibility(String fragmentName) {
-		isVisibleSearchView = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
-	}
-	
 	@Override
 	protected void checkOnStart(final boolean showMiniPlayer) {
 		super.checkOnStart(ManagerFragmentId.playerFragment() != currentFragmentId);
@@ -681,7 +602,4 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}
 	}
 
-	public SearchView getSearchView() {
-		return searchView;
-	}
 }

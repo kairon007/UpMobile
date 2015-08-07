@@ -21,13 +21,6 @@ public class SearchFragment extends Fragment {
 	
 	@Override
 	public void onResume() {
-		String query = ((MainActivity) getActivity()).getQuery();
-		if (null != query) {
-			searchView.setExtraSearch(query);
-			searchView.setSearchField(query);
-			searchView.trySearch();
-			query = null;
-		}
 		searchView.onResume();
 		super.onResume();
 	}

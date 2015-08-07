@@ -13,14 +13,9 @@ import android.os.Bundle;
 import android.os.FileObserver;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
@@ -51,13 +46,10 @@ import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
-public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, OnQueryTextListener, Constants {
+public class MainActivity extends BaseMiniPlayerActivity implements NavigationDrawerCallbacks, Constants {
 
-	private SearchView searchView;
-	private MenuItem searchItem;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private String currentTag;
-	private boolean isVisibleSearchView = false;
 	private boolean buttonBackEnabled = false;
 	private FileObserver fileObserver;
 
@@ -95,95 +87,12 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 			}
 		};
 	}
-	
-	
+
 	@Override
 	public void setCover(Bitmap bmp) {
 		super.setCover(bmp);
 	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu, menu);
-		searchItem = menu.findItem(R.id.action_search);
-		searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		searchView.setOnQueryTextListener(this);
-		searchView.setOnSearchClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (navigationDrawerFragment.isDrawerOpen()) {
-					navigationDrawerFragment.closeDrawer();
-					searchView.onActionViewExpanded();
-				}
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onQueryTextChange(String query) {
-		if (query.isEmpty()) {
-			String fragmentName = getPreviousFragmentName(1);
-			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-			if (null != fragment) {
-                if (LibraryFragment.class == fragment.getClass() && fragment.isVisible()) {
-                    ((LibraryFragment) fragment).clearFilter();
-                } else if (PlaylistFragment.class == fragment.getClass() && fragment.isVisible()) {
-                    ((PlaylistFragment) fragment).clearFilter();
-                }
-            }
-		}
-		return false;
-	}
 
-	@Override
-	public boolean onQueryTextSubmit(String query) {
-		Util.hideKeyboard(this, searchView);
-		String lastFragmentName = getPreviousFragmentName(1);
-		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-			searchView.clearFocus();
-			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		} else if(lastFragmentName.equals(PlaylistFragment.class.getSimpleName())){
-			searchView.clearFocus();
-			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				fragment.collapseAll();
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		}
-		return false;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		View view  = findViewById(R.id.drawer_layout);
-		Util.hideKeyboard(this, view);
-		switch(item.getItemId()) {
-        case R.id.action_search:
-            searchView.setIconified(false);// to Expand the SearchView when clicked
-            return true;
-	    }
-		return false;
-	}
-	
-	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
-		return super.onPrepareOptionsMenu(menu);
-	}
-	
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		buttonBackEnabled = true;
@@ -244,7 +153,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	public void setActionBarTitle(String title) {
 		getSupportActionBar().setTitle(title);
 	}
-	
+
 	public void setActionBarTitle(int title) {
 		setActionBarTitle(getResources().getString(title));
 	}
@@ -255,7 +164,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	
 	public void changeFragment(Fragment targetFragment, boolean isAnimate, AbstractSong song) {
 		currentTag = targetFragment.getClass().getSimpleName();
-		setSearchViewVisibility(currentTag);
 		currentFragmentIsPlayer = currentTag.equals(PlayerFragment.class.getSimpleName());
 		if (targetFragment.getClass() == LibraryFragment.class) {
 			Bundle b = new Bundle();
@@ -272,10 +180,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 				   .commit();
 	}
 
-	private void setSearchViewVisibility(String fragmentName) {
-		isVisibleSearchView = (fragmentName.equals(LibraryFragment.class.getSimpleName())) || (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
-	}
-	
 	public boolean isButtonBackEnabled() {
 		return buttonBackEnabled;
 	}
@@ -295,7 +199,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
 		String lastFragmentName = backEntry.getName();
 		Fragment currentFragment = getFragmentManager().findFragmentByTag(lastFragmentName);
-		setSearchViewVisibility(getPreviousFragmentName(2));
 		if (null != currentFragment && currentFragment.isVisible() && currentFragment.getClass() == PlayerFragment.class) {
 			getFragmentManager().popBackStack();
 			invalidateOptionsMenu();
@@ -440,14 +343,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements NavigationDr
 	@Override
 	protected BaseDownloadSongTask createDownloadListener(RemoteSong song) {
 		return new BaseDownloadListener(this, song, 0);
-	}
-	
-	public SearchView getSearchView() {
-		return searchView;
-	}
-	
-	public MenuItem getSearchItem() {
-		return searchItem;
 	}
 
 }

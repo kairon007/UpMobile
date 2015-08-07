@@ -72,8 +72,6 @@ public abstract class BasePlaylistView extends View {
 
 	protected abstract ListView getListView(View view);
 
-	protected abstract void collapseSearchView();
-
 	public abstract TextView getMessageView(View view);
 	
 	protected void animateListView(ListView listView, BasePlaylistsAdapter adapter) {
@@ -284,7 +282,6 @@ public abstract class BasePlaylistView extends View {
 						return;
 					}
 				}
-				collapseSearchView();
 				createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), dialoglayout);
 				dialog.cancel();

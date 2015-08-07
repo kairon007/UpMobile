@@ -1,15 +1,15 @@
 package org.upmobile.materialmusicdownloader.fragment;
 
-import org.upmobile.materialmusicdownloader.R;
-import org.upmobile.materialmusicdownloader.activity.MainActivity;
-import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
-import org.upmobile.materialmusicdownloader.ui.DownloadsView;
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.upmobile.materialmusicdownloader.R;
+import org.upmobile.materialmusicdownloader.activity.MainActivity;
+import org.upmobile.materialmusicdownloader.models.BaseMaterialFragment;
+import org.upmobile.materialmusicdownloader.ui.DownloadsView;
 
 import ru.johnlife.lifetoolsmp3.Constants;
 
@@ -36,7 +36,6 @@ public class DownloadsFragment extends Fragment implements BaseMaterialFragment 
 		activity.setSelectedItem(Constants.DOWNLOADS_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);
-		activity.setVisibleSearchView(getClass().getSimpleName());
 		super.onResume();
 	}
 

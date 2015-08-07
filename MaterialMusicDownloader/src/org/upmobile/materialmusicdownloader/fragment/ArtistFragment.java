@@ -31,7 +31,6 @@ public class ArtistFragment  extends Fragment implements BaseMaterialFragment, C
         MainActivity activity = ((MainActivity) getActivity());
         activity.setSelectedItem(ARTIST_FRAGMENT);
         activity.setTitle(getDrawerTitle());
-        activity.setVisibleSearchView(getClass().getSimpleName());
         activity.setDrawerEnabled(true);
         artistView.onResume();
         super.onResume();

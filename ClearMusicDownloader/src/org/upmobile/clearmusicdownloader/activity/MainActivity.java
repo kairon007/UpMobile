@@ -5,18 +5,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 
 import com.special.BaseClearActivity;
@@ -44,15 +40,12 @@ import ru.johnlife.lifetoolsmp3.song.RemoteSong;
 import ru.johnlife.lifetoolsmp3.tasks.BaseDownloadSongTask;
 import ru.johnlife.lifetoolsmp3.ui.dialog.DirectoryChooserDialog;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
-import ru.johnlife.lifetoolsmp3.utils.Util;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarController;
 import ru.johnlife.uilibrary.widget.notifications.undobar.UndoBarStyle;
 
 public class MainActivity extends BaseClearActivity implements Constants {
 
 	private Fragment[] fragments;
-    private SearchView searchView;
-    private String query;
 	private boolean useCoverHelper = true;
 	FileObserver fileObserver;
 
@@ -65,8 +58,6 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		initObserver(ClearMusicDownloaderApp.getDirectory());
 		fileObserver.startWatching();
 		super.onCreate(savedInstanceState);
-		initSearchView();
-		
 //		 Nulldroid_Advertisement.startIfNotBlacklisted(this, false);
 
 	}
@@ -105,86 +96,9 @@ public class MainActivity extends BaseClearActivity implements Constants {
 		super.checkOnStart(null == player || !player.isVisible());
 	}
 	
-	private void initSearchView() {
-		searchView = (SearchView) findViewById(R.id.ab_search);
-		AutoCompleteTextView mQueryTextView = (AutoCompleteTextView) searchView.findViewById(R.id.search_src_text);
-		mQueryTextView.setTextColor(Color.WHITE);
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String q) {
-				query = q;
-				Util.hideKeyboard(MainActivity.this, searchView);
-				String lastFragmentName = getLastFragmentName();
-				if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-					searchView.clearFocus();
-					LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					if (fragment.isVisible()) {
-						if (query.isEmpty()) {
-							fragment.clearFilter();
-						} else {
-							fragment.setFilter(query);
-						}
-					}
-				} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
-					searchView.clearFocus();
-					PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					if (fragment.isVisible()) {
-						fragment.collapseAll();
-						if (query.isEmpty()) {
-							fragment.clearFilter();
-						} else {
-							fragment.setFilter(query);
-						}
-					}
-				}
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				if ("".equals(newText)) {
-					String fragmentName = getLastFragmentName();
-					Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-					if (LibraryFragment.class == fragment.getClass()) {
-						if (fragment.isVisible()) {
-							((LibraryFragment) fragment).clearFilter();
-						}
-					} else if (PlaylistFragment.class == fragment.getClass()) {
-						if (fragment.isVisible()) {
-							((PlaylistFragment) fragment).clearFilter();
-						}
-					}
-				}
-				return false;
-			}
-
-		});
-	}
-
-	public SearchView getSearchView() {
-		return searchView;
-	}
-	
 	private String getLastFragmentName() {
 		android.app.FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(getFragmentManager().getBackStackEntryCount() - 1);
         return backEntry.getName();
-	}
-
-	public String getQuery() {
-		return query;
-	}
-
-	@Override
-	protected void manageSearchView(String targetFragment) {
-		if (null == searchView) return;
-		if (targetFragment.equals(LibraryFragment.class.getSimpleName())) {
-			searchView.setVisibility(View.VISIBLE);
-		} else if (targetFragment.equals(PlaylistFragment.class.getSimpleName())) {
-			searchView.setVisibility(View.VISIBLE);
-		} else {
-			searchView.setVisibility(View.INVISIBLE);
-		}
 	}
 
 	@Override

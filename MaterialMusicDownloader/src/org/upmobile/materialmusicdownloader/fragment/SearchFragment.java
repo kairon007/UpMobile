@@ -17,12 +17,6 @@ import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 public class SearchFragment extends Fragment implements BaseMaterialFragment, Constants {
 
 	private SearchView searchView;
-	private String query;
-
-	public SearchFragment(String query) {
-		this.query = query;
-	}
-
 	public SearchFragment() {}
 
 	@Override
@@ -41,14 +35,6 @@ public class SearchFragment extends Fragment implements BaseMaterialFragment, Co
 	@Override
 	public void onResume() {
 		MainActivity activity = (MainActivity) getActivity();
-		activity.setVisibleSearchView(getClass().getSimpleName());
-		query = activity.getQuery();
-		if (null != query) {
-			searchView.setExtraSearch(query);
-			searchView.setSearchField(query);
-			searchView.trySearch();
-			query = null;
-		}
 		activity.setSelectedItem(SEARCH_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
 		activity.setDrawerEnabled(true);

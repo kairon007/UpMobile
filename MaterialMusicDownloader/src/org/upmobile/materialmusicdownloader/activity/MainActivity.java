@@ -9,22 +9,15 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.FileObserver;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.SearchView;
-import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.TypedValue;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 
 import org.upmobile.materialmusicdownloader.BaseDownloadListener;
@@ -64,12 +57,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	private int currentFragmentId = -1;
 	private CharSequence mTitle;
-	private String query = null;
-	private SearchView searchView;
 	private NavigationDrawerFragment navigationDrawerFragment;
 	private boolean isVisibleSearchView = false;
 	protected boolean isEnabledFilter = false;
-	protected boolean hadClosedDraver = false;
 	private int currentPosition = -1;
 	private Bitmap defaultCover;
 
@@ -130,14 +120,7 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	public void changeFragment(BaseMaterialFragment baseMaterialFragment, boolean isAnimate, AbstractSong song) {
 		configCurrentId(baseMaterialFragment);
-		if (null != searchView) {
-			Util.hideKeyboard(this, searchView);
-		}
 		isEnabledFilter = false;
-		if (null != searchView) {
-			searchView.setIconified(true);
-			searchView.setIconified(true);
-		}
 		if (((Fragment) baseMaterialFragment).isAdded()) {
 			((Fragment) baseMaterialFragment).onResume();
 		}
@@ -160,20 +143,9 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.id.action_search).setVisible(isVisibleSearchView);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		View view = findViewById(R.id.drawer_layout);
 		Util.hideKeyboard(this, view);
-		int itemId = item.getItemId();
-		if (itemId == R.id.action_search) {
-			searchView.setIconified(false);// to Expand the SearchView when clicked
-			return true;
-		}
 		return false;
 	}
 
@@ -225,85 +197,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		View v = findViewById(android.R.id.home);
-		if (null != v) {
-			if (useOldToggle()) {
-				((View) v.getParent().getParent()).setPadding(32, 0, 0, 0);
-			}
-		}
-		getMenuInflater().inflate(R.menu.main, menu);
-		MenuItem searchItem = menu.findItem(R.id.action_search);
-		searchView = (SearchView) searchItem.getActionView();
-		searchView.setQueryHint(getResources().getString(R.string.hint_main_search));
-		searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-			@Override
-			public boolean onClose() {
-				return false;
-			}
-		});
-		((EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text)).addTextChangedListener(new TextWatcher() {
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-			}
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-				if (PLAYLIST_FRAGMENT == currentPosition) {
-					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					playlist.forceDelete();
-				}
-				if (SONGS_FRAGMENT == currentPosition) {
-					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					library.forceDelete();
-				}
-			}
-		});
-		searchView.setOnSearchClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				if (navigationDrawerFragment.isDrawerOpen()) {
-					navigationDrawerFragment.closeDrawer();
-				}
-				if (PLAYLIST_FRAGMENT == currentPosition) {
-					PlaylistFragment playlist = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-					playlist.forceDelete();
-				}
-				if (SONGS_FRAGMENT == currentPosition) {
-					LibraryFragment library = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-					library.forceDelete();
-				}
-			}
-		});
-		searchView.setOnQueryTextListener(new OnQueryTextListener() {
-
-			@Override
-			public boolean onQueryTextSubmit(String q) {
-				searchView.clearFocus();
-				Util.hideKeyboard(MainActivity.this, searchView);
-				onQueryTextSubmitAct(q);
-				return false;
-			}
-
-			@Override
-			public boolean onQueryTextChange(String newText) {
-				onQueryTextChangeAct(newText);
-				return false;
-			}
-		});
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	public void closeSearchView(boolean close) {
-		if(null == searchView) return;
-		searchView.setIconified(close);
-	}
-
-	@Override
 	protected void onStart() {
 		startService(new Intent(this, PlaybackService.class));
 		super.onStart();
@@ -317,7 +210,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 
 	@Override
 	public void onBackPressed() {
-		setVisibleSearchView(getPreviousFragmentName(2));
 		if (getPreviousFragmentName(2).equals(SearchFragment.class.getSimpleName())) {
 			getSupportActionBar().setElevation(0);
 		}
@@ -582,10 +474,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		return navigationDrawerFragment.isDrawerIndicatorEnabled();
 	}
 
-	public String getQuery() {
-		return query;
-	}
-
 	public void setSelectedItem(int position) {
 		currentPosition = position;
 		if (null != navigationDrawerFragment) {
@@ -594,23 +482,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		setCurrentFragmentId(position);
 	}
 
-	public void setVisibleSearchView(String fragmentName) {
-		boolean flag = (fragmentName.equals(LibraryFragment.class.getSimpleName()))
-				|| (fragmentName.equals(PlaylistFragment.class.getSimpleName()));
-		if (flag != isVisibleSearchView) {
-			invalidateOptionsMenu();
-		}
-		isVisibleSearchView = flag;
-	}
-
-	public SearchView getSearchView() {
-		return searchView;
-	}
-
-	private boolean useOldToggle() {
-		return Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN_MR1;
-	}
-	
 	@Override
 	protected int getMiniPlayerDuplicateID() {
 		return R.id.mini_player_duplicate;

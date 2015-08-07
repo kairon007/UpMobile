@@ -74,7 +74,6 @@ public class PlaylistView extends BasePlaylistView {
 						return;
 					}
 				}
-				collapseSearchView();
 				PlaylistView.this.createPlaylist(getContext().getContentResolver(), newTitle);
 				Util.hideKeyboard(getContext(), input);
 				dialog.cancel();
@@ -234,11 +233,6 @@ public class PlaylistView extends BasePlaylistView {
 	@Override
 	public void forceDelete() {
 		swipeUndoAdapter.forceDelete();
-	}
-
-	@Override
-	protected void collapseSearchView () {
-		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
 	}
 
     public void miniPlayerAnimationStart(boolean isUpAnimation) {

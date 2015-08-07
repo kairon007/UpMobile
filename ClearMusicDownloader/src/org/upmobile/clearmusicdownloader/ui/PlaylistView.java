@@ -107,8 +107,4 @@ public class PlaylistView extends BasePlaylistView {
 		swipeUndoAdapter.forceDelete();
 	}
 
-	@Override
-	protected void collapseSearchView () {
-		((MainActivity) getContext()).getSearchView().onActionViewCollapsed();
-	}
 }

@@ -31,7 +31,6 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 		MainActivity activity = ((MainActivity) getActivity());
 		activity.setSelectedItem(SONGS_FRAGMENT);
 		activity.setTitle(getDrawerTitle());
-		activity.setVisibleSearchView(getClass().getSimpleName());
 		abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
 		activity.setDrawerEnabled(null == abstractSong ? true : false);
 		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());

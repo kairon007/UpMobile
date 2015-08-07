@@ -411,7 +411,6 @@ public class PlayerFragment extends Fragment implements Constants, OnClickListen
 		act.setCurrentFragmentId(ManagerFragmentId.playerFragment());
 		act.setDrawerEnabled(false);
 		act.setTitle(R.string.tab_now_playing);
-		act.invalidateOptionsMenu();
 		act.setToolbarOverlay(true);
 		act.setToolbarAlpha(scrollView.getToolbarAlpha());
 		act.showToolbarShadow(true);
