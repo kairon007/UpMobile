@@ -60,4 +60,9 @@ public class ArtistView extends BaseArtistView {
     @Override
     protected void animateListView(ListView listView, final BaseAbstractAdapter<AbstractSong> adapter) {
     }
+
+    @Override
+    protected void showShadow(boolean show) {
+
+    }
 }

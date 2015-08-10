@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+
+    <View
+        android:id="@+id/fakeScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"/>
+
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <EditText
+                android:id="@+id/liveSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/fake_image"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="@string/hint_main_search"
+                android:imeOptions="actionSearch"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textStyle="bold"/>
+
+
+                <ImageView
+                    android:id="@+id/clearLiveSearch"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@android:drawable/ic_menu_delete" />
+        </FrameLayout>
+
+    </FrameLayout>
 
     <include
         android:layout_width="match_parent"

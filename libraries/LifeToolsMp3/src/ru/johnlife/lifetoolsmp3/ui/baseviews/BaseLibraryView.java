@@ -17,14 +17,19 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupMenu.OnMenuItemClickListener;
@@ -33,8 +38,6 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import ru.johnlife.lifetoolsmp3.R;
 import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
@@ -47,7 +50,7 @@ import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 @SuppressLint("NewApi")
-public abstract class BaseLibraryView extends View implements Handler.Callback {
+public abstract class BaseLibraryView extends View implements Handler.Callback, View.OnClickListener, TextWatcher{
 
      public static final int MSG_FILL_ADAPTER = 1;
 
@@ -55,14 +58,17 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     private BaseAbstractAdapter<MusicData> adapter;
     private ListView listView;
     private TextView emptyMessage;
+    private EditText liveSearch;
+    private View clearLiveSearch;
     private Handler uiHandler;
-    private String filterQuery = "";
     private final Object lock = new Object();
     private CheckRemovedFiles checkRemovedFiles;
     private Cursor cursor;
     private PlaybackService service;
     private SDReceiver sdReceiver;
     private IntentFilter intentFilter;
+    private View liveSearchScroll;
+    protected View headerView;
 
     private ContentObserver observer = new ContentObserver(null) {
 
@@ -90,17 +96,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
     };
     private String comment;
 
-    private void fillAdapter(ArrayList<MusicData> list) {
-        if (list.isEmpty() && !adapter.isEmpty()) {
-            adapter.clear();
-            return;
-        }
-        Message msg = new Message();
-        msg.what = MSG_FILL_ADAPTER;
-        msg.obj = list;
-        uiHandler.sendMessage(msg);
-        StateKeeper.getInstance().setLibraryAdapterItems(list);
-    }
+    protected abstract void showShadow(boolean show);
 
     protected boolean isUserDeleted = false;
 
@@ -120,11 +116,14 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             checkRemovedFiles.cancel(true);
             checkRemovedFiles = null;
         }
+        StateKeeper.getInstance().setLibraryAdapterItems(adapter.getOriginalItems());
         StateKeeper.getInstance().setLibraryFirstPosition(listView.getFirstVisiblePosition());
         getContext().unregisterReceiver(sdReceiver);
     }
 
     public void onResume() {
+        liveSearchScroll.scrollTo(0, 0);
+        liveSearchScroll.scrollBy(0, 0);
         ((BaseLibraryAdapter) adapter).setListener();
         checkRemovedFiles = new CheckRemovedFiles(adapter.getAll());
         if (checkRemovedFiles.getStatus() == Status.RUNNING) return;
@@ -134,14 +133,17 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             checkRemovedFiles.execute();
         }
         getContext().registerReceiver(sdReceiver, intentFilter);
-        updateAdapter();
     }
 
-    private PlaybackService getService() {
-        if (PlaybackService.hasInstance()) {
-            return PlaybackService.get(getContext());
+    private void fillAdapter(ArrayList<MusicData> list) {
+        if (list.isEmpty() && !adapter.isEmpty()) {
+            adapter.clear();
+            return;
         }
-        return null;
+        Message msg = new Message();
+        msg.what = MSG_FILL_ADAPTER;
+        msg.obj = list;
+        uiHandler.sendMessage(msg);
     }
 
     public class SDReceiver extends BroadcastReceiver {
@@ -157,7 +159,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                 updateAdapter();
             }
         }
-    };
+    }
 
     public BaseLibraryView(LayoutInflater inflater) {
         super(inflater.getContext());
@@ -173,17 +175,17 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         getContext().registerReceiver(sdReceiver, intentFilter);
         getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
         init(inflater);
-        if (null != listView) {
-            showProgress(view);
-            listView.setAdapter(adapter);
-            animateListView(listView, adapter);
+        showProgress(view);
+        listView.setAdapter(adapter);
+        animateListView(listView, adapter);
+        if (null != StateKeeper.getInstance().getLibraryAdapterItems()) {
+            hideProgress(view);
+            fillAdapter(StateKeeper.getInstance().getLibraryAdapterItems());
         }
+        updateAdapter();
     }
 
     private void updateAdapter() {
-        if (null != StateKeeper.getInstance().getLibraryAdapterItems()) {
-            fillAdapter(StateKeeper.getInstance().getLibraryAdapterItems());
-        }
         new Thread(new Runnable() {
 
             private ArrayList<MusicData> querySong;
@@ -225,28 +227,14 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
 
     public void applyFilter(String srcFilter) {
         adapter.getFilter().filter(srcFilter);
-        filterQuery = srcFilter;
     }
 
     public void clearFilter() {
         adapter.clearFilter();
-        filterQuery = "";
     }
 
     public void showMessage(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    protected void adapterCancelTimer() {
-        adapter.cancelTimer();
-    }
-
-    protected void deleteAdapterItem(MusicData item) {
-        adapter.remove(item);
-    }
-
-    protected void deleteServiceItem(MusicData item) {
-        getService().remove(item);
     }
 
     private void init(LayoutInflater inflater) {
@@ -254,6 +242,14 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         listView = getListView(view);
         emptyMessage = getMessageView(view);
         adapter = getAdapter();
+        liveSearchScroll = view.findViewById(R.id.liveSearchScroll);
+        liveSearchScroll.setVisibility(VISIBLE);
+        liveSearch = (EditText) view.findViewById(R.id.liveSearch);
+        clearLiveSearch = view.findViewById(R.id.clearLiveSearch);
+        liveSearch.addTextChangedListener(this);
+        clearLiveSearch.setOnClickListener(this);
+        headerView = inflate(getContext(), R.layout.empty_scroll, null);
+        listView.addHeaderView(headerView);
         if (PlaybackService.hasInstance()) {
             service = PlaybackService.get(view.getContext());
         } else {
@@ -264,9 +260,39 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
                 }
             });
         }
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int lastScroll = getScrollListView();
+            int maxScroll = liveSearchScroll.getLayoutParams().height;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {}
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int scrollBy = getScrollListView() - lastScroll;
+                lastScroll = getScrollListView();
+                int resultScroll = liveSearchScroll.getScrollY() + scrollBy;
+                if (resultScroll < 0 && adapter.getCount() != 0) {
+                    liveSearchScroll.scrollTo(0, 0);
+                    showShadow(false);
+                } else if (resultScroll > maxScroll && adapter.getCount() != 0) {
+                    liveSearchScroll.scrollTo(0, maxScroll);
+                    showShadow(true);
+                } else {
+                    if (adapter.getCount() != 0) liveSearchScroll.scrollBy(0, scrollBy);
+                    if (0 != scrollBy) {
+                        Util.hideKeyboard(getContext(), view);
+                        showShadow(false);
+                    }
+                }
+            }
+        });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0 && listView.getHeaderViewsCount() > 0) return; //header click;
+                i = i - listView.getHeaderViewsCount();
                 forceDelete();
                 Util.hideKeyboard(getContext(), view);
 
@@ -282,6 +308,8 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
         listView.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 0 && listView.getHeaderViewsCount() > 0) return false; //header click;
+                position = position - listView.getHeaderViewsCount();
                 forceDelete();
                 AbstractSong data = (AbstractSong) adapter.getItem(position);
                 showMenu(view, (MusicData) data);
@@ -289,6 +317,44 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             }
         });
     }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(final CharSequence s, int start, int before, int count) {
+        adapter.getFilter().filter(s.toString(), new Filter.FilterListener() {
+            @Override
+            public void onFilterComplete(int count) {
+                String message = adapter.getCount() == 0 ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + s : getResources().getString(R.string.library_empty);
+                emptyMessage.setText(message);
+                emptyMessage.setVisibility(count == 0 ? VISIBLE: INVISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {}
+
+    public int getScrollListView() {
+        View c = listView.getChildAt(1);
+        if (c == null) return 0;
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        int top = c.getTop();
+        return -top + firstVisiblePosition * c.getHeight();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.clearLiveSearch) {
+            clearFilter();
+            liveSearch.clearFocus();
+            liveSearch.setText("");
+            emptyMessage.setVisibility(INVISIBLE);
+        }
+    }
+
 
     private void showMenu(final View view, final MusicData musicData) {
         PopupMenu menu = new PopupMenu(getContext(), view);
@@ -329,12 +395,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             }
             cursor.close();
         }
-        Collections.sort(result, new Comparator<MusicData>() {
-            @Override
-            public int compare(MusicData lhs, MusicData rhs) {
-                return lhs.getTitle().compareToIgnoreCase(rhs.getTitle());
-            }
-        });
         return result;
     }
 
@@ -361,11 +421,7 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             adapter.setDoNotifyData(false);
             adapter.clear();
             adapter.add(list);
-            if (!filterQuery.isEmpty()) {
-                applyFilter(filterQuery);
-            } else {
-                adapter.notifyDataSetChanged();
-            }
+            adapter.notifyDataSetChanged();
             hideProgress(view);
             if (null != comment) {
                 synchronized (lock) {
@@ -457,9 +513,5 @@ public abstract class BaseLibraryView extends View implements Handler.Callback {
             }
             super.onPostExecute(result);
         }
-    }
-
-    public String getFilterQuery() {
-        return filterQuery;
     }
 }

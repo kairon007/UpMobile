@@ -20,7 +20,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	private LayoutInflater inflater;
 	protected ViewGroup parent;
 	private Filter filter;
-	
+
 	protected int layoutId;
 	private boolean doNotifyData = true;
 
@@ -156,6 +156,10 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			notifyDataSetChanged();
 		}
 	}
+
+	public ArrayList<T> getOriginalItems(){
+		return null == originalItems ? items : originalItems;
+	}
 	
 	public Context getContext() {
 		return context;
@@ -201,7 +205,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		notifyDataSetChanged();
 		originalItems = null;
 	}
-	
+
 	public void setDoNotifyData(boolean doNotifyData) {
 		this.doNotifyData = doNotifyData;
 	}
@@ -215,12 +219,14 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	public static abstract class ViewHolder<T extends AbstractSong> {
 		protected abstract void hold(T item, int position);
 	}
-	
+
 	private class ResultFilter extends Filter {
+
+		FilterResults results;
 
 		@Override
 		protected FilterResults performFiltering(CharSequence constraint) {
-			FilterResults results = new FilterResults();
+			results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (originalItems == null) {
 				originalItems = new ArrayList<>(items);

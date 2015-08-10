@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/listview" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/message_listview"
@@ -24,5 +25,60 @@
         android:id="@+id/progress"
         style="@style/ProgressBar"
         android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="?attr/colorPrimary"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <EditText
+                android:id="@+id/liveSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/fake_image"
+                android:ems="10"
+                android:fontFamily="sans-serif"
+                android:hint="@string/hint_main_search"
+                android:imeOptions="actionSearch"
+                android:lines="1"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textStyle="bold"/>
+
+            <ru.johnlife.uilibrary.widget.customviews.RippleView
+                style="@style/RippleStyleCircle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginBottom="4dp"
+                app:rv_color="@android:color/white">
+
+                <ImageView
+                    android:id="@+id/clearLiveSearch"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_close_white" />
+            </ru.johnlife.uilibrary.widget.customviews.RippleView>
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/toolbar_shadow"/>
+
+
+    </FrameLayout>
 
 </FrameLayout>

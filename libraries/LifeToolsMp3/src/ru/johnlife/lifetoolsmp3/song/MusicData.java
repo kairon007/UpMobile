@@ -17,11 +17,12 @@ import org.cmc.music.metadata.MusicMetadataSet;
 import org.cmc.music.myid3.MyID3;
 
 import java.io.File;
+import java.util.Comparator;
 
 import ru.johnlife.lifetoolsmp3.song.RemoteSong.DownloadUrlListener;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
-public class MusicData implements Comparable<MusicData>, AbstractSong {
+public class MusicData implements Comparable<MusicData>, AbstractSong, Comparator<MusicData> {
 
 	public static final String[] FILLED_PROJECTION = {
 				BaseColumns._ID, 
@@ -260,6 +261,13 @@ public class MusicData implements Comparable<MusicData>, AbstractSong {
 	@Override
 	public String toString() {
 		return String.format("%d %s", id, path);
+	}
+
+	@Override
+	public int compare(MusicData lhs, MusicData rhs) {
+		String arg1 = lhs.getArtist() + lhs.getTitle();
+		String arg2 = rhs.getArtist() + rhs.getTitle();
+		return arg1.compareToIgnoreCase(arg2);
 	}
 
 	@Override

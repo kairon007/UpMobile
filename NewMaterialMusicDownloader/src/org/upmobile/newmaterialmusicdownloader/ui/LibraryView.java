@@ -12,6 +12,7 @@ import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCallback;
 
 import org.upmobile.newmaterialmusicdownloader.R;
+import org.upmobile.newmaterialmusicdownloader.activity.MainActivity;
 import org.upmobile.newmaterialmusicdownloader.adapter.LibraryAdapter;
 
 import java.util.HashSet;
@@ -82,6 +83,11 @@ public class LibraryView extends BaseLibraryView {
         } catch (Throwable e){
             Log.d(getClass().getSimpleName(), "Exception: " + e);
         }
+	}
+
+	@Override
+	protected void showShadow(final boolean visible) {
+		((MainActivity) getContext()).showToolbarShadow(visible);
 	}
 
     @Override

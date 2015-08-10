@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/message_listview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:padding="16dp"
+        android:text="@string/library_empty"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:visibility="gone" />
+
+    <ru.johnlife.uilibrary.widget.form.ProgressWheel
+        android:id="@+id/progress"
+        style="@style/ProgressBar"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+            <EditText
+                android:id="@+id/liveSearch"
+                style="@style/EditTextAppearance.Line"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/fake_image"
+                android:hint="@string/hint_main_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:singleLine="true" />
+
+            <ru.johnlife.uilibrary.widget.customviews.RippleView
+                style="@style/RippleStyleCircle"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|right"
+                app:rv_color="@color/main_color_for_search_fragment_text" >
+
+            <org.upmobile.materialmusicdownloader.font.MusicTextView
+                android:id="@+id/clearLiveSearch"
+                style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="4dp"
+                android:text="@string/font_cancel"
+                android:textSize="16sp" />
+            </ru.johnlife.uilibrary.widget.customviews.RippleView>
+        </FrameLayout>
+
+    </FrameLayout>
+
+</FrameLayout>

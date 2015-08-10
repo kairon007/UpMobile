@@ -14,11 +14,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -38,7 +44,7 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 /**
  * Created by Aleksandr on 04.08.2015.
  */
-public abstract class BaseArtistView extends View implements Handler.Callback {
+public abstract class BaseArtistView extends View implements Handler.Callback, View.OnClickListener, TextWatcher {
 
     public static final int MSG_FILL_ADAPTER = 1;
 
@@ -46,12 +52,15 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
     private BaseAbstractAdapter<AbstractSong> adapter;
     private ListView listView;
     private TextView emptyMessage;
+    private EditText liveSearch;
+    private View clearLiveSearch;
     private Handler uiHandler;
     private final Object lock = new Object();
     private Cursor cursor;
     private PlaybackService service;
     private SDReceiver sdReceiver;
     private IntentFilter intentFilter;
+    private View liveSearchScroll;
 
     protected void showProgress(View v) {
         v.findViewById(R.id.progress).setVisibility(View.VISIBLE);
@@ -74,6 +83,8 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
     protected abstract void showPlayerFragment(MusicData musicData);
 
     protected abstract void animateListView(ListView listView, BaseAbstractAdapter<AbstractSong> adapter);
+
+    protected abstract void showShadow(boolean show);
 
     public View getView() {
         return view;
@@ -119,16 +130,22 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
             listView.setAdapter(adapter);
             animateListView(listView, adapter);
         }
+        if (null != StateKeeper.getInstance().getArtistAdapterItems()) {
+            updateAdapter(StateKeeper.getInstance().getArtistAdapterItems());
+            hideProgress(view);
+        }
+        updateAdapter();
     }
 
     public void onPause() {
-        StateKeeper.getInstance().setArtistAdapterItems(adapter.getAll());
+        StateKeeper.getInstance().setArtistAdapterItems(adapter.getOriginalItems());
         getContext().unregisterReceiver(sdReceiver);
     }
 
     public void onResume() {
+        liveSearchScroll.scrollTo(0, 0);
+        liveSearchScroll.scrollBy(0, 0);
         getContext().registerReceiver(sdReceiver, intentFilter);
-        updateAdapter();
     }
 
     public class SDReceiver extends BroadcastReceiver {
@@ -162,6 +179,14 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
         listView = getListView(view);
         emptyMessage = getMessageView(view);
         adapter = getAdapter();
+        liveSearchScroll = view.findViewById(R.id.liveSearchScroll);
+        liveSearchScroll.setVisibility(VISIBLE);
+        liveSearch = (EditText) view.findViewById(R.id.liveSearch);
+        clearLiveSearch = view.findViewById(R.id.clearLiveSearch);
+        liveSearch.addTextChangedListener(this);
+        clearLiveSearch.setOnClickListener(this);
+        View v = inflate(getContext(), R.layout.empty_scroll, null);
+        listView.addHeaderView(v);
         if (PlaybackService.hasInstance()) {
             service = PlaybackService.get(view.getContext());
         } else {
@@ -174,16 +199,49 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
         }
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int i, long id) {
+                if (i == 0 && listView.getHeaderViewsCount() > 0) return false; //header click;
+                i = i - listView.getHeaderViewsCount();
                 forceDelete();
-                AbstractSong data = (AbstractSong) adapter.getItem(position);
+                AbstractSong data = (AbstractSong) adapter.getItem(i);
                 showMenu(view, data);
                 return true;
+            }
+        });
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+
+            int lastScroll = getScrollListView();
+            int maxScroll = liveSearchScroll.getLayoutParams().height;
+
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                int scrollBy = getScrollListView() - lastScroll;
+                lastScroll = getScrollListView();
+                int resultScroll = liveSearchScroll.getScrollY() + scrollBy;
+                if (resultScroll < 0 && adapter.getCount() != 0) {
+                    liveSearchScroll.scrollTo(0, 0);
+                    showShadow(false);
+                } else if (resultScroll > maxScroll && adapter.getCount() != 0) {
+                    liveSearchScroll.scrollTo(0, maxScroll);
+                    showShadow(true);
+                } else {
+                    if (adapter.getCount() != 0) liveSearchScroll.scrollBy(0, scrollBy);
+                    if (0 != scrollBy) {
+                        Util.hideKeyboard(getContext(), view);
+                        showShadow(false);
+                    }
+                }
             }
         });
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0 && listView.getHeaderViewsCount() > 0) return; //header click;
+                i = i - listView.getHeaderViewsCount();
                 forceDelete();
                 AbstractSong abstractSong = (AbstractSong) adapter.getItem(i);
                 ArrayList<AbstractSong> all = adapter.getAll();
@@ -206,6 +264,43 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                 }
             }
         });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    @Override
+    public void onTextChanged(final CharSequence s, int start, int before, int count) {
+        adapter.getFilter().filter(s.toString(), new Filter.FilterListener() {
+            @Override
+            public void onFilterComplete(int count) {
+                String message = adapter.getCount() == 0 ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + s : getResources().getString(R.string.library_empty);
+                emptyMessage.setText(message);
+                emptyMessage.setVisibility(count == 0 ? VISIBLE : INVISIBLE);
+            }
+        });
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {}
+
+    public int getScrollListView() {
+        View c = listView.getChildAt(1);
+        if (c == null) return 0;
+        int firstVisiblePosition = listView.getFirstVisiblePosition();
+        int top = c.getTop();
+        return -top + firstVisiblePosition * c.getHeight();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.clearLiveSearch) {
+            adapter.clearFilter();
+            liveSearch.clearFocus();
+            liveSearch.setText("");
+            emptyMessage.setVisibility(INVISIBLE);
+        }
     }
 
     private void showMenu(final View view, final AbstractSong musicData) {
@@ -234,18 +329,17 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
             public void run() {
                 adapter.setDoNotifyData(false);
                 adapter.clear();
-                adapter.changeData(newAdapter);
+                adapter.add(newAdapter);
                 adapter.notifyDataSetChanged();
-                StateKeeper.getInstance().setArtistAdapterItems(newAdapter);
+                if (newAdapter.isEmpty()) {
+                    String message = adapter.getCount() == 0 && !liveSearch.getText().toString().isEmpty() ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + liveSearch.getText() : getResources().getString(R.string.artist_empty);
+                    emptyMessage.setText(message);
+                }
             }
         });
     }
 
     private void updateAdapter() {
-        if (null != StateKeeper.getInstance().getArtistAdapterItems()) {
-            updateAdapter(StateKeeper.getInstance().getArtistAdapterItems());
-            hideProgress(view);
-        }
         new Thread(new Runnable() {
 
             private ArrayList<AbstractSong> querySong;
@@ -258,6 +352,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
                     @Override
                     public void run() {
                         fillAdapter(querySong);
+                        Log.d("logd", "run : 3");
                         if (querySong.isEmpty()) {
                             hideProgress(view);
                             listView.setEmptyView(emptyMessage);
@@ -322,6 +417,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
     }
 
     public void removeData(AbstractSong data) {
+        getContext().getContentResolver().unregisterContentObserver(observer);
         ArrayList<AbstractSong> allAdapter = adapter.getAll();
         if (MusicData.class != data.getClass()) {
             if (((ArtistData) data).getArtistSongs().equals(service.getArrayPlayback())) {
@@ -350,6 +446,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
             ((MusicData) data).reset(getContext());
         }
         updateAdapter(allAdapter);
+        getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
     }
 
     public ArtistData getArtistBySong (MusicData data) {
@@ -370,7 +467,6 @@ public abstract class BaseArtistView extends View implements Handler.Callback {
             adapter.add(list);
             adapter.notifyDataSetChanged();
             hideProgress(view);
-            StateKeeper.getInstance().setArtistAdapterItems(list);
         }
         return true;
     }

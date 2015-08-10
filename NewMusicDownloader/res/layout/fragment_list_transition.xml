@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical"
-             android:paddingLeft="8dp"
-             android:paddingRight="8dp">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ListView
         android:id="@+id/listView"
@@ -27,8 +24,45 @@
         android:id="@+id/progress"
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"
-        android:layout_height="wrap_content" />
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/searchBackgroundColor"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <EditText
+                android:id="@+id/liveSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/fake_image"
+                android:hint="@string/hint_main_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:paddingRight="50dp"
+                android:singleLine="true"
+                android:textColor="?attr/textViewColor"
+                android:textColorHint="?attr/textViewColor" />
+
+            <ImageButton
+                android:id="@+id/clearLiveSearch"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/selectable_item_bg"
+                android:src="@drawable/close" />
+
+        </FrameLayout>
+    </FrameLayout>
 
 </FrameLayout>

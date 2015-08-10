@@ -104,7 +104,6 @@ import ru.johnlife.lifetoolsmp3.utils.Util;
 
 public abstract class BaseSearchView extends View implements OnTouchListener, OnClickListener, OnItemClickListener, FinishedParsingSongs {
 
-	private static final Void[] NO_PARAMS = {};
 	private static String DOWNLOAD_DIR = "DOWNLOAD_DIR";
 	private static String DOWNLOAD_DETAIL = "DOWNLOAD_DETAIL";
 
@@ -124,7 +123,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	
 	private final String SPREF_CURRENT_ENGINES = "pref_key_current_engines_array";
 	private int clickPosition;
-	private boolean isRestored = false;
 	private String lastSearchString = "";
 	private String extraSearch = null;
 	private String keyEngines;
@@ -357,15 +355,12 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 				lastScroll = getScrollListView();
 				int resultScroll = spEnginesChoiserScroll.getScrollY() + scrollBy;
 				if (resultScroll < 0) {
-					Log.d("logd", "onScroll : 0 :");
 					spEnginesChoiserScroll.scrollTo(0, 0);
 					showShadow(false);
 				} else if (resultScroll > maxScroll) {
-					Log.d("logd", "onScroll : 1 " + resultScroll);
 					showShadow(true);
 					spEnginesChoiserScroll.scrollTo(0, maxScroll);
 				} else {
-					Log.d("logd", "onScroll : 3 " + scrollBy);
 					spEnginesChoiserScroll.scrollBy(0, scrollBy);
 					if (0 != scrollBy) {
 						Util.hideKeyboard(getContext(), view);
@@ -466,16 +461,6 @@ public abstract class BaseSearchView extends View implements OnTouchListener, On
 	    return -top + firstVisiblePosition * c.getHeight();
 	}
 	
-	public View getViewByPosition(int pos) {
-		pos++;
-	    final int firstListItemPosition = listView.getFirstVisiblePosition();
-	    final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-	    if (pos < firstListItemPosition || pos > lastListItemPosition ) {
-	        return listView.getAdapter().getView(pos, null, listView);
-	    }
-		return listView.getChildAt(pos - firstListItemPosition);
-	}
-
 	public void initSearchEngines(Context context, String valueEngines) {
 		if (null == valueEngines) {
 			sPref = MusicApp.getSharedPreferences();

@@ -14,8 +14,17 @@ import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView;
 
 public class LibraryView extends BaseLibraryView {
 
+	private ListView listView;
+
 	public LibraryView(LayoutInflater inflater) {
 		super(inflater);
+		getView().findViewById(R.id.liveSearchScroll).setVisibility(GONE);
+		listView.removeHeaderView(headerView);
+	}
+
+	@Override
+	protected void showShadow(boolean show) {
+
 	}
 
 	@Override
@@ -25,7 +34,8 @@ public class LibraryView extends BaseLibraryView {
 
 	@Override
 	protected ListView getListView(View view) {
-		return (ListView) view.findViewById(R.id.lsvSongLibrary);
+		listView = (ListView) view.findViewById(R.id.lsvSongLibrary);
+		return listView;
 	}
 
 	@Override

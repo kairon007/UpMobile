@@ -28,4 +28,37 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:visibility="gone">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/liveSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="@string/hint_main_search"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:lines="1"
+            android:paddingLeft="8dp"
+            android:paddingRight="50dp"
+            android:singleLine="true"
+            android:textColor="@android:color/black" />
+
+        <ImageButton
+            android:id="@+id/clearLiveSearch"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|right"
+            android:src="@drawable/close" />
+</FrameLayout>
+    </FrameLayout>
+
 </LinearLayout>

@@ -90,4 +90,9 @@ public class ArtistView extends BaseArtistView {
             Log.d(getClass().getSimpleName(), "Exception: " + e);
         }
     }
+
+    @Override
+    protected void showShadow(boolean show) {
+
+    }
 }

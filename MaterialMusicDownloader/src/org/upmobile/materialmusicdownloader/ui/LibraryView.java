@@ -35,6 +35,10 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	}
 
 	@Override
+	protected void showShadow(boolean show) {
+	}
+
+	@Override
 	protected BaseAbstractAdapter<MusicData> getAdapter() {
 		return new LibraryAdapter(getContext(), R.layout.row_online_search);
 	}

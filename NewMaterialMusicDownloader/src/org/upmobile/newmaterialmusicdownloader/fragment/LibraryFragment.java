@@ -20,7 +20,6 @@ public class LibraryFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		libraryView = new LibraryView(inflater);
-		((MainActivity) inflater.getContext()).invalidateOptionsMenu();
 		return libraryView.getView();
 	}
 	
@@ -40,7 +39,7 @@ public class LibraryFragment extends Fragment {
 		MainActivity act = (MainActivity) getActivity();
 		act.setCurrentFragmentId(ManagerFragmentId.songFragment());
 		act.setTitle(R.string.tab_songs);
-		act.showToolbarShadow(true);
+		act.showToolbarShadow(false);
 		AbstractSong abstractSong = getArguments().getParcelable("KEY_SELECTED_SONG");
 		libraryView.highlightSong(null == abstractSong ? null : abstractSong.getComment());
 		act.setDrawerEnabled(null == abstractSong ? true : false);

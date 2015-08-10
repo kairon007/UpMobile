@@ -4,6 +4,13 @@
     android:layout_height="72dp">
 
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/fakeItemView"
+        android:visibility="gone"/>
+
+
     <LinearLayout
         android:id="@+id/musicRowView"
         android:layout_width="match_parent"

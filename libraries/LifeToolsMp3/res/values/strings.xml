@@ -170,4 +170,5 @@
         <item quantity="one">song</item>
         <item quantity="other">songs</item>
     </plurals>
+    <string name="artist_empty">Artists list is empty</string>
 </resources>

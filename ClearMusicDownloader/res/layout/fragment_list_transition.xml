@@ -1,32 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <include
+        layout="@layout/listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        layout="@layout/listview" />
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/message_listview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:fontFamily="sans-serif-thin"
         android:layout_marginTop="24dp"
+        android:fontFamily="sans-serif-thin"
         android:padding="16dp"
         android:text="@string/library_empty"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:visibility="gone" />
 
-	<ImageView 
-	    android:id="@id/progress"
-	    android:layout_width="48dp"
-	    android:layout_height="48dp"
-	    android:visibility="gone"
-	    android:layout_gravity="center"
-	    android:src="@drawable/loader"/>
+    <ImageView
+        android:id="@id/progress"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:src="@drawable/loader"
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/liveSearchScroll"
+        android:layout_width="match_parent"
+        android:layout_height="48dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white_transparent">
+
+            <EditText
+                android:id="@+id/liveSearch"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/tab_default"
+                android:hint="@string/hint_main_search"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
+                android:lines="1"
+                android:paddingLeft="8dp"
+                android:paddingRight="50dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black" />
+
+            <ImageButton
+                android:id="@+id/clearLiveSearch"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|right"
+                android:background="@drawable/button_selector_inverse"
+                android:src="@drawable/close" />
+
+        </FrameLayout>
+    </FrameLayout>
 
 </FrameLayout>

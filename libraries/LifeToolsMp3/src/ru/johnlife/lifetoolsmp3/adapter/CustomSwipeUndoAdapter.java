@@ -24,8 +24,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	private CanNotifyListener listener;
 	private ArrayList<DismissTimers> timers = new ArrayList<DismissTimers>();
 	private ArrayList<AbstractSong> songs = new ArrayList<>();
-	private BaseAdapter adapter;
-	
+
 	public interface CanNotifyListener {
 		
 		void canNotify(boolean isCan);
@@ -33,7 +32,6 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 	
 	public CustomSwipeUndoAdapter(BaseAdapter adapter, Context context, OnDismissCallback dismissCallback) {
 		super(adapter, context, dismissCallback);
-		this.adapter = adapter;
 	}
 	
 	@Override
@@ -42,8 +40,6 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 			listener.canNotify(false);
 		}
 		startTimer(position, o);
-		AbstractSong song = (AbstractSong) adapter.getItem(position);
-		if (!songs.contains(song)) songs.add(song);
 		super.onUndoShown(view, position, o);
 	}
 	
@@ -52,7 +48,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
-		stopTimer(position, o);
+		stopTimer(o);
 		super.onDismiss(view, position, o);
 	}
 	
@@ -61,8 +57,8 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
-		for (int position : reverseSortedPositions) {
-			stopTimer(position, getItem(position));
+		for (Object o : removed) {
+			stopTimer(o);
 		}
 		super.onDismiss(listView, reverseSortedPositions, removed);
 	}
@@ -72,7 +68,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		if (null != listener && !hasUndoViews()) {
 			listener.canNotify(true);
 		}
-		stopTimer(position, o);
+		stopTimer(o);
 		super.onUndo(view, position, o);
 	}
 	
@@ -85,7 +81,7 @@ public class CustomSwipeUndoAdapter extends SimpleSwipeUndoAdapter {
 		timers.add(new DismissTimers(o, position).startTimer());
 	}
 	
-	private void stopTimer(int position, Object o) {
+	private void stopTimer(Object o) {
 		for (DismissTimers timer : timers) {
 			if (null == o) {
 				notifyDataSetChanged();

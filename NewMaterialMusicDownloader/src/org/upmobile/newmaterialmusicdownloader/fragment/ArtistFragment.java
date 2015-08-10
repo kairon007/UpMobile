@@ -31,7 +31,7 @@ public class ArtistFragment extends Fragment {
         MainActivity act = (MainActivity) getActivity();
         act.setCurrentFragmentId(ManagerFragmentId.artistFragment());
         act.setTitle(R.string.tab_artists);
-        act.showToolbarShadow(true);
+        act.showToolbarShadow(false);
         act.setDrawerEnabled(true);
         artistView.onResume();
     }
