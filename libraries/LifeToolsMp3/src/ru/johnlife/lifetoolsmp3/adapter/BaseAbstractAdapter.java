@@ -77,6 +77,16 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			notifyDataSetChanged();
 		}
 	}
+
+	public void addByData(ArrayList<T> arrayList, T t) {
+		if (null != originalItems) {
+			originalItems.addAll(originalItems.indexOf(t) + 1, arrayList);
+		}
+		items.addAll(items.indexOf(t) + 1, arrayList);
+		if (doNotifyData) {
+			notifyDataSetChanged();
+		}
+	}
 	
 	public void add(T item) {
 		if (null != originalItems) {

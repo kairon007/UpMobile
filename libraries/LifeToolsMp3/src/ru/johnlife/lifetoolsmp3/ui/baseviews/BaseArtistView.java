@@ -248,7 +248,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                         adapter.remove(((ArtistData) abstractSong).getArtistSongs());
                         ((ArtistData) abstractSong).setExpanded(false);
                     } else {
-                        adapter.add(((ArtistData) abstractSong).getArtistSongs(), i + 1);
+                        adapter.addByData(((ArtistData) abstractSong).getArtistSongs(), abstractSong);
                         ((ArtistData) abstractSong).setExpanded(true);
                     }
                 } else {
