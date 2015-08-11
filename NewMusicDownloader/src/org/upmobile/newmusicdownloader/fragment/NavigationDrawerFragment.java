@@ -179,7 +179,6 @@ public class NavigationDrawerFragment extends Fragment implements Constants {
         mDrawerLayout.post(new Runnable() {
             @Override
             public void run() {
-            	android.util.Log.d("logd", "run: ");
                 mDrawerToggle.syncState();
             }
         });

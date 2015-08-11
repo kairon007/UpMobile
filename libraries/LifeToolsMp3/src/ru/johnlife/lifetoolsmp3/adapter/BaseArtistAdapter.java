@@ -17,7 +17,6 @@ import ru.johnlife.lifetoolsmp3.activity.BaseMiniPlayerActivity;
 import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.song.RemoteSong;
-import ru.johnlife.lifetoolsmp3.utils.TestApp;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
@@ -110,7 +109,6 @@ public abstract class BaseArtistAdapter extends BaseAbstractAdapter<AbstractSong
                 cover.setTag(data);
                 cover.setImageBitmap(getDefaultCover());
                 Bitmap bmp = getFromCache(data.hashCode());
-                TestApp.start();
                 if (null != bmp) {
                     cover.setImageBitmap(bmp);
                 } else {
@@ -139,7 +137,6 @@ public abstract class BaseArtistAdapter extends BaseAbstractAdapter<AbstractSong
                         }
                     });
                 }
-                TestApp.stop();
                 title.setText(data.getTitle());
                 artist.setText(data.getArtist());
                 duration.setText(Util.getFormatedStrDuration(data.getDuration()));

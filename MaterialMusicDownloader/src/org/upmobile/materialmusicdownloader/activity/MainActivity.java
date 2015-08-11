@@ -367,46 +367,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements FolderSelect
 		}
 	}
 
-	public void onQueryTextSubmitAct(String query) {
-		String lastFragmentName = getPreviousFragmentName(1);
-		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
-			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-			if (fragment.isVisible()) {
-				fragment.collapseAll();
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		}
-	}
-
-	public void onQueryTextChangeAct(String newText) {
-		if ("".equals(newText)) {
-			String fragmentName = getPreviousFragmentName(1);
-			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-			if (LibraryFragment.class == fragment.getClass()) {
-				if (fragment.isVisible()) {
-					((LibraryFragment) fragment).clearFilter();
-				}
-			} else if (PlaylistFragment.class == fragment.getClass()) {
-				if (fragment.isVisible()) {
-					((PlaylistFragment) fragment).clearFilter();
-				}
-			}
-		}
-	}
-
 	@Override
 	protected void showPlayerFragment() {
 		setDrawerEnabled(false);

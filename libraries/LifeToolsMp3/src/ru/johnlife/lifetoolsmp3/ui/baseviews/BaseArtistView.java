@@ -16,7 +16,6 @@ import android.provider.BaseColumns;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -244,24 +243,22 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                 i = i - listView.getHeaderViewsCount();
                 forceDelete();
                 AbstractSong abstractSong = (AbstractSong) adapter.getItem(i);
-                ArrayList<AbstractSong> all = adapter.getAll();
                 if (abstractSong.getClass() == ArtistData.class) {
-                    ArrayList<MusicData> songs = ((ArtistData) abstractSong).getArtistSongs();
                     if (((ArtistData) abstractSong).isExpanded()) {
-                        all.removeAll(songs);
+                        adapter.remove(((ArtistData) abstractSong).getArtistSongs());
                         ((ArtistData) abstractSong).setExpanded(false);
                     } else {
-                        all.addAll(i + 1, songs);
+                        adapter.add(((ArtistData) abstractSong).getArtistSongs(), i + 1);
                         ((ArtistData) abstractSong).setExpanded(true);
                     }
-                    updateAdapter(all);
                 } else {
                     Util.hideKeyboard(getContext(), view);
                     if (null != service) {
-                        service.setArrayPlayback(new ArrayList<AbstractSong>(getArtistBySong((MusicData) adapter.getItem(i)).getArtistSongs()));
+                        service.setArrayPlayback(new ArrayList<>(getArtistBySong((MusicData) adapter.getItem(i)).getArtistSongs()));
                         showPlayerFragment((MusicData) adapter.getItem(i));
                     }
                 }
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -271,10 +268,16 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
 
     @Override
     public void onTextChanged(final CharSequence s, int start, int before, int count) {
+        if (s.toString().trim().isEmpty()) return;
+        if (null == adapter.getOriginalItems() || adapter.getOriginalItems().isEmpty()) {
+            liveSearch.setText("");
+            liveSearch.clearFocus();
+            return;
+        }
         adapter.getFilter().filter(s.toString(), new Filter.FilterListener() {
             @Override
             public void onFilterComplete(int count) {
-                String message = adapter.getCount() == 0 ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + s : getResources().getString(R.string.library_empty);
+                String message = count == 0 ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + s : getResources().getString(R.string.library_empty);
                 emptyMessage.setText(message);
                 emptyMessage.setVisibility(count == 0 ? VISIBLE : INVISIBLE);
             }
@@ -296,6 +299,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.clearLiveSearch) {
+            if (liveSearch.getText().toString().isEmpty()) return;
             adapter.clearFilter();
             liveSearch.clearFocus();
             liveSearch.setText("");
@@ -352,7 +356,6 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                     @Override
                     public void run() {
                         fillAdapter(querySong);
-                        Log.d("logd", "run : 3");
                         if (querySong.isEmpty()) {
                             hideProgress(view);
                             listView.setEmptyView(emptyMessage);
@@ -418,34 +421,34 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
 
     public void removeData(AbstractSong data) {
         getContext().getContentResolver().unregisterContentObserver(observer);
-        ArrayList<AbstractSong> allAdapter = adapter.getAll();
         if (MusicData.class != data.getClass()) {
             if (((ArtistData) data).getArtistSongs().equals(service.getArrayPlayback())) {
                 service.stopPressed();
             }
             if (((ArtistData) data).isExpanded()) {
-                allAdapter.removeAll(((ArtistData) data).getArtistSongs());
+                adapter.remove(((ArtistData) data).getArtistSongs());
             }
-            for (MusicData musicData : ((ArtistData) data).getArtistSongs()) {
+            for (AbstractSong musicData : ((ArtistData) data).getArtistSongs()) {
                 StateKeeper.getInstance().removeSongInfo(musicData.getComment());
-                musicData.reset(getContext());
+                ((MusicData) musicData).reset(getContext());
             }
-            allAdapter.remove(data);
+            adapter.remove(data);
         } else {
-            allAdapter.remove(data);
-            service.remove(data);
             ArtistData a = getArtistBySong((MusicData) data);
             if (null != a) {
                 a.getArtistSongs().remove(data);
-                a.setNumberOfTracks(a.getNumberOfTracks() - 1);
                 if (a.getNumberOfTracks() == 1) {
-                    allAdapter.remove(a);
+                    adapter.remove(a);
+                } else {
+                    a.setNumberOfTracks(a.getNumberOfTracks() - 1);
                 }
             }
             StateKeeper.getInstance().removeSongInfo(data.getComment());
             ((MusicData) data).reset(getContext());
+            adapter.remove(data);
         }
-        updateAdapter(allAdapter);
+        String message = adapter.getCount() == 0 && !liveSearch.getText().toString().isEmpty() ? getContext().getResources().getString(R.string.search_no_results_for) + " - " + liveSearch.getText() : getResources().getString(R.string.artist_empty);
+        emptyMessage.setText(message);
         getContext().getContentResolver().registerContentObserver(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, true, observer);
     }
 
@@ -465,7 +468,8 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
             adapter.setDoNotifyData(false);
             adapter.clear();
             adapter.add(list);
-            adapter.notifyDataSetChanged();
+            liveSearch.setText(liveSearch.getText());
+            if (liveSearch.getText().toString().isEmpty()) adapter.notifyDataSetChanged();
             hideProgress(view);
         }
         return true;

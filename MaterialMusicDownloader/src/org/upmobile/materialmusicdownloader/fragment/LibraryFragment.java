@@ -60,16 +60,6 @@ public class LibraryFragment extends Fragment implements BaseMaterialFragment, C
 		return R.string.font_musics;
 	}
 	
-	public void setFilter(String filter) {
-		libraryView.applyFilter(filter);
-		libraryView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
-	}
-	
-	public void clearFilter() {
-		libraryView.getMessageView(getView()).setText(R.string.library_empty);
-		libraryView.clearFilter();
-	}
-
 	@Override
 	public int getDrawerTitle() {
 		return R.string.tab_songs;

@@ -43,4 +43,5 @@ public interface AbstractSong extends Parcelable, Cloneable {
 	AbstractSong cloneSong() throws CloneNotSupportedException;
 
 	AbstractSpecial getSpecial();
+
 }

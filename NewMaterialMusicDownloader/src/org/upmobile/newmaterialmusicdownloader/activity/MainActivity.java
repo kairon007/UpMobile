@@ -256,46 +256,6 @@ public class MainActivity extends BaseMiniPlayerActivity implements Constants, F
 		}
 	}
 
-	public void onQueryTextSubmitAct(String query) {
-		String lastFragmentName = getPreviousFragmentName(1);
-		if (lastFragmentName.equals(LibraryFragment.class.getSimpleName())) {
-			LibraryFragment fragment = (LibraryFragment) getFragmentManager().findFragmentByTag(LibraryFragment.class.getSimpleName());
-			fragment.forceDelete();
-			if (fragment.isVisible()) {
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		} else if (lastFragmentName.equals(PlaylistFragment.class.getSimpleName())) {
-			PlaylistFragment fragment = (PlaylistFragment) getFragmentManager().findFragmentByTag(PlaylistFragment.class.getSimpleName());
-			fragment.forceDelete();
-			if (fragment.isVisible()) {
-				fragment.collapseAll();
-				if (query.isEmpty()) {
-					fragment.clearFilter();
-				} else {
-					fragment.setFilter(query);
-				}
-			}
-		}
-	}
-
-	public void onQueryTextChangeAct(String newText) {
-		if (newText.isEmpty()) {
-			String fragmentName = getPreviousFragmentName(1);
-			Fragment fragment = getFragmentManager().findFragmentByTag(fragmentName);
-            if (fragment.isVisible()) {
-                if (LibraryFragment.class == fragment.getClass()) {
-                    ((LibraryFragment) fragment).clearFilter();
-                } else if (PlaylistFragment.class == fragment.getClass()) {
-                    ((PlaylistFragment) fragment).clearFilter();
-                }
-            }
-		}
-	}
-
 	public void showToolbarShadow(boolean isShowing) {
 		toolbarShadow.setVisibility(isShowing ? View.VISIBLE : View.GONE);
 	}

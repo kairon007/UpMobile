@@ -38,16 +38,6 @@ public class LibraryFragment extends Fragment {
 		return libraryView.getView();
 	}
 	
-	public void setFilter(String filter) {
-		libraryView.applyFilter(filter);
-		libraryView.getMessageView(getView()).setText(getString(R.string.search_no_results_for) + " " + filter);
-	}
-	
-	public void clearFilter() {
-		libraryView.getMessageView(getView()).setText(R.string.library_empty);
-		libraryView.clearFilter();
-	}
-	
 	@Override
 	public void onResume() {
 		Bundle arguments = getArguments();

@@ -13,17 +13,14 @@ import com.nhaarman.listviewanimations.itemmanipulation.swipedismiss.OnDismissCa
 
 import org.upmobile.clearmusicdownloader.Constants;
 import org.upmobile.clearmusicdownloader.R;
-import org.upmobile.clearmusicdownloader.activity.MainActivity;
 import org.upmobile.clearmusicdownloader.adapters.LibraryAdapter;
 
 import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView;
-import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class LibraryView extends BaseLibraryView implements Constants {
 
@@ -69,17 +66,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 			@Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
 				for (Object o : removed) {
-					MusicData data = (MusicData) o;
-					if (null == data) return;
-	            	isUserDeleted = true;
-	            	PlaybackService.get(getContext()).remove(data);
-	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
-	            	adapter.remove(data);
-	            	data.reset(getContext());
-	            	if (adapter.isEmpty()) {
-	        			((MainActivity) getContext()).showPlayerElement();
-	        			lView.setEmptyView(message);
-	        		}
+					removeData((MusicData) o);
 	            }
 	        }
 			

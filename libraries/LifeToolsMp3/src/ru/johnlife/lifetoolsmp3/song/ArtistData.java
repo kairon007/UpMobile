@@ -20,7 +20,7 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
     private long id;
     private String artist;
     private int numberOfTracks;
-    private ArrayList<MusicData> artistSongs;
+    private ArrayList<AbstractSong> artistSongs;
     private boolean isExpanded = false;
 
     public static final String[] FILLED_PROJECTION = {
@@ -174,7 +174,7 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
         return context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, selection.toString(), null, MediaStore.Audio.AudioColumns.TITLE);
     }
 
-    public ArrayList<MusicData> getSongsByArtist(Context context) {
+    public ArrayList<AbstractSong> getSongsByArtist(Context context) {
         artistSongs = new ArrayList<>();
         Cursor cursor = makeArtistSongCursor(MusicData.FILLED_PROJECTION, context);
         if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
@@ -193,7 +193,7 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
         return artistSongs;
     }
 
-    public ArrayList<MusicData> getArtistSongs() {
+    public ArrayList<AbstractSong> getArtistSongs() {
         return artistSongs;
     }
 

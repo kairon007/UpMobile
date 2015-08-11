@@ -29,12 +29,13 @@
     <FrameLayout
         android:id="@+id/liveSearchScroll"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:visibility="gone">
+        android:layout_height="50dp"
+        android:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
+            android:layout_gravity="top"
             android:background="?attr/colorPrimary"
             android:paddingLeft="15dp"
             android:paddingRight="15dp">
@@ -56,19 +57,25 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center_vertical|right"
-                app:rv_color="@color/main_color_for_search_fragment_text" >
+                app:rv_color="@color/main_color_for_search_fragment_text">
 
-            <org.upmobile.materialmusicdownloader.font.MusicTextView
-                android:id="@+id/clearLiveSearch"
-                style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:padding="4dp"
-                android:text="@string/font_cancel"
-                android:textSize="16sp" />
+                <org.upmobile.materialmusicdownloader.font.MusicTextView
+                    android:id="@+id/clearLiveSearch"
+                    style="@style/TextViewAppearance.CustomMusicButtons.Colored.Search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:padding="4dp"
+                    android:text="@string/font_cancel"
+                    android:textSize="16sp" />
             </ru.johnlife.uilibrary.widget.customviews.RippleView>
         </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bottom_shadow" />
 
     </FrameLayout>
 

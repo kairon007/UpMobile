@@ -1,6 +1,7 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +110,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	}
 
 	public void clear() {
-		if (null == filter && null != originalItems) {
+		if (null != originalItems) {
 			originalItems.clear();
 		}
 		items.clear();
@@ -148,10 +149,12 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	}
 
 	public void remove(ArrayList<T> array) {
-		if (null != originalItems) {
-			originalItems.remove(array);
+		for (T t : array) {
+			if (null != originalItems) {
+				originalItems.remove(t);
+			}
+			items.remove(t);
 		}
-		items.remove(array);
 		if (doNotifyData) {
 			notifyDataSetChanged();
 		}
@@ -201,7 +204,9 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			return;
 		}
         filter = null;
-        changeData(originalItems);
+        setDoNotifyData(false);
+		items.clear();
+		items.addAll(originalItems);
 		notifyDataSetChanged();
 		originalItems = null;
 	}
@@ -229,6 +234,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (originalItems == null) {
+				Log.d("logd", "performFiltering : " + constraint);
 				originalItems = new ArrayList<>(items);
 			}
 			if (prefix == null || prefix.length() == 0) {

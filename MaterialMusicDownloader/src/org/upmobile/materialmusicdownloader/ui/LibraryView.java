@@ -19,10 +19,8 @@ import java.util.HashSet;
 
 import ru.johnlife.lifetoolsmp3.adapter.BaseAbstractAdapter;
 import ru.johnlife.lifetoolsmp3.adapter.CustomSwipeUndoAdapter;
-import ru.johnlife.lifetoolsmp3.services.PlaybackService;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.ui.baseviews.BaseLibraryView;
-import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
 
 public class LibraryView extends BaseLibraryView implements Constants {
 
@@ -72,16 +70,7 @@ public class LibraryView extends BaseLibraryView implements Constants {
 	        @Override
 	        public void onDismiss(@NonNull final ViewGroup listView, @NonNull final int[] reverseSortedPositions, HashSet<Object> removed) {
 	            for (Object o : removed) {
-					MusicData data = (MusicData) o;
-					if (null == data) return;
-	            	data.reset(getContext());
-	            	isUserDeleted = true;
-	            	PlaybackService.get(getContext()).remove(data);
-	            	StateKeeper.getInstance().removeSongInfo(data.getComment());
-	            	adapter.remove(data);
-	            	if (adapter.isEmpty()) {
-	        			lView.setEmptyView(message);
-	        		}
+					removeData((MusicData) o);
 	            }
 	        }
 	        
