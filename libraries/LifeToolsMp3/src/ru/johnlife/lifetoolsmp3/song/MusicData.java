@@ -272,10 +272,8 @@ public class MusicData implements Comparable<MusicData>, AbstractSong, Comparato
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object)
-			return true;
-		if (null == object || this.getClass() != object.getClass())
-			return false;
+		if (this == object) return true;
+		if (null == object || this.getClass() != object.getClass()) return false;
 		MusicData another = (MusicData) object;
         return this.id == another.id;
     }

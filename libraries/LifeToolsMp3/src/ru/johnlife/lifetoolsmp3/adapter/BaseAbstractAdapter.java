@@ -40,8 +40,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 
 	protected abstract ViewHolder<T> createViewHolder(final View v);
 
-	public void cancelTimer() {}
-	
 	@SuppressWarnings("unchecked")
 	@Override
 	public View getView(int position, View convertView, ViewGroup p) {
@@ -71,7 +69,7 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 	public void add(ArrayList<T> array, int position) {
 		if (null != originalItems) {
 			T t = items.get(position - 1);
-			originalItems.addAll((getIndex(originalItems, t) + 1), array);
+			originalItems.addAll((originalItems.indexOf(t) + 1), array);
 		}
 		items.addAll(position, array);
 		if (doNotifyData) {
@@ -79,15 +77,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		}
 	}
 
-	private int getIndex(ArrayList<T> arrayList, T t) {
-		int i = 0;
-		for (T o: arrayList) {
-			if (t == o) return i;
-			i++;
-		}
-		return -1;
-	}
-	
 	public void add(T item) {
 		if (null != originalItems) {
 			originalItems.add(item);

@@ -38,7 +38,6 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.ArtistData;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
-import ru.johnlife.lifetoolsmp3.utils.TestApp;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
@@ -455,7 +454,6 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
     public boolean handleMessage(Message msg) {
         if (msg.what == MSG_FILL_ADAPTER) {
             ArrayList<AbstractSong> list = ((ArrayList<AbstractSong>) msg.obj);
-            TestApp.start();
             for (AbstractSong data : adapter.getAll()) {
                 if (data.getClass() == ArtistData.class && ((ArtistData) data).isExpanded() ) {
                     ArtistData artistData = (ArtistData) list.get(list.indexOf(data));
@@ -465,7 +463,6 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                     }
                 }
             }
-            TestApp.stop();
             adapter.setDoNotifyData(false);
             adapter.clear();
             adapter.add(list);

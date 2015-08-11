@@ -219,7 +219,10 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
     }
 
     @Override
-    public boolean equals(Object o) {
-        return id == id && artist.equals(artist);
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (null == object || this.getClass() != object.getClass()) return false;
+        ArtistData another = (ArtistData) object;
+        return this.id == another.getId() && this.artist.equals(another.getArtist());
     }
 }
