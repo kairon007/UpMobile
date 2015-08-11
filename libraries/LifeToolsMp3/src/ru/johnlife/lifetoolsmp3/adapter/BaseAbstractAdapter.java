@@ -70,7 +70,8 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 
 	public void add(ArrayList<T> array, int position) {
 		if (null != originalItems) {
-			originalItems.addAll(position, array);
+			T t = items.get(position - 1);
+			originalItems.addAll((getIndex(originalItems, t) + 1), array);
 		}
 		items.addAll(position, array);
 		if (doNotifyData) {
@@ -78,14 +79,13 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 		}
 	}
 
-	public void addByData(ArrayList<T> arrayList, T t) {
-		if (null != originalItems) {
-			originalItems.addAll(originalItems.indexOf(t) + 1, arrayList);
+	private int getIndex(ArrayList<T> arrayList, T t) {
+		int i = 0;
+		for (T o: arrayList) {
+			if (t == o) return i;
+			i++;
 		}
-		items.addAll(items.indexOf(t) + 1, arrayList);
-		if (doNotifyData) {
-			notifyDataSetChanged();
-		}
+		return -1;
 	}
 	
 	public void add(T item) {

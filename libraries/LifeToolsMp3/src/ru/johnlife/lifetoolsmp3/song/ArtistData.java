@@ -217,4 +217,9 @@ public class ArtistData implements Comparable<ArtistData>, AbstractSong {
     public String toString() {
         return id + " " + artist + " " + numberOfTracks;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        return id == id && artist.equals(artist);
+    }
 }

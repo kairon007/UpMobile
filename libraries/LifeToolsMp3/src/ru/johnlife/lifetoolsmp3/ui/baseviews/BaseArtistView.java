@@ -38,6 +38,7 @@ import ru.johnlife.lifetoolsmp3.song.AbstractSong;
 import ru.johnlife.lifetoolsmp3.song.ArtistData;
 import ru.johnlife.lifetoolsmp3.song.MusicData;
 import ru.johnlife.lifetoolsmp3.utils.StateKeeper;
+import ru.johnlife.lifetoolsmp3.utils.TestApp;
 import ru.johnlife.lifetoolsmp3.utils.Util;
 
 /**
@@ -248,7 +249,7 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                         adapter.remove(((ArtistData) abstractSong).getArtistSongs());
                         ((ArtistData) abstractSong).setExpanded(false);
                     } else {
-                        adapter.addByData(((ArtistData) abstractSong).getArtistSongs(), abstractSong);
+                        adapter.add(((ArtistData) abstractSong).getArtistSongs(), i + 1);
                         ((ArtistData) abstractSong).setExpanded(true);
                     }
                 } else {
@@ -369,18 +370,12 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
 
     protected ArrayList<AbstractSong> querySong() {
         synchronized (lock) {
-            ArrayList<String> expanded = new ArrayList<>();
-            for (AbstractSong abstractSong : adapter.getAll()) {
-                if (abstractSong.getClass() == ArtistData.class && ((ArtistData) abstractSong).isExpanded()) {
-                    expanded.add(abstractSong.getTitle().trim());
-                }
-            }
-            ArrayList<ArtistData> result = new ArrayList<>();
+            ArrayList<AbstractSong> result = new ArrayList<>();
             Cursor cursor = buildQuery(getContext().getContentResolver());
-            if (null == cursor) return new ArrayList<AbstractSong>(result);
+            if (null == cursor) return result;
             if (cursor.getCount() == 0 || !cursor.moveToFirst()) {
                 cursor.close();
-                return new ArrayList<AbstractSong>(result);
+                return result;
             }
             ArtistData d = new ArtistData();
             d.populate(cursor);
@@ -391,15 +386,10 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
                 result.add(data);
             }
             cursor.close();
-            ArrayList<AbstractSong> abstractSongArrayList = new ArrayList<AbstractSong>(result);
             for (AbstractSong data : result) {
                 ((ArtistData) data).getSongsByArtist(getContext());
-                if (expanded.contains(data.getTitle().trim())) {
-                    ((ArtistData) data).setExpanded(true);
-                    abstractSongArrayList.addAll(abstractSongArrayList.indexOf(data) + 1, ((ArtistData) data).getArtistSongs());
-                }
             }
-            return abstractSongArrayList;
+            return result;
         }
     }
 
@@ -465,6 +455,17 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
     public boolean handleMessage(Message msg) {
         if (msg.what == MSG_FILL_ADAPTER) {
             ArrayList<AbstractSong> list = ((ArrayList<AbstractSong>) msg.obj);
+            TestApp.start();
+            for (AbstractSong data : adapter.getAll()) {
+                if (data.getClass() == ArtistData.class && ((ArtistData) data).isExpanded() ) {
+                    ArtistData artistData = (ArtistData) list.get(list.indexOf(data));
+                    if (null != artistData) {
+                        artistData.setExpanded(true);
+                        list.addAll(list.indexOf(artistData) + 1, artistData.getArtistSongs());
+                    }
+                }
+            }
+            TestApp.stop();
             adapter.setDoNotifyData(false);
             adapter.clear();
             adapter.add(list);
