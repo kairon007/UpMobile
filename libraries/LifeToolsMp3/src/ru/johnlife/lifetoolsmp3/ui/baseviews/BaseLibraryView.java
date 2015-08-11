@@ -19,7 +19,6 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -173,7 +172,6 @@ public abstract class BaseLibraryView extends View implements Handler.Callback, 
         showProgress(view);
         listView.setAdapter(adapter);
         animateListView(listView, adapter);
-        Log.d("logd", "BaseLibraryView : " + adapter.getOriginalItems() + " - " + adapter.getCount());
         if (null != StateKeeper.getInstance().getLibraryAdapterItems()) {
             hideProgress(view);
             fillAdapter(StateKeeper.getInstance().getLibraryAdapterItems());

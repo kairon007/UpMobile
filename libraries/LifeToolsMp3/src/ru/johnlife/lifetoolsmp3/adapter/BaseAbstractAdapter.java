@@ -1,7 +1,6 @@
 package ru.johnlife.lifetoolsmp3.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,7 +233,6 @@ public abstract class BaseAbstractAdapter<T extends AbstractSong> extends BaseAd
 			results = new FilterResults();
 			String prefix = constraint.toString().toLowerCase();
 			if (originalItems == null) {
-				Log.d("logd", "performFiltering : " + constraint);
 				originalItems = new ArrayList<>(items);
 			}
 			if (prefix == null || prefix.length() == 0) {

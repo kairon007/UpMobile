@@ -469,7 +469,11 @@ public abstract class BaseArtistView extends View implements Handler.Callback, V
             adapter.clear();
             adapter.add(list);
             liveSearch.setText(liveSearch.getText());
-            if (liveSearch.getText().toString().isEmpty()) adapter.notifyDataSetChanged();
+            if (liveSearch.getText().toString().isEmpty()) {
+                adapter.notifyDataSetChanged();
+            } else {
+                liveSearch.setSelection(liveSearch.getText().length());
+            }
             hideProgress(view);
         }
         return true;
